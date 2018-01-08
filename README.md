@@ -12,6 +12,12 @@ https://addons.mozilla.org/en-US/firefox/addon/panorama-view/
 - Create and remove groups
 - Drag and drop tabs between groups
 
+### Being worked on
+- More solid thumbnailing
+- Double checking that the active group in a window is always set and valid
+- Fix up renaming of groups
+- Backups (Waiting for API) Import works, but creating windows and tabs correctly isn't really possible right now (can't open about: urls, etc)
+
 ### Planned
 - Different views of the groups
   - Automatic with thumbnails
@@ -21,12 +27,6 @@ https://addons.mozilla.org/en-US/firefox/addon/panorama-view/
 - Make new group and set active when you delete last group in a window
 - Salvage tabs who's group doesn't exist on load of add-on
 - Drag and drop tabs and groups between windows (maybe)
-
-### Being worked on
-- More solid thumbnailing
-- Double checking that the active group in a window is always set and valid
-- Fix up renaming of groups
-- Backups (Waiting for API) Import works, but creating windows and tabs correctly isn't really possible right now (can't open about: urls, etc)
 
 ### Waiting for API
 - Tab and tab-strip hiding
