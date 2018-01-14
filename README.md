@@ -25,7 +25,6 @@ https://addons.mozilla.org/en-US/firefox/addon/panorama-view/
   - List view with vertical lists (scrollable)
 - Dark theme
 - Make new group and set active when you delete last group in a window
-- Salvage tabs who's group doesn't exist on load of add-on
 - Drag and drop tabs and groups between windows (maybe)
 
 ### Waiting for API
