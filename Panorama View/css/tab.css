@@ -1,0 +1,154 @@
+
+.tab, .newtab {
+	position: absolute;
+
+	cursor: pointer;
+
+	_transition: all 100ms cubic-bezier(.08,.82,.17,1);
+	_transition-property: width, height, top, left;
+}
+
+.tab:hover .inner {
+	outline: #ff9400 1px solid;
+}
+
+.tab.selected .inner {
+	outline: #45a1ff 2px solid;
+}
+
+.tab .inner, .newtab .inner {
+	position: absolute;
+	top: 5px;
+	left: 5px;
+	right: 5px;
+	bottom: 5px;
+}
+
+.tab.inactive .inner {
+	opacity: 0.75;
+	box-shadow: 0 0 1px rgba(0, 0, 0, 0.25);
+}
+
+.tab .inner {
+	border: #ffffff 3px solid;
+	border-bottom: #ffffff 24px solid;
+	box-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
+
+	background-color: #f9f9fa;
+	background-size: cover;
+	background-position: top;
+
+	transition: opacity 500ms cubic-bezier(.08,.82,.17,1), transform 500ms cubic-bezier(.08,.82,.17,1), filter 500ms cubic-bezier(.08,.82,.17,1);
+}
+
+.newtab .inner {
+	border: #cccccc 2px dashed;
+
+	background-image: url(/icons/plus.svg);
+	background-repeat: no-repeat;
+	background-size: 16px;
+	background-position: center;
+}
+
+.tab.drag .inner {
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+
+	outline: none;
+
+	opacity: 0.5;
+	transform: scale(0.9);
+	backdrop-filter: blur(10px);
+}
+
+.tab .favicon {
+	width: 16px;
+	height: 16px;
+
+	position: absolute;
+	left: 0;
+	top: 0;
+
+	border-right: #ffffff 4px solid;
+	border-bottom: #ffffff 4px solid;
+	border-radius: 0 0 2px 0;
+
+	background-color: #ffffff;
+	background-size: contain;
+
+	display: none;
+}
+
+.tab .favicon.visible {
+	display: block;
+}
+
+.tab .close {
+	width: 16px;
+	height: 16px;
+
+	position: absolute;
+	right: 0;
+	top: 0;
+
+	background-image: url(/icons/close.svg);
+	background-repeat: no-repeat;
+	background-size: 10px;
+	background-position: center;
+}
+
+.tab .name {
+	height: 23px;
+
+	position: absolute;
+	bottom: -23px;
+	left: 1px;
+	right: 1px;
+
+	background-color: #ffffff;
+
+	font-size: 12px;
+	text-align: center;
+	line-height: 22px;
+	overflow: hidden;
+	white-space: nowrap;
+	_text-overflow: '..';
+}
+
+
+.tab.small .inner {
+	border-bottom: #ffffff 20px solid;
+}
+
+.tab.small .favicon {
+	width: 100%;
+	height: 100%;
+
+	border: none;
+	border-radius: 0;
+
+	background-size: cover;
+}
+
+.tab.small .name {
+	height: 18px;
+
+	bottom: -20px;
+
+	font-size: 10px;
+	text-align: center;
+	line-height: 15px;
+}
+
+.tab.small .close {
+	width: 12px;
+	height: 12px;
+
+	position: absolute;
+	right: 0;
+	top: 0;
+
+	background-image: url(/icons/close.svg);
+	background-repeat: no-repeat;
+	background-size: 10px;
+	background-position: center;
+}

@@ -1,0 +1,39 @@
+{
+	"manifest_version": 2,
+	"name": "Panorama View",
+	"description": "Tab Groups with Panorama View",
+	"version": "0.6.16",
+	"icons": {
+		"16": "icons/logo/logo-16.png",
+		"24": "icons/logo/logo-24.png",
+		"32": "icons/logo/logo-32.png",
+		"48": "icons/logo/logo-48.png",
+		"64": "icons/logo/logo-64.png",
+		"96": "icons/logo/logo-96.png"
+	},
+	"applications": {
+		"gecko": {
+			"id": "test@test.net"
+		}
+	},
+
+	"background": {
+		"scripts": ["js/background.js", "js/thumbnail.js"]
+	},
+
+	"browser_action": {
+		"default_icon": "icons/icon.svg"
+	},
+
+	 "options_ui": {
+		"page": "options.html"
+	},
+
+	"permissions": [
+		"<all_urls>",
+		"tabs",
+		"storage",
+		"sessions",
+		"downloads"
+	]
+}

@@ -1,0 +1,64 @@
+
+body {
+	margin: 0;
+
+	background-color: #f9f9fa;
+
+	font-family: sans-serif;
+}
+
+#groups {
+	position: absolute;
+	top: 5px;
+	right: 43px;
+	bottom: 5px;
+	left: 5px;
+}
+
+#toolbar {
+	width: 28px;
+	padding: 5px;
+
+	position: absolute;
+	top: 0;
+	right: 0;
+
+	border-left: #cccccc 1px solid;
+	border-bottom: #cccccc 1px solid;
+	border-radius: 0 0 0 4px;
+
+	background-color: #f2f2f2;
+}
+
+#toolbar .button {
+	width: 28px;
+	height: 28px;
+
+	border-radius: 4px;
+}
+
+#toolbar .button:hover {
+	background-color: #d6d6d6;
+}
+
+#newGroup {
+	background-image: url(/icons/plus_dark.svg);
+	background-repeat: no-repeat;
+	background-position: center;
+}
+
+.drag_indicator {
+	width: 2px;
+	height: 100px;
+
+	position: absolute;
+	z-index: 100;
+
+	background-color: #00adff;
+
+	display: none;
+}
+
+.drag_indicator.show {
+	display: block;
+}
