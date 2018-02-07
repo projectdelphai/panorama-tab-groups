@@ -25,7 +25,7 @@ https://addons.mozilla.org/en-US/firefox/addon/panorama-view/
 - Drag and drop tabs and groups between windows (maybe)
 
 ### Waiting for API
-- Tab and tab-strip hiding
+- Tab and tab-strip hiding (coming in v59)
 - Import/restore backup
 
 ### Impossible
@@ -34,4 +34,3 @@ https://addons.mozilla.org/en-US/firefox/addon/panorama-view/
 ## Known bugs
 - Attached tab isn't added
 - Detached tab not always removed
-- Won't take group id of last activated tab (might not be needed)
