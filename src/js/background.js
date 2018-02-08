@@ -59,13 +59,9 @@ async function tabActivated(activeInfo) {
 		var groupId = await browser.sessions.getTabValue(tab.id, 'groupId');
 
 		if(groupId != activeGroup) {
-			if(browser.tabs.hide) {
-				browser.tabs.hide(tab.id);
-			}
+			browser.tabs.hide(tab.id);
 		}else{
-			if(browser.tabs.show) {
-				browser.tabs.show(tab.id);
-			}
+			browser.tabs.show(tab.id);
 		}
 	}
 }
