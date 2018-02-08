@@ -56,19 +56,15 @@ async function tabActivated(activeInfo) {
 	const tabs = browser.tabs.query({currentWindow: true});
 
 	for(const tab of await tabs) {
-		var groupId = await view.tabs.getGroupId(tab.id);
+		var groupId = await browser.sessions.getTabValue(tab.id, 'groupId');
 
 		if(groupId != activeGroup) {
 			if(browser.tabs.hide) {
 				browser.tabs.hide(tab.id);
-			}else{
-				//console.log('hiding tab:', tab.id);
 			}
 		}else{
 			if(browser.tabs.show) {
 				browser.tabs.show(tab.id);
-			}else{
-				//console.log('showing tab:', tab.id);
 			}
 		}
 	}
