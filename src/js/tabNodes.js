@@ -37,6 +37,15 @@ function makeTabNode(tab) {
 		await browser.tabs.update(tab.id, {active: true});
 	}, false);
 
+    node.addEventListener('auxclick', function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        if (event.button == 1) { // middle mouse
+            browser.tabs.remove(tab.id);
+        }
+    }, false);
+
 	close.addEventListener('click', function(event) {
 		event.stopPropagation();
 		browser.tabs.remove(tab.id);
