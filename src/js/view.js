@@ -48,6 +48,14 @@ async function initView() {
 
 	// set all listeners
 	document.getElementById('newGroup').addEventListener('click', createGroup, false);
+	document.getElementById('groups').addEventListener('auxclick', async function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        if ( event.target != document.getElementById('groups') ) return; // ignore middle clicks in foreground
+        if ( event.button != 1 ) return; // middle mouse
+		createGroup();
+    }, false);
 	browser.runtime.onMessage.addListener(function(message) {
 		message = JSON.parse(message);
 		if(message.name == 'updateThumbnail') {
