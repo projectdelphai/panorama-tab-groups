@@ -2,7 +2,7 @@
 	"manifest_version": 2,
 	"name": "Panorama View",
 	"description": "Tab Groups with Panorama View",
-	"version": "0.6.19",
+	"version": "0.6.20",
 	"icons": {
 		"16": "icons/logo/logo-16.png",
 		"24": "icons/logo/logo-24.png",
@@ -13,7 +13,7 @@
 	},
 	"applications": {
 		"gecko": {
-			"id": "test@test.net"
+			"id": "{60e27487-c779-464c-8698-ad481b718d5f}"
 		}
 	},
 
