@@ -32,19 +32,17 @@ function makeTabNode(tab) {
 		event.preventDefault();
 		event.stopPropagation();
 
-		//var groupId = await browser.sessions.getTabValue(tab.id, 'groupId');
-		//await groups.setActive(groupId);
 		await browser.tabs.update(tab.id, {active: true});
 	}, false);
 
-    node.addEventListener('auxclick', function(event) {
-        event.preventDefault();
-        event.stopPropagation();
+	node.addEventListener('auxclick', function(event) {
+		event.preventDefault();
+		event.stopPropagation();
 
-        if (event.button == 1) { // middle mouse
-            browser.tabs.remove(tab.id);
-        }
-    }, false);
+		if (event.button == 1) { // middle mouse
+			browser.tabs.remove(tab.id);
+		}
+	}, false);
 
 	close.addEventListener('click', function(event) {
 		event.stopPropagation();
