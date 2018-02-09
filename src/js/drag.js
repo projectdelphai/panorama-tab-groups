@@ -6,7 +6,12 @@ var dragOverTab = null;
 var dragCount = 0;
 var dragDropBefore;
 
-function tabDragStart(e) {
+function tabDragStart( e ) {
+	if ( this.classList.contains( 'pinned' ) ) {
+		e.preventDefault();
+		return;
+	}
+
 	this.classList.add('drag');
 
 	e.dataTransfer.effectAllowed = 'move';
