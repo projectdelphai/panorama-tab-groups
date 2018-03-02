@@ -53,17 +53,22 @@ async function tabActivated(activeInfo) {
 		await browser.sessions.setWindowValue(windowId, 'activeGroup', activeGroup);
 	}
 
-	const tabs = browser.tabs.query({currentWindow: true});
+	const tabs = await browser.tabs.query({currentWindow: true});
 
-	for(const tab of await tabs) {
+	var showTabs = [];
+	var hideTabs = [];
+
+	await Promise.all(tabs.map( async(tab) => {
 		var groupId = await browser.sessions.getTabValue(tab.id, 'groupId');
 
 		if(groupId != activeGroup) {
-			browser.tabs.hide(tab.id);
+			hideTabs.push(tab.id)
 		}else{
-			browser.tabs.show(tab.id);
+		    showTabs.push(tab.id)
 		}
-	}
+	}));
+	browser.tabs.hide(hideTabs);
+	browser.tabs.show(showTabs);
 }
 
 async function setupWindows() {
