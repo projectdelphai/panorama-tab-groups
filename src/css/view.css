@@ -19,7 +19,7 @@ body {
 	width: 28px;
 	padding: 5px;
 
-	position: absolute;
+	position: fixed;
 	top: 0;
 	right: 0;
 
