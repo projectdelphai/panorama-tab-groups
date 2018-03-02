@@ -104,8 +104,10 @@ document.addEventListener('DOMContentLoaded', initView, false);
 async function createGroup() {
 	var group = await groups.create();
 	makeGroupNode(group);
-	view.groupsNode.appendChild(groupNodes[group.id].group);
+	var groupElement = groupNodes[group.id].group
+	view.groupsNode.appendChild(groupElement);
 	updateGroupFit(group);
+	groupElement.scrollIntoView({behavior: "smooth"});
 }
 
 
