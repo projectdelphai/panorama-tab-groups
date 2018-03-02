@@ -28,8 +28,19 @@ var view = {
 	groupsNode: null,
 	dragIndicator: null,
 
+	screenshotInterval: null,
+
 	tabs: {},
 };
+
+async function captureTabs() {
+	console.log('capture tabs');
+	/*view.tabs.forEach(async function(tab) {
+		if(!tab.discarded) {
+			console.log(tab.title);
+		}
+	});*/
+}
 
 async function initView() {
 
@@ -48,14 +59,25 @@ async function initView() {
 
 	// set all listeners
 	document.getElementById('newGroup').addEventListener('click', createGroup, false);
-	document.getElementById('groups').addEventListener('auxclick', async function(event) {
-        event.preventDefault();
-        event.stopPropagation();
 
-        if ( event.target != document.getElementById('groups') ) return; // ignore middle clicks in foreground
-        if ( event.button != 1 ) return; // middle mouse
+	document.getElementById('groups').addEventListener('auxclick', async function(event) {
+		event.preventDefault();
+		event.stopPropagation();
+
+		if ( event.target != document.getElementById('groups') ) return; // ignore middle clicks in foreground
+		if ( event.button != 1 ) return; // middle mouse
+
 		createGroup();
-    }, false);
+	}, false);
+
+	/*document.addEventListener('visibilitychange', function handleVisibilityChange() {
+		if(document.hidden) {
+			clearInterval(view.screenshotInterval);
+		}else{
+			view.screenshotInterval = setInterval(captureTabs, 1000);
+		}
+	}, false);*/
+
 	browser.runtime.onMessage.addListener(function(message) {
 		message = JSON.parse(message);
 		if(message.name == 'updateThumbnail') {
