@@ -55,7 +55,12 @@ async function tabCreated(tab) {
 async function tabActivated(activeInfo) {
 
 	// Set the window's active group to the new active tab's group
-	const activeGroup = await browser.sessions.getTabValue(activeInfo.tabId, 'groupId');
+	// If this is a newly-created tab, tabCreated() might not have set a
+	// groupId yet, so retry until it does.
+	var activeGroup = await browser.sessions.getTabValue(activeInfo.tabId, 'groupId');
+	while (activeGroup === undefined) {
+		activeGroup = await browser.sessions.getTabValue(activeInfo.tabId, 'groupId');
+	}
 
 	if(activeGroup != -1) {
 		const windowId = (await browser.windows.getCurrent()).id;
