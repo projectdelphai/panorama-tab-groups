@@ -11,18 +11,33 @@ var config = {
 
 var openingView = false;
 
-/** Open the Panorama View tab */
-async function openView() {
+/** The currently open tab, which needs to be remembered when the Panorama View tab is opened */
+var currentTab;
+
+/** Open the Panorama View tab, or return to the last open tab if Panorama View is currently open */
+async function toggleView() {
 
 	// Check if it's already open (possibly in a hidden tab)
 	var tabs = await browser.tabs.query({url: browser.extension.getURL("view.html"), currentWindow: true});
 
-	// Switch to the open tab, or open a new one
-	if(tabs.length > 0) {
-		browser.tabs.update(Number(tabs[0].id), {active: true});
+	var activeTab = (await browser.tabs.query({active: true, currentWindow: true}))[0];
+
+	if(tabs.map(tab => tab.id).includes(activeTab.id)) {
+		// Panorama View is open, return to the current tab if possible
+		if (currentTab !== undefined) {
+			browser.tabs.update(currentTab.id, {active: true});
+		}
 	}else{
-		openingView = true;
-		browser.tabs.create({url: "/view.html", active: true});
+		currentTab = activeTab;
+
+		if(tabs.length > 0) {
+			// There's a background tab for Panorama View open, switch to it
+			browser.tabs.update(tabs[0].id, {active: true});
+		}else{
+			// Create a Panorama View tab
+			openingView = true;
+			browser.tabs.create({url: "/view.html", active: true});
+		}
 	}
 }
 
@@ -177,7 +192,7 @@ async function init() {
 	await setupWindows();
 	await salvageGrouplessTabs();
 
-	browser.browserAction.onClicked.addListener(openView);
+	browser.browserAction.onClicked.addListener(toggleView);
 	browser.windows.onCreated.addListener(createGroupInWindow);
 	browser.tabs.onCreated.addListener(tabCreated);
 	browser.tabs.onActivated.addListener(tabActivated);
