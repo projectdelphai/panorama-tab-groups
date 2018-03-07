@@ -11,21 +11,41 @@ var config = {
 
 var openingView = false;
 
-async function openView() {
+/** The currently open tab, which needs to be remembered when the Panorama View tab is opened */
+var currentTab;
 
+/** Open the Panorama View tab, or return to the last open tab if Panorama View is currently open */
+async function toggleView() {
+
+	// Check if it's already open (possibly in a hidden tab)
 	var tabs = await browser.tabs.query({url: browser.extension.getURL("view.html"), currentWindow: true});
 
-	if(tabs.length > 0) {
-		browser.tabs.update(Number(tabs[0].id), {active: true});
+	var activeTab = (await browser.tabs.query({active: true, currentWindow: true}))[0];
+
+	if(tabs.map(tab => tab.id).includes(activeTab.id)) {
+		// Panorama View is open, return to the current tab if possible
+		if (currentTab !== undefined) {
+			browser.tabs.update(currentTab.id, {active: true});
+		}
 	}else{
-		openingView = true;
-		browser.tabs.create({url: "/view.html", active: true});
+		currentTab = activeTab;
+
+		if(tabs.length > 0) {
+			// There's a background tab for Panorama View open, switch to it
+			browser.tabs.update(tabs[0].id, {active: true});
+		}else{
+			// Create a Panorama View tab
+			openingView = true;
+			browser.tabs.create({url: "/view.html", active: true});
+		}
 	}
 }
 
+/** Callback function which will be called whenever a tab is opened */
 async function tabCreated(tab) {
 	if(!openingView) {
-
+		// Normal case: everything except the Panorama View tab
+		// If the tab does not have a group, set its group to the current group
 		var tabGroupId = await browser.sessions.getTabValue(tab.id, 'groupId');
 
 		if(tabGroupId === undefined) {
@@ -39,20 +59,30 @@ async function tabCreated(tab) {
 			browser.sessions.setTabValue(tab.id, 'groupId', activeGroup);
 		}
 	}else{
+		// Opening the Panorama View tab
+		// Make sure it's in the special group
 		openingView = false;
 		browser.sessions.setTabValue(tab.id, 'groupId', -1);
 	}
 }
 
+/** Callback function which will be called whenever the user switches tabs */
 async function tabActivated(activeInfo) {
 
-	const activeGroup = await browser.sessions.getTabValue(activeInfo.tabId, 'groupId');
+	// Set the window's active group to the new active tab's group
+	// If this is a newly-created tab, tabCreated() might not have set a
+	// groupId yet, so retry until it does.
+	var activeGroup = await browser.sessions.getTabValue(activeInfo.tabId, 'groupId');
+	while (activeGroup === undefined) {
+		activeGroup = await browser.sessions.getTabValue(activeInfo.tabId, 'groupId');
+	}
 
 	if(activeGroup != -1) {
 		const windowId = (await browser.windows.getCurrent()).id;
 		await browser.sessions.setWindowValue(windowId, 'activeGroup', activeGroup);
 	}
 
+	// Show and hide the appropriate tabs
 	const tabs = await browser.tabs.query({currentWindow: true});
 
 	var showTabs = [];
@@ -64,13 +94,14 @@ async function tabActivated(activeInfo) {
 		if(groupId != activeGroup) {
 			hideTabs.push(tab.id)
 		}else{
-		    showTabs.push(tab.id)
+			showTabs.push(tab.id)
 		}
 	}));
 	browser.tabs.hide(hideTabs);
 	browser.tabs.show(showTabs);
 }
 
+/** Make sure each window has a group */
 async function setupWindows() {
 
 	const windows = browser.windows.getAll({});
@@ -85,6 +116,7 @@ async function setupWindows() {
 	}
 }
 
+/** Get a new UID for a group */
 async function newGroupUid(windowId) {
 	var groupIndex = (await browser.sessions.getWindowValue(windowId, 'groupIndex'));
 
@@ -96,6 +128,9 @@ async function newGroupUid(windowId) {
 	return uid;
 }
 
+/** Create the first group in a window
+ * This handles new windows and, during installation, existing windows
+ * that do not yet have a group */
 async function createGroupInWindow(window) {
 
 	var groupId = await newGroupUid(window.id);
@@ -119,6 +154,7 @@ async function createGroupInWindow(window) {
 	}
 }
 
+/** Put any tabs that do not have a group into the active group */
 async function salvageGrouplessTabs() {
 
 	// make array of all groups for quick look-up
@@ -156,7 +192,7 @@ async function init() {
 	await setupWindows();
 	await salvageGrouplessTabs();
 
-	browser.browserAction.onClicked.addListener(openView);
+	browser.browserAction.onClicked.addListener(toggleView);
 	browser.windows.onCreated.addListener(createGroupInWindow);
 	browser.tabs.onCreated.addListener(tabCreated);
 	browser.tabs.onActivated.addListener(tabActivated);

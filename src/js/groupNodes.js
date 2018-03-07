@@ -37,7 +37,7 @@ function makeGroupNode(group) {
 	var header = new_element('div', {class: 'header'}, [name, input, tabCount, close]);
 
 	// newtab
-	var newtab = new_element('div', {class: 'newtab'}, [new_element('div', {class: 'wrap'}, [new_element('div', {class: 'inner'})])]);
+	var newtab = new_element('div', {class: 'newtab'}, [new_element('div', {class: 'inner'})]);
 
 	// group
 	var content = new_element('div', {class: 'content transition', groupId: group.id}, [newtab]);
