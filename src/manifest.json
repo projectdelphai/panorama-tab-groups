@@ -22,10 +22,12 @@
 	},
 
 	"browser_action": {
+		"browser_style": true,
 		"default_icon": "icons/icon.svg"
 	},
 
-	 "options_ui": {
+	"options_ui": {
+		"browser_style": true,
 		"page": "options.html"
 	},
 
