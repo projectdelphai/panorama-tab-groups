@@ -1,6 +1,9 @@
 
 'use strict';
 
+/**
+ * Helper function to create a new element with the given attributes and children
+ */
 function new_element(name, attributes, children) {
 
 	const e = document.createElement(name);
@@ -42,6 +45,12 @@ async function captureTabs() {
 	});*/
 }
 
+/**
+ * Initialize the Panorama View tab
+ *
+ * This displays all the groups and the tabs in them, and sets up listeners
+ * to respond to user actions and react to changes
+ */
 async function initView() {
 
 	view.windowId = (await browser.windows.getCurrent()).id;
@@ -58,8 +67,11 @@ async function initView() {
 	await initGroupNodes();
 
 	// set all listeners
+
+	// Listen for clicks on new group button
 	document.getElementById('newGroup').addEventListener('click', createGroup, false);
 
+	// Listen for middle clicks in background to open new group
 	document.getElementById('groups').addEventListener('auxclick', async function(event) {
 		event.preventDefault();
 		event.stopPropagation();
@@ -70,6 +82,7 @@ async function initView() {
 		createGroup();
 	}, false);
 
+
 	/*document.addEventListener('visibilitychange', function handleVisibilityChange() {
 		if(document.hidden) {
 			clearInterval(view.screenshotInterval);
@@ -78,6 +91,7 @@ async function initView() {
 		}
 	}, false);*/
 
+	// Listen for messages from thumbnail script
 	browser.runtime.onMessage.addListener(function(message) {
 		message = JSON.parse(message);
 		if(message.name == 'updateThumbnail') {
@@ -85,15 +99,13 @@ async function initView() {
 		}
 	});
 
+	// Listen for tabs being added/removed/switched/etc. and update appropriately
 	browser.tabs.onCreated.addListener(tabCreated);
 	browser.tabs.onRemoved.addListener(tabRemoved);
-
 	browser.tabs.onUpdated.addListener(tabUpdated);
 	browser.tabs.onMoved.addListener(tabMoved);
-
 	browser.tabs.onAttached.addListener(tabAttached);
 	browser.tabs.onDetached.addListener(tabDetached);
-
 	browser.tabs.onActivated.addListener(tabActivated);
 }
 
@@ -110,15 +122,14 @@ async function createGroup() {
 	groupElement.scrollIntoView({behavior: "smooth"});
 }
 
-
 async function tabCreated(tab) {
 	if(view.windowId == tab.windowId){
 		makeTabNode(tab);
 		updateTabNode(tab);
 		updateFavicon(tab);
 
+		// Wait for background script to assign this tab to a group
 		var groupId = undefined;
-
 		while(groupId === undefined) {
 			groupId = await view.tabs.getGroupId(tab.id);
 		}
