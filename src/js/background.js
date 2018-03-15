@@ -188,7 +188,6 @@ async function salvageGrouplessTabs() {
 
 async function init() {
 
-	await migrate069();
 	await setupWindows();
 	await salvageGrouplessTabs();
 
@@ -199,7 +198,3 @@ async function init() {
 }
 
 init();
-
-async function migrate069(groups) {
-	await browser.storage.local.clear();
-}

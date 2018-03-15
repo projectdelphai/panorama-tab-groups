@@ -33,13 +33,39 @@ var view = {
 	tabs: {},
 };
 
+async function captureThumbnail(tabId) {
+
+	var data = await browser.tabs.captureTab(tabId, {format: 'jpeg', quality: 25});
+	var img = new Image;
+
+	img.onload = async function() {
+		var canvas = document.createElement('canvas');
+		var ctx = canvas.getContext('2d');
+
+		canvas.width = 500;
+		canvas.height = canvas.width * (this.height / this.width);
+
+		//ctx.imageSmoothingEnabled = true;
+		//ctx.imageSmoothingQuality = 'high';
+		ctx.drawImage(this, 0, 0, canvas.width, canvas.height);
+
+		var thumbnail = canvas.toDataURL('image/jpeg', 0.7);
+
+		updateThumbnail(tabId, thumbnail);
+		browser.sessions.setTabValue(tabId, 'thumbnail', thumbnail);
+	};
+
+	img.src = data;
+}
+
 async function captureTabs() {
 	console.log('capture tabs');
-	/*view.tabs.forEach(async function(tab) {
+	view.tabs.forEach(async function(tab) {
 		if(!tab.discarded) {
-			console.log(tab.title);
+			//console.log(tab.title);
+			await captureThumbnail(tab.id);
 		}
-	});*/
+	});
 }
 
 async function initView() {
@@ -70,20 +96,14 @@ async function initView() {
 		createGroup();
 	}, false);
 
-	/*document.addEventListener('visibilitychange', function handleVisibilityChange() {
+	document.addEventListener('visibilitychange', function() {
 		if(document.hidden) {
-			clearInterval(view.screenshotInterval);
+			//clearInterval(view.screenshotInterval);
 		}else{
-			view.screenshotInterval = setInterval(captureTabs, 1000);
+			//view.screenshotInterval = setInterval(captureTabs, 2000);
+			captureTabs();
 		}
-	}, false);*/
-
-	browser.runtime.onMessage.addListener(function(message) {
-		message = JSON.parse(message);
-		if(message.name == 'updateThumbnail') {
-			updateThumbnail(message.value);
-		}
-	});
+	}, false);
 
 	browser.tabs.onCreated.addListener(tabCreated);
 	browser.tabs.onRemoved.addListener(tabRemoved);

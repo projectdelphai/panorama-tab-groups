@@ -108,18 +108,20 @@ function deleteTabNode(tabId) {
 	}
 }
 
-async function updateThumbnail(tabId) {
+async function updateThumbnail(tabId, thumbnail) {
 
 	var node = tabNodes[tabId];
 
 	if(node) {
-		browser.sessions.getTabValue(tabId, 'thumbnail').then(function(thumbnail) {
-			if(thumbnail) {
-				node.inner.style.backgroundImage = 'url(' + thumbnail + ')';
-			}else{
-				node.inner.style.backgroundImage = '';
-			}
-		});
+		if(!thumbnail) {
+			thumbnail = await browser.sessions.getTabValue(tabId, 'thumbnail');
+		}
+
+		if(thumbnail) {
+			node.inner.style.backgroundImage = 'url(' + thumbnail + ')';
+		}else{
+			node.inner.style.backgroundImage = '';
+		}
 	}
 }
 

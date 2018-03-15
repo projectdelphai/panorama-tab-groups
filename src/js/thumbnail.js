@@ -1,6 +1,7 @@
 
-async function storeThumbnail(tabId, data) {
+async function captureThumbnail(tabId) {
 
+	var data = await browser.tabs.captureTab(tabId, {format: 'jpeg', quality: 25});
 	var img = new Image;
 
 	img.onload = async function() {
@@ -18,34 +19,8 @@ async function storeThumbnail(tabId, data) {
 
 		await browser.sessions.setTabValue(tabId, 'thumbnail', thumbnail);
 
-		var tabs = await browser.tabs.query({url: browser.extension.getURL("view.html"), currentWindow: true});
-
-		if(tabs.length > 0) {
-			browser.tabs.sendMessage(tabs[0].id, JSON.stringify({name: 'updateThumbnail', value: tabId}));
-		};
+		updateThumbnail(tabId);
 	};
 
 	img.src = data;
 }
-
-async function captureThumbnail(tabId) {
-	var imageData = await browser.tabs.captureVisibleTab(null, {format: 'jpeg', quality: 25});
-	storeThumbnail(tabId, imageData);
-}
-
-function storeScreenshot_ac(activeInfo) {
-	browser.tabs.get(activeInfo.tabId).then(tab => {
-		if(tab.status == 'complete') {
-			captureThumbnail(tab.id);
-		}
-	});
-}
-
-function storeScreenshot_up(tabId, changeInfo, tab) {
-	if(changeInfo.status == 'complete' && tab.active == true) {
-		captureThumbnail(tab.id);
-	}
-}
-
-browser.tabs.onActivated.addListener(storeScreenshot_ac);
-browser.tabs.onUpdated.addListener(storeScreenshot_up);
