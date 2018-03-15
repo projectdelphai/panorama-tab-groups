@@ -22,7 +22,16 @@
 	},
 
 	"browser_action": {
-		"default_icon": "icons/icon.svg"
+		"default_icon": "icons/icon.svg",
+		"theme_icons": [{
+			"light": "icons/icon-light.svg",
+			"dark": "icons/icon.svg",
+			"size": 16
+		}, {
+			"light": "icons/icon-light.svg",
+			"dark": "icons/icon.svg",
+			"size": 32
+		}]
 	},
 
 	 "options_ui": {
