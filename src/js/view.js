@@ -63,7 +63,7 @@ async function captureTabs() {
 	view.tabs.forEach(async function(tab) {
 		if(!tab.discarded) {
 			//console.log(tab.title);
-			await captureThumbnail(tab.id);
+			captureThumbnail(tab.id);
 		}
 	});
 }
@@ -162,6 +162,7 @@ async function tabUpdated(tabId, changeInfo, tab) {
 	if(view.windowId == tab.windowId){
 		updateTabNode(tab);
 		updateFavicon(tab);
+		captureThumbnail(tabId);
 	}
 }
 
