@@ -1,5 +1,5 @@
 # Panorama View
-Tab Groups with Panorama View Add-on for Firefox 57+
+Tab Groups with Panorama View Add-on for Firefox
 
 https://addons.mozilla.org/en-US/firefox/addon/panorama-view/
 
@@ -8,12 +8,7 @@ https://addons.mozilla.org/en-US/firefox/addon/panorama-view/
 ### Done
 - Create and remove groups
 - Drag and drop tabs between groups
-
-### Being worked on
-- More solid thumbnailing
-- Double checking that the active group in a window is always set and valid
-- Fix up renaming of groups
-- Backups (Waiting for API) Import works, but creating windows and tabs correctly isn't really possible right now (can't open about: urls, etc)
+- Only show tabs of currently selected group
 
 ### Planned
 - Different views of the groups
@@ -25,7 +20,6 @@ https://addons.mozilla.org/en-US/firefox/addon/panorama-view/
 - Drag and drop tabs and groups between windows (maybe)
 
 ### Waiting for API
-- Tab and tab-strip hiding (coming in v59)
 - Import/restore backup
 
 ### Impossible
