@@ -59,13 +59,11 @@ async function captureThumbnail(tabId) {
 }
 
 async function captureTabs() {
-	console.log('capture tabs');
-	view.tabs.forEach(async function(tab) {
-		if(!tab.discarded) {
-			//console.log(tab.title);
-			captureThumbnail(tab.id);
-		}
-	});
+	const tabs = browser.tabs.query({currentWindow: true, discarded: false});
+
+	for(const tab of await tabs) {
+		captureThumbnail(tab.id);
+	}
 }
 
 async function initView() {
@@ -100,7 +98,7 @@ async function initView() {
 		if(document.hidden) {
 			//clearInterval(view.screenshotInterval);
 		}else{
-			//view.screenshotInterval = setInterval(captureTabs, 2000);
+			//view.screenshotInterval = setInterval(captureTabs, 5000);
 			captureTabs();
 		}
 	}, false);
@@ -162,7 +160,7 @@ async function tabUpdated(tabId, changeInfo, tab) {
 	if(view.windowId == tab.windowId){
 		updateTabNode(tab);
 		updateFavicon(tab);
-		captureThumbnail(tabId);
+		//captureThumbnail(tabId);
 	}
 }
 
