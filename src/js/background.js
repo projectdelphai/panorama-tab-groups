@@ -26,7 +26,7 @@ async function triggerCommand(command) {
         activeGroup = newIndex in groups ? groups[newIndex].id : 0;
         await browser.sessions.setWindowValue(windowId, 'activeGroup', activeGroup);
 
-        await toggleVisibleTabs(activeGroup);
+        await toggleVisibleTabs(activeGroup, true);
 	}
 }
 
@@ -102,11 +102,11 @@ async function tabActivated(activeInfo) {
 			await browser.sessions.setWindowValue(windowId, 'activeGroup', activeGroup);
 		}
 
-		await toggleVisibleTabs(activeGroup);
+		await toggleVisibleTabs(activeGroup, false);
 	}
 }
 
-async function toggleVisibleTabs(activeGroup) {
+async function toggleVisibleTabs(activeGroup, activateFirstVisible) {
 
     // Show and hide the appropriate tabs
     const tabs = await browser.tabs.query({currentWindow: true});
@@ -123,6 +123,12 @@ async function toggleVisibleTabs(activeGroup) {
             showTabs.push(tab.id)
         }
     }));
+
+    if(activateFirstVisible && showTabs) {
+        console.log(showTabs);
+        browser.tabs.update(showTabs[0], {active: true});
+    }
+
     browser.tabs.hide(hideTabs);
     browser.tabs.show(showTabs);
 }
