@@ -83,6 +83,10 @@ async function updateTabNode(tab) {
 	}
 }
 
+/**
+ * Find the most recently accessed tab and give its thumbnail the selected
+ * class, removing selected from all other thumbnails
+ */
 async function setActiveTabNode() {
 
 	var lastActive = -1;
@@ -90,7 +94,12 @@ async function setActiveTabNode() {
 
 	await view.tabs.forEach(async function(tab) {
 
-		tabNodes[tab.id].tab.classList.remove('selected');
+		// Can race if deleteTabNode is called at the same time (e.g. every time
+		// the active tab is closed, since a new tab becomes active), so confirm
+		// the tab is still in tabNodes
+		if (tabNodes[tab.id]) {
+			tabNodes[tab.id].tab.classList.remove('selected');
+		}
 
 		if(tab.lastAccessed > lastAccessed && tab.id != view.tabId) {
 			lastAccessed = tab.lastAccessed;
