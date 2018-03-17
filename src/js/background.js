@@ -19,17 +19,17 @@ var currentTab;
 
 async function triggerCommand(command) {
 	if (command === "activate-next-group") {
-        const windowId = (await browser.windows.getCurrent()).id;
+		const windowId = (await browser.windows.getCurrent()).id;
 		const groups = await browser.sessions.getWindowValue(windowId, 'groups');
 
-        var activeGroup = (await browser.sessions.getWindowValue(windowId, 'activeGroup'));
-        var activeIndex = groups.findIndex(function(group){ return group.id === activeGroup; });
-        var newIndex = activeIndex + 1;
+		var activeGroup = (await browser.sessions.getWindowValue(windowId, 'activeGroup'));
+		var activeIndex = groups.findIndex(function(group){ return group.id === activeGroup; });
+		var newIndex = activeIndex + 1;
 
-        activeGroup = newIndex in groups ? groups[newIndex].id : 0;
-        await browser.sessions.setWindowValue(windowId, 'activeGroup', activeGroup);
+		activeGroup = newIndex in groups ? groups[newIndex].id : 0;
+		await browser.sessions.setWindowValue(windowId, 'activeGroup', activeGroup);
 
-        await toggleVisibleTabs(activeGroup);
+		await toggleVisibleTabs(activeGroup);
 	}
 }
 
@@ -105,7 +105,7 @@ async function tabActivated(activeInfo) {
 			await browser.sessions.setWindowValue(windowId, 'activeGroup', activeGroup);
 		}
 
-        activeTabs[activeGroup] = activeInfo.tabId;
+		activeTabs[activeGroup] = activeInfo.tabId;
 
 		await toggleVisibleTabs(activeGroup);
 	}
@@ -113,30 +113,30 @@ async function tabActivated(activeInfo) {
 
 async function toggleVisibleTabs(activeGroup) {
 
-    // Show and hide the appropriate tabs
-    const tabs = await browser.tabs.query({currentWindow: true});
+	// Show and hide the appropriate tabs
+	const tabs = await browser.tabs.query({currentWindow: true});
 
-    var showTabs = [];
-    var hideTabs = [];
+	var showTabs = [];
+	var hideTabs = [];
 
-    await Promise.all(tabs.map( async(tab) => {
-        var groupId = await browser.sessions.getTabValue(tab.id, 'groupId');
+	await Promise.all(tabs.map( async(tab) => {
+		var groupId = await browser.sessions.getTabValue(tab.id, 'groupId');
 
-        if(groupId != activeGroup) {
-            hideTabs.push(tab.id)
-        }else{
-            showTabs.push(tab.id)
-        }
-    }));
+		if(groupId != activeGroup) {
+			hideTabs.push(tab.id)
+		}else{
+			showTabs.push(tab.id)
+		}
+	}));
 
-    if(activeGroup in activeTabs) {
-        browser.tabs.update(activeTabs[activeGroup], {active: true});
+	if(activeGroup in activeTabs) {
+		browser.tabs.update(activeTabs[activeGroup], {active: true});
 	} else if(showTabs) {
-        browser.tabs.update(showTabs[0], {active: true});
-    }
+		browser.tabs.update(showTabs[0], {active: true});
+	}
 
-    browser.tabs.hide(hideTabs);
-    browser.tabs.show(showTabs);
+	browser.tabs.hide(hideTabs);
+	browser.tabs.show(showTabs);
 }
 
 /** Make sure each window has a group */
@@ -232,7 +232,7 @@ async function init() {
 	await setupWindows();
 	await salvageGrouplessTabs();
 
-    browser.commands.onCommand.addListener(triggerCommand);
+	browser.commands.onCommand.addListener(triggerCommand);
 	browser.browserAction.onClicked.addListener(toggleView);
 	browser.windows.onCreated.addListener(createGroupInWindow);
 	browser.tabs.onCreated.addListener(tabCreated);
