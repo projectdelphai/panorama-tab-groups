@@ -158,7 +158,6 @@ async function tabUpdated(tabId, changeInfo, tab) {
 	if(view.windowId == tab.windowId){
 		updateTabNode(tab);
 		updateFavicon(tab);
-		//captureThumbnail(tabId);
 	}
 }
 
