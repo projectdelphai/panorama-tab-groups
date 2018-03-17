@@ -31,8 +31,6 @@ var view = {
 	groupsNode: null,
 	dragIndicator: null,
 
-	screenshotInterval: null,
-
 	tabs: {},
 };
 
@@ -59,14 +57,6 @@ async function captureThumbnail(tabId) {
 	};
 
 	img.src = data;
-}
-
-async function captureTabs() {
-	const tabs = browser.tabs.query({currentWindow: true, discarded: false});
-
-	for(const tab of await tabs) {
-		captureThumbnail(tab.id);
-	}
 }
 
 /**
@@ -108,10 +98,9 @@ async function initView() {
 
 	document.addEventListener('visibilitychange', function() {
 		if(document.hidden) {
-			//clearInterval(view.screenshotInterval);
+			browser.tabs.onUpdated.removeListener(captureThumbnail);
 		}else{
-			//view.screenshotInterval = setInterval(captureTabs, 5000);
-			captureTabs();
+			browser.tabs.onUpdated.addListener(captureThumbnail);
 		}
 	}, false);
 
