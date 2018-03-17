@@ -11,6 +11,9 @@ var config = {
 
 var openingView = false;
 
+/** The last active tab for each group, which needs to be remembered when switching groups */
+var activeTabs = [];
+
 /** The currently open tab, which needs to be remembered when the Panorama View tab is opened */
 var currentTab;
 
@@ -26,7 +29,7 @@ async function triggerCommand(command) {
         activeGroup = newIndex in groups ? groups[newIndex].id : 0;
         await browser.sessions.setWindowValue(windowId, 'activeGroup', activeGroup);
 
-        await toggleVisibleTabs(activeGroup, true);
+        await toggleVisibleTabs(activeGroup);
 	}
 }
 
@@ -102,11 +105,13 @@ async function tabActivated(activeInfo) {
 			await browser.sessions.setWindowValue(windowId, 'activeGroup', activeGroup);
 		}
 
-		await toggleVisibleTabs(activeGroup, false);
+        activeTabs[activeGroup] = activeInfo.tabId;
+
+		await toggleVisibleTabs(activeGroup);
 	}
 }
 
-async function toggleVisibleTabs(activeGroup, activateFirstVisible) {
+async function toggleVisibleTabs(activeGroup) {
 
     // Show and hide the appropriate tabs
     const tabs = await browser.tabs.query({currentWindow: true});
@@ -124,8 +129,9 @@ async function toggleVisibleTabs(activeGroup, activateFirstVisible) {
         }
     }));
 
-    if(activateFirstVisible && showTabs) {
-        console.log(showTabs);
+    if(activeGroup in activeTabs) {
+        browser.tabs.update(activeTabs[activeGroup], {active: true});
+	} else if(showTabs) {
         browser.tabs.update(showTabs[0], {active: true});
     }
 
@@ -183,6 +189,9 @@ async function createGroupInWindow(window) {
 
 	for(const tab of await tabs) {
 		browser.sessions.setTabValue(tab.id, 'groupId', groupId);
+		if(!groupId in activeTabs || tab.active) {
+			activeTabs[groupId] = tab.id;
+		}
 	}
 }
 
