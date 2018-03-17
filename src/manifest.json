@@ -2,7 +2,7 @@
 	"manifest_version": 2,
 	"name": "Panorama View",
 	"description": "Tab Groups with Panorama View",
-	"version": "0.6.23",
+	"version": "0.7.2",
 	"icons": {
 		"16": "icons/logo/logo-16.png",
 		"24": "icons/logo/logo-24.png",
@@ -18,12 +18,21 @@
 	},
 
 	"background": {
-		"scripts": ["js/background.js", "js/thumbnail.js"]
+		"scripts": ["js/background.js"]
 	},
 
 	"browser_action": {
 		"browser_style": true,
-		"default_icon": "icons/icon.svg"
+		"default_icon": "icons/icon.svg",
+		"theme_icons": [{
+			"light": "icons/icon-light.svg",
+			"dark": "icons/icon.svg",
+			"size": 16
+		}, {
+			"light": "icons/icon-light.svg",
+			"dark": "icons/icon.svg",
+			"size": 32
+		}]
 	},
 
 	"options_ui": {

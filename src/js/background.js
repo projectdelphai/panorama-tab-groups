@@ -69,36 +69,41 @@ async function tabCreated(tab) {
 /** Callback function which will be called whenever the user switches tabs */
 async function tabActivated(activeInfo) {
 
-	// Set the window's active group to the new active tab's group
-	// If this is a newly-created tab, tabCreated() might not have set a
-	// groupId yet, so retry until it does.
-	var activeGroup = await browser.sessions.getTabValue(activeInfo.tabId, 'groupId');
-	while (activeGroup === undefined) {
-		activeGroup = await browser.sessions.getTabValue(activeInfo.tabId, 'groupId');
-	}
+	var tabData = await browser.tabs.get(activeInfo.tabId);
 
-	if(activeGroup != -1) {
-		const windowId = (await browser.windows.getCurrent()).id;
-		await browser.sessions.setWindowValue(windowId, 'activeGroup', activeGroup);
-	}
+	if(!tabData.pinned) {
 
-	// Show and hide the appropriate tabs
-	const tabs = await browser.tabs.query({currentWindow: true});
-
-	var showTabs = [];
-	var hideTabs = [];
-
-	await Promise.all(tabs.map( async(tab) => {
-		var groupId = await browser.sessions.getTabValue(tab.id, 'groupId');
-
-		if(groupId != activeGroup) {
-			hideTabs.push(tab.id)
-		}else{
-			showTabs.push(tab.id)
+		// Set the window's active group to the new active tab's group
+		// If this is a newly-created tab, tabCreated() might not have set a
+		// groupId yet, so retry until it does.
+		var activeGroup = await browser.sessions.getTabValue(activeInfo.tabId, 'groupId');
+		while (activeGroup === undefined) {
+			activeGroup = await browser.sessions.getTabValue(activeInfo.tabId, 'groupId');
 		}
-	}));
-	browser.tabs.hide(hideTabs);
-	browser.tabs.show(showTabs);
+
+		if(activeGroup != -1) {
+			const windowId = (await browser.windows.getCurrent()).id;
+			await browser.sessions.setWindowValue(windowId, 'activeGroup', activeGroup);
+		}
+
+		// Show and hide the appropriate tabs
+		const tabs = await browser.tabs.query({currentWindow: true});
+
+		var showTabs = [];
+		var hideTabs = [];
+
+		await Promise.all(tabs.map( async(tab) => {
+			var groupId = await browser.sessions.getTabValue(tab.id, 'groupId');
+
+			if(groupId != activeGroup) {
+				hideTabs.push(tab.id)
+			}else{
+				showTabs.push(tab.id)
+			}
+		}));
+		browser.tabs.hide(hideTabs);
+		browser.tabs.show(showTabs);
+	}
 }
 
 /** Make sure each window has a group */
@@ -188,7 +193,6 @@ async function salvageGrouplessTabs() {
 
 async function init() {
 
-	await migrate069();
 	await setupWindows();
 	await salvageGrouplessTabs();
 
@@ -199,7 +203,3 @@ async function init() {
 }
 
 init();
-
-async function migrate069(groups) {
-	await browser.storage.local.clear();
-}

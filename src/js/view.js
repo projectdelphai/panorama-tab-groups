@@ -36,13 +36,37 @@ var view = {
 	tabs: {},
 };
 
+async function captureThumbnail(tabId) {
+
+	var data = await browser.tabs.captureTab(tabId, {format: 'jpeg', quality: 25});
+	var img = new Image;
+
+	img.onload = async function() {
+		var canvas = document.createElement('canvas');
+		var ctx = canvas.getContext('2d');
+
+		canvas.width = 500;
+		canvas.height = canvas.width * (this.height / this.width);
+
+		//ctx.imageSmoothingEnabled = true;
+		//ctx.imageSmoothingQuality = 'high';
+		ctx.drawImage(this, 0, 0, canvas.width, canvas.height);
+
+		var thumbnail = canvas.toDataURL('image/jpeg', 0.7);
+
+		updateThumbnail(tabId, thumbnail);
+		browser.sessions.setTabValue(tabId, 'thumbnail', thumbnail);
+	};
+
+	img.src = data;
+}
+
 async function captureTabs() {
-	console.log('capture tabs');
-	/*view.tabs.forEach(async function(tab) {
-		if(!tab.discarded) {
-			console.log(tab.title);
-		}
-	});*/
+	const tabs = browser.tabs.query({currentWindow: true, discarded: false});
+
+	for(const tab of await tabs) {
+		captureThumbnail(tab.id);
+	}
 }
 
 /**
@@ -82,22 +106,14 @@ async function initView() {
 		createGroup();
 	}, false);
 
-
-	/*document.addEventListener('visibilitychange', function handleVisibilityChange() {
+	document.addEventListener('visibilitychange', function() {
 		if(document.hidden) {
-			clearInterval(view.screenshotInterval);
+			//clearInterval(view.screenshotInterval);
 		}else{
-			view.screenshotInterval = setInterval(captureTabs, 1000);
+			//view.screenshotInterval = setInterval(captureTabs, 5000);
+			captureTabs();
 		}
-	}, false);*/
-
-	// Listen for messages from thumbnail script
-	browser.runtime.onMessage.addListener(function(message) {
-		message = JSON.parse(message);
-		if(message.name == 'updateThumbnail') {
-			updateThumbnail(message.value);
-		}
-	});
+	}, false);
 
 	// Listen for tabs being added/removed/switched/etc. and update appropriately
 	browser.tabs.onCreated.addListener(tabCreated);
@@ -153,6 +169,7 @@ async function tabUpdated(tabId, changeInfo, tab) {
 	if(view.windowId == tab.windowId){
 		updateTabNode(tab);
 		updateFavicon(tab);
+		//captureThumbnail(tabId);
 	}
 }
 
