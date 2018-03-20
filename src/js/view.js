@@ -23,8 +23,6 @@ function new_element(name, attributes, children) {
 	return e;
 }
 
-var background = browser.extension.getBackgroundPage();
-
 var view = {
 	windowId: -1,
 	tabId: -1,
