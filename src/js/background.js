@@ -1,13 +1,13 @@
 
 'use strict';
 
-var config = {
+/*var config = {
 	tab: {
 		minWidth: 100,
 		maxWidth: 250,
 		ratio: 0.68,
 	},
-};
+};*/
 
 var openingView = false;
 
