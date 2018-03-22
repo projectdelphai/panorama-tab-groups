@@ -17,6 +17,15 @@
 		}
 	},
 
+	"commands": {
+		"activate-next-group": {
+			"suggested_key": {
+				"default": "Alt+W"
+			},
+			"description": "Activate the next Tab Group"
+		}
+	},
+
 	"background": {
 		"scripts": ["js/background.js"]
 	},

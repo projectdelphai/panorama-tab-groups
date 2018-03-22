@@ -11,8 +11,27 @@
 
 var openingView = false;
 
+/** The last active tab for each group, which needs to be remembered when switching groups */
+var activeTabs = [];
+
 /** The currently open tab, which needs to be remembered when the Panorama View tab is opened */
 var currentTab;
+
+async function triggerCommand(command) {
+	if (command === "activate-next-group") {
+		const windowId = (await browser.windows.getCurrent()).id;
+		const groups = await browser.sessions.getWindowValue(windowId, 'groups');
+
+		var activeGroup = (await browser.sessions.getWindowValue(windowId, 'activeGroup'));
+		var activeIndex = groups.findIndex(function(group){ return group.id === activeGroup; });
+		var newIndex = activeIndex + 1;
+
+		activeGroup = newIndex in groups ? groups[newIndex].id : 0;
+		await browser.sessions.setWindowValue(windowId, 'activeGroup', activeGroup);
+
+		await toggleVisibleTabs(activeGroup);
+	}
+}
 
 /** Open the Panorama View tab, or return to the last open tab if Panorama View is currently open */
 async function toggleView() {
@@ -86,24 +105,38 @@ async function tabActivated(activeInfo) {
 			await browser.sessions.setWindowValue(windowId, 'activeGroup', activeGroup);
 		}
 
-		// Show and hide the appropriate tabs
-		const tabs = await browser.tabs.query({currentWindow: true});
+		activeTabs[activeGroup] = activeInfo.tabId;
 
-		var showTabs = [];
-		var hideTabs = [];
-
-		await Promise.all(tabs.map( async(tab) => {
-			var groupId = await browser.sessions.getTabValue(tab.id, 'groupId');
-
-			if(groupId != activeGroup) {
-				hideTabs.push(tab.id)
-			}else{
-				showTabs.push(tab.id)
-			}
-		}));
-		browser.tabs.hide(hideTabs);
-		browser.tabs.show(showTabs);
+		await toggleVisibleTabs(activeGroup);
 	}
+}
+
+async function toggleVisibleTabs(activeGroup) {
+
+	// Show and hide the appropriate tabs
+	const tabs = await browser.tabs.query({currentWindow: true});
+
+	var showTabs = [];
+	var hideTabs = [];
+
+	await Promise.all(tabs.map( async(tab) => {
+		var groupId = await browser.sessions.getTabValue(tab.id, 'groupId');
+
+		if(groupId != activeGroup) {
+			hideTabs.push(tab.id)
+		}else{
+			showTabs.push(tab.id)
+		}
+	}));
+
+	if(activeGroup in activeTabs) {
+		browser.tabs.update(activeTabs[activeGroup], {active: true});
+	} else if(showTabs) {
+		browser.tabs.update(showTabs[0], {active: true});
+	}
+
+	browser.tabs.hide(hideTabs);
+	browser.tabs.show(showTabs);
 }
 
 /** Make sure each window has a group */
@@ -156,6 +189,9 @@ async function createGroupInWindow(window) {
 
 	for(const tab of await tabs) {
 		browser.sessions.setTabValue(tab.id, 'groupId', groupId);
+		if(!groupId in activeTabs || tab.active) {
+			activeTabs[groupId] = tab.id;
+		}
 	}
 }
 
@@ -196,6 +232,7 @@ async function init() {
 	await setupWindows();
 	await salvageGrouplessTabs();
 
+	browser.commands.onCommand.addListener(triggerCommand);
 	browser.browserAction.onClicked.addListener(toggleView);
 	browser.windows.onCreated.addListener(createGroupInWindow);
 	browser.tabs.onCreated.addListener(tabCreated);
