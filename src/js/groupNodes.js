@@ -257,15 +257,15 @@ function updateGroupFit(group) {
 	// fit
 	var rect = node.content.getBoundingClientRect();
 
-	var ratio = background.config.tab.ratio;
+	var ratio = 0.68;
 	var small = false;
 
 	var fit = getBestFit({
 		width: rect.width,
 		height: rect.height,
 
-		minWidth: background.config.tab.minWidth,
-		maxWidth: background.config.tab.maxWidth,
+		minWidth: 100,
+		maxWidth: 250,
 
 		ratio: ratio,
 
