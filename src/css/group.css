@@ -25,25 +25,20 @@
 	left: 10px;
 	z-index: 100;
 
-	_border-bottom: #cccccc 1px solid;
-
 	cursor: move;
 }
 
 .group .header input {
-	width: calc(100% - 80px);
 	height: 25px;
 
 	position: absolute;
 	top: -3px;
 
-	display: none;
-
 	border: none;
 
 	background: none;
 
-	color: #2a2a2e;
+	color: #737373;
 	font-size: 13px;
 	font-family: inherit;
 	white-space: nowrap;
@@ -51,6 +46,8 @@
 }
 
 .group .header input.edit {
+	width: calc(100% - 80px);
+
 	color: #2a2a2e;
 }
 
@@ -64,11 +61,10 @@
 	top: 2px;
 	left: 1px;
 
-	color: #737373;
 	font-size: 13px;
 	line-height: 16px;
 
-	cursor: text;
+	opacity: 0;
 }
 
 .group .header.input input {

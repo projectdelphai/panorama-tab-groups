@@ -87,16 +87,34 @@ function makeGroupNode(group) {
 	}, false);
 
 	// renaming groups
-	name.addEventListener('mousedown', function(event) {
+	var setInputWidth = function() {
+		input.style.width = name.getBoundingClientRect().width + 'px';
+	};
+
+	input.addEventListener('input', function() {
+		name.innerHTML = '';
+		name.appendChild(document.createTextNode(this.value));
+
+		setInputWidth();
+	}, false);
+
+	name.addEventListener('DOMContentLoaded', setInputWidth, false);
+
+	input.addEventListener('focus', function(event) {
 		event.stopPropagation();
 
-		header.classList.add('input');
+		input.classList.add('edit');
+
+		input.addEventListener('keydown', function(event) {
+			 if(event.keyCode == 13) {
+				input.blur();
+			}
+		}, false);
 	}, false);
 
 	input.addEventListener('blur', function(event) {
-		name.innerHTML = '';
-		name.appendChild(document.createTextNode(this.value));
-		header.classList.remove('input');
+		input.classList.remove('edit');
+		input.setSelectionRange(0, 0);
 		groups.rename(group.id, this.value);
 	}, false);
 	// ----
