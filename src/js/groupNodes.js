@@ -8,6 +8,9 @@ async function initGroupNodes() {
 	groups.forEach(function(group) {
 		makeGroupNode(group);
 		view.groupsNode.appendChild(groupNodes[group.id].group);
+
+		// readjust group name input element
+		groupNodes[group.id].input.style.width = groupNodes[group.id].name.getBoundingClientRect().width + 'px';
 	});
 	fillGroupNodes();
 }
@@ -87,18 +90,12 @@ function makeGroupNode(group) {
 	}, false);
 
 	// renaming groups
-	var setInputWidth = function() {
-		input.style.width = name.getBoundingClientRect().width + 'px';
-	};
-
 	input.addEventListener('input', function() {
 		name.innerHTML = '';
 		name.appendChild(document.createTextNode(this.value));
 
-		setInputWidth();
+		input.style.width = name.getBoundingClientRect().width + 'px';
 	}, false);
-
-	name.addEventListener('DOMContentLoaded', setInputWidth, false);
 
 	input.addEventListener('focus', function(event) {
 		event.stopPropagation();
@@ -170,7 +167,9 @@ function makeGroupNode(group) {
 		group: node,
 		content: content,
 		newtab: newtab,
-		tabCount: tabCount
+		tabCount: tabCount,
+		name: name,
+		input: input
 	};
 }
 

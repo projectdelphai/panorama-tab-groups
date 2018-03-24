@@ -120,8 +120,12 @@ async function createGroup() {
 	var group = await groups.create();
 	makeGroupNode(group);
 	var groupElement = groupNodes[group.id].group
+
 	view.groupsNode.appendChild(groupElement);
+
+	groupNodes[group.id].input.style.width = groupNodes[group.id].name.getBoundingClientRect().width + 'px';
 	updateGroupFit(group);
+
 	groupElement.scrollIntoView({behavior: "smooth"});
 }
 
