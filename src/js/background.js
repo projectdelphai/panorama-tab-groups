@@ -24,6 +24,8 @@ async function triggerCommand(command) {
 		await browser.sessions.setWindowValue(windowId, 'activeGroup', activeGroup);
 
 		await toggleVisibleTabs(activeGroup, true);
+	}else if(command === "toggle-panorama-view") {
+		toggleView();
 	}
 }
 
