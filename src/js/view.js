@@ -28,6 +28,7 @@ var view = {
 	tabId: -1,
 	groupsNode: null,
 	dragIndicator: null,
+	//intervalId: null,
 
 	tabs: {},
 };
@@ -57,6 +58,15 @@ async function captureThumbnail(tabId) {
 	img.src = data;
 }
 
+async function captureThumbnails() {
+	const tabs = browser.tabs.query({currentWindow: true, discarded: false});
+
+	for(const tab of await tabs) {
+		captureThumbnail(tab.id);
+	}
+	//console.log('capture');
+}
+
 /**
  * Initialize the Panorama View tab
  *
@@ -78,6 +88,9 @@ async function initView() {
 	await initTabNodes();
 	await initGroupNodes();
 
+	captureThumbnails();
+	//view.intervalId = setInterval(captureThumbnails, 2000);
+
 	// set all listeners
 
 	// Listen for clicks on new group button
@@ -97,8 +110,11 @@ async function initView() {
 	document.addEventListener('visibilitychange', function() {
 		if(document.hidden) {
 			browser.tabs.onUpdated.removeListener(captureThumbnail);
+			//clearInterval(view.intervalId);
 		}else{
 			browser.tabs.onUpdated.addListener(captureThumbnail);
+			//view.intervalId = setInterval(captureThumbnails, 2000);
+			captureThumbnails();
 		}
 	}, false);
 

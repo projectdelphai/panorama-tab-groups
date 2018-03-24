@@ -11,12 +11,6 @@
 
 var openingView = false;
 
-/** The last active tab for each group, which needs to be remembered when switching groups */
-var activeTabs = [];
-
-/** The currently open tab, which needs to be remembered when the Panorama View tab is opened */
-var currentTab;
-
 async function triggerCommand(command) {
 	if (command === "activate-next-group") {
 		const windowId = (await browser.windows.getCurrent()).id;
@@ -29,34 +23,41 @@ async function triggerCommand(command) {
 		activeGroup = newIndex in groups ? groups[newIndex].id : 0;
 		await browser.sessions.setWindowValue(windowId, 'activeGroup', activeGroup);
 
-		await toggleVisibleTabs(activeGroup);
+		await toggleVisibleTabs(activeGroup, true);
 	}
 }
 
 /** Open the Panorama View tab, or return to the last open tab if Panorama View is currently open */
 async function toggleView() {
 
-	// Check if it's already open (possibly in a hidden tab)
-	var tabs = await browser.tabs.query({url: browser.extension.getURL("view.html"), currentWindow: true});
+	var extTabs = await browser.tabs.query({url: browser.extension.getURL("view.html"), currentWindow: true});
 
-	var activeTab = (await browser.tabs.query({active: true, currentWindow: true}))[0];
+	if(extTabs.length > 0) {
 
-	if(tabs.map(tab => tab.id).includes(activeTab.id)) {
-		// Panorama View is open, return to the current tab if possible
-		if (currentTab !== undefined) {
-			browser.tabs.update(currentTab.id, {active: true});
-		}
-	}else{
-		currentTab = activeTab;
+		var currentTab = (await browser.tabs.query({active: true, currentWindow: true}))[0];
 
-		if(tabs.length > 0) {
-			// There's a background tab for Panorama View open, switch to it
+		// switch to last accessed tab in window
+		if (extTabs[0].id == currentTab.id) {
+
+			var tabs = await browser.tabs.query({currentWindow: true});
+
+			tabs.sort(function(tabA, tabB) {
+				return tabB.lastAccessed - tabA.lastAccessed;
+			});
+
+			tabs.splice(0, 1); // remove first which will be the panorama view
+
 			browser.tabs.update(tabs[0].id, {active: true});
+
+		// switch to Panorama View tab
 		}else{
-			// Create a Panorama View tab
-			openingView = true;
-			browser.tabs.create({url: "/view.html", active: true});
+			browser.tabs.update(extTabs[0].id, {active: true});
 		}
+
+	// if there is no Panorama View tab, make one
+	}else{
+		openingView = true;
+		browser.tabs.create({url: "/view.html", active: true});
 	}
 }
 
@@ -105,38 +106,40 @@ async function tabActivated(activeInfo) {
 			await browser.sessions.setWindowValue(windowId, 'activeGroup', activeGroup);
 		}
 
-		activeTabs[activeGroup] = activeInfo.tabId;
-
 		await toggleVisibleTabs(activeGroup);
 	}
 }
 
-async function toggleVisibleTabs(activeGroup) {
+async function toggleVisibleTabs(activeGroup, noTabSelected) {
 
 	// Show and hide the appropriate tabs
 	const tabs = await browser.tabs.query({currentWindow: true});
 
-	var showTabs = [];
-	var hideTabs = [];
+	var showTabIds = [];
+	var hideTabIds = [];
 
-	await Promise.all(tabs.map( async(tab) => {
+	var showTabs = [];
+
+	await Promise.all(tabs.map(async(tab) => {
 		var groupId = await browser.sessions.getTabValue(tab.id, 'groupId');
 
 		if(groupId != activeGroup) {
-			hideTabs.push(tab.id)
+			hideTabIds.push(tab.id)
 		}else{
-			showTabs.push(tab.id)
+			showTabIds.push(tab.id)
+			showTabs.push(tab)
 		}
 	}));
 
-	if(activeGroup in activeTabs) {
-		browser.tabs.update(activeTabs[activeGroup], {active: true});
-	} else if(showTabs) {
-		browser.tabs.update(showTabs[0], {active: true});
+	if(noTabSelected) {
+		showTabs.sort(function(tabA, tabB) {
+			return tabB.lastAccessed - tabA.lastAccessed;
+		});
+		browser.tabs.update(showTabs[0].id, {active: true});
 	}
 
-	browser.tabs.hide(hideTabs);
-	browser.tabs.show(showTabs);
+	browser.tabs.hide(hideTabIds);
+	browser.tabs.show(showTabIds);
 }
 
 /** Make sure each window has a group */
@@ -186,13 +189,6 @@ async function createGroupInWindow(window) {
 	browser.sessions.setWindowValue(window.id, 'activeGroup', groupId);
 
 	const tabs = browser.tabs.query({windowId: window.id});
-
-	for(const tab of await tabs) {
-		browser.sessions.setTabValue(tab.id, 'groupId', groupId);
-		if(!groupId in activeTabs || tab.active) {
-			activeTabs[groupId] = tab.id;
-		}
-	}
 }
 
 /** Put any tabs that do not have a group into the active group */
