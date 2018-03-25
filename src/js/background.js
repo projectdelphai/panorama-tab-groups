@@ -24,7 +24,7 @@ async function triggerCommand(command) {
 		await browser.sessions.setWindowValue(windowId, 'activeGroup', activeGroup);
 
 		await toggleVisibleTabs(activeGroup, true);
-	}else if(command === "toggle-panorama-view") {
+	}else if (command === "toggle-panorama-view") {
 		toggleView();
 	}
 }
@@ -39,7 +39,7 @@ async function toggleView() {
 		var currentTab = (await browser.tabs.query({active: true, currentWindow: true}))[0];
 
 		// switch to last accessed tab in window
-		if (extTabs[0].id == currentTab.id) {
+		if(extTabs[0].id == currentTab.id) {
 
 			var tabs = await browser.tabs.query({currentWindow: true});
 
@@ -47,9 +47,10 @@ async function toggleView() {
 				return tabB.lastAccessed - tabA.lastAccessed;
 			});
 
-			tabs.splice(0, 1); // remove first which will be the panorama view
-
-			browser.tabs.update(tabs[0].id, {active: true});
+			// skip first tab which will be the panorama view
+			if(tabs.length > 1) {
+				browser.tabs.update(tabs[1].id, {active: true});
+			}
 
 		// switch to Panorama View tab
 		}else{
@@ -176,21 +177,26 @@ async function newGroupUid(windowId) {
  * that do not yet have a group */
 async function createGroupInWindow(window) {
 
-	var groupId = await newGroupUid(window.id);
+	var currentGroups = await browser.sessions.getWindowValue(window.id, 'groups');
 
-	var groups = [{
-		id: groupId,
-		name: 'Unnamed Group',
-		containerId: 'firefox-default',
-		rect: {x: 0, y: 0, w: 0.25, h: 0.5},
-		tabCount: 0,
-	}];
+	if(!currentGroups) {
+
+		var groupId = await newGroupUid(window.id);
+
+		var groups = [{
+			id: groupId,
+			name: 'Unnamed Group',
+			containerId: 'firefox-default',
+			rect: {x: 0, y: 0, w: 0.25, h: 0.5},
+			tabCount: 0,
+		}];
 
 
-	browser.sessions.setWindowValue(window.id, 'groups', groups);
-	browser.sessions.setWindowValue(window.id, 'activeGroup', groupId);
+		browser.sessions.setWindowValue(window.id, 'groups', groups);
+		browser.sessions.setWindowValue(window.id, 'activeGroup', groupId);
 
-	const tabs = browser.tabs.query({windowId: window.id});
+		const tabs = browser.tabs.query({windowId: window.id});
+	}
 }
 
 /** Put any tabs that do not have a group into the active group */
