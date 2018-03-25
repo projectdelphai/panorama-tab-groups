@@ -26,7 +26,7 @@
 		},
 		"toggle-panorama-view": {
 			"suggested_key": {
-				"default": "Alt+P"
+				"default": "Ctrl+Shift+F"
 			},
 			"description": "Toggle Panorama View"
 		}
