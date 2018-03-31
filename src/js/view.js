@@ -62,9 +62,8 @@ async function captureThumbnails() {
 	const tabs = browser.tabs.query({currentWindow: true, discarded: false});
 
 	for(const tab of await tabs) {
-		captureThumbnail(tab.id);
+		await captureThumbnail(tab.id); //await to lessen strain on browser
 	}
-	//console.log('capture');
 }
 
 /**
