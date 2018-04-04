@@ -1,0 +1,16 @@
+
+h2 {
+	border-bottom: solid 1px #d7d7db;
+	line-height: 2em;
+}
+
+section label {
+	width: 220px;
+	display: inline-block;
+	line-height: 2em;
+}
+
+#keyboardShortcuts button {
+	width: 120px;
+	text-align: center;
+}
