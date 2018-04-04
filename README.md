@@ -26,5 +26,4 @@ https://addons.mozilla.org/en-US/firefox/addon/panorama-view/
 - Properly open backup urls (maybe)
 
 ## Known bugs
-- Attached tab isn't added
-- Detached tab not always removed
+- Detached tab not always removed from the Panorama View, a refresh solves it.
