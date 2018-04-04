@@ -189,19 +189,17 @@ async function tabMoved(tabId, moveInfo) {
 	}
 }
 
-function tabAttached(tabId, attachInfo) {
-	console.log('tab attached', attachInfo.newWindowId);
+async function tabAttached(tabId, attachInfo) {
 	if(view.windowId == attachInfo.newWindowId){
-		browser.tabs.get(tabId).then(tab => {
-			tabCreated(tab);
-		});
+		var tab = await browser.tabs.get(tabId);
+		tabCreated(tab);
 	}
 }
 
 function tabDetached(tabId, detachInfo) {
-	console.log('tab detached', detachInfo.oldWindowId);
 	if(view.windowId == detachInfo.oldWindowId){
-		deleteTabNode(tabId);
+		console.log('delete node', tabId);
+		deleteTabNode(tabId); // something really weird is happening here...
 		groups.forEach(function(group) {
 			updateGroupFit(group);
 		});

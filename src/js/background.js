@@ -89,12 +89,22 @@ async function tabCreated(tab) {
 	}
 }
 
+async function tabAttached(tabId, attachInfo) {
+	var tab = await browser.tabs.get(tabId);
+	tabCreated(tab);
+}
+
+function tabDetached(tabId, detachInfo) {
+	browser.sessions.removeTabValue(tabId, 'groupId');
+}
+
+
 /** Callback function which will be called whenever the user switches tabs */
 async function tabActivated(activeInfo) {
 
-	var tabData = await browser.tabs.get(activeInfo.tabId);
+	var tab = await browser.tabs.get(activeInfo.tabId);
 
-	if(!tabData.pinned) {
+	if(!tab.pinned) {
 
 		// Set the window's active group to the new active tab's group
 		// If this is a newly-created tab, tabCreated() might not have set a
@@ -105,8 +115,7 @@ async function tabActivated(activeInfo) {
 		}
 
 		if(activeGroup != -1) {
-			const windowId = (await browser.windows.getCurrent()).id;
-			await browser.sessions.setWindowValue(windowId, 'activeGroup', activeGroup);
+			await browser.sessions.setWindowValue(tab.windowId, 'activeGroup', activeGroup);
 		}
 
 		await toggleVisibleTabs(activeGroup);
@@ -195,7 +204,7 @@ async function createGroupInWindow(window) {
 		browser.sessions.setWindowValue(window.id, 'groups', groups);
 		browser.sessions.setWindowValue(window.id, 'activeGroup', groupId);
 
-		const tabs = browser.tabs.query({windowId: window.id});
+		//const tabs = browser.tabs.query({windowId: window.id}); // why is this here..?
 	}
 }
 
@@ -240,6 +249,8 @@ async function init() {
 	browser.browserAction.onClicked.addListener(toggleView);
 	browser.windows.onCreated.addListener(createGroupInWindow);
 	browser.tabs.onCreated.addListener(tabCreated);
+	browser.tabs.onAttached.addListener(tabAttached);
+	browser.tabs.onDetached.addListener(tabDetached);
 	browser.tabs.onActivated.addListener(tabActivated);
 }
 
