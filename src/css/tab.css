@@ -18,10 +18,10 @@
 
 .tab .inner, .newtab .inner {
 	position: absolute;
-	top: 5px;
-	left: 5px;
-	right: 5px;
-	bottom: 5px;
+	top: 4px;
+	left: 4px;
+	right: 4px;
+	bottom: 4px;
 }
 
 .tab.inactive .inner {
@@ -68,8 +68,8 @@
 	left: 0;
 	top: 0;
 
-	border-right: #ffffff 4px solid;
-	border-bottom: #ffffff 4px solid;
+	border-right: #ffffff 3px solid;
+	border-bottom: #ffffff 3px solid;
 	border-radius: 0 0 2px 0;
 
 	background-color: #ffffff;
@@ -104,14 +104,11 @@
 	left: 1px;
 	right: 1px;
 
-	background-color: #ffffff;
-
 	font-size: 12px;
 	text-align: center;
 	line-height: 22px;
 	overflow: hidden;
 	white-space: nowrap;
-	_text-overflow: '..';
 }
 
 

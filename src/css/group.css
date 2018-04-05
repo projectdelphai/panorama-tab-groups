@@ -3,7 +3,7 @@
 	width: 450px;
 	height: 450px;
 
-	margin: 5px;
+	margin: 4px;
 
 	position: relative;
 
@@ -112,9 +112,9 @@
 .group .content {
 	position: absolute;
 	top: 28px;
-	right: 5px;
-	left: 5px;
-	bottom: 5px;
+	right: 4px;
+	left: 4px;
+	bottom: 4px;
 }
 
 .group .top {

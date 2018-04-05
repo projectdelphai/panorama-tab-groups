@@ -52,14 +52,14 @@ function tabDragOver(e) {
 		var rect = dragOverTab.getBoundingClientRect();
 
 		view.dragIndicator.classList.add('show');
-		view.dragIndicator.style.height = (rect.height - 10) + 'px';
+		view.dragIndicator.style.height = (rect.height - 8) + 'px';
 		view.dragIndicator.style.top = (window.scrollY + rect.top) + 'px';
 
 		if(e.clientX < rect.left+(rect.width/2)) {
-			view.dragIndicator.style.left = (rect.left - 6) + 'px';
+			view.dragIndicator.style.left = (rect.left - 5) + 'px';
 			dragDropBefore = true;
 		}else{
-			view.dragIndicator.style.left = (rect.left + rect.width - 6) + 'px';
+			view.dragIndicator.style.left = (rect.left + rect.width - 5) + 'px';
 			dragDropBefore = false;
 		}
 	}
