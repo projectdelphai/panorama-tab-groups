@@ -10,6 +10,7 @@
 };*/
 
 var openingView = false;
+var openingBackup = false;
 
 async function triggerCommand(command) {
 	if (command === "activate-next-group") {
@@ -66,26 +67,28 @@ async function toggleView() {
 
 /** Callback function which will be called whenever a tab is opened */
 async function tabCreated(tab) {
-	if(!openingView) {
-		// Normal case: everything except the Panorama View tab
-		// If the tab does not have a group, set its group to the current group
-		var tabGroupId = await browser.sessions.getTabValue(tab.id, 'groupId');
+	if(!openingBackup) {
+		if(!openingView) {
+			// Normal case: everything except the Panorama View tab
+			// If the tab does not have a group, set its group to the current group
+			var tabGroupId = await browser.sessions.getTabValue(tab.id, 'groupId');
 
-		if(tabGroupId === undefined) {
+			if(tabGroupId === undefined) {
 
-			var activeGroup = undefined;
+				var activeGroup = undefined;
 
-			while(activeGroup === undefined) {
-				activeGroup = (await browser.sessions.getWindowValue(tab.windowId, 'activeGroup'));
+				while(activeGroup === undefined) {
+					activeGroup = (await browser.sessions.getWindowValue(tab.windowId, 'activeGroup'));
+				}
+
+				browser.sessions.setTabValue(tab.id, 'groupId', activeGroup);
 			}
-
-			browser.sessions.setTabValue(tab.id, 'groupId', activeGroup);
+		}else{
+			// Opening the Panorama View tab
+			// Make sure it's in the special group
+			openingView = false;
+			browser.sessions.setTabValue(tab.id, 'groupId', -1);
 		}
-	}else{
-		// Opening the Panorama View tab
-		// Make sure it's in the special group
-		openingView = false;
-		browser.sessions.setTabValue(tab.id, 'groupId', -1);
 	}
 }
 
@@ -186,25 +189,28 @@ async function newGroupUid(windowId) {
  * that do not yet have a group */
 async function createGroupInWindow(window) {
 
-	var currentGroups = await browser.sessions.getWindowValue(window.id, 'groups');
+	if(!openingBackup) {
 
-	if(!currentGroups) {
+		var currentGroups = await browser.sessions.getWindowValue(window.id, 'groups');
 
-		var groupId = await newGroupUid(window.id);
+		if(!currentGroups) {
 
-		var groups = [{
-			id: groupId,
-			name: 'Unnamed Group',
-			containerId: 'firefox-default',
-			rect: {x: 0, y: 0, w: 0.25, h: 0.5},
-			tabCount: 0,
-		}];
+			var groupId = await newGroupUid(window.id);
+
+			var groups = [{
+				id: groupId,
+				name: 'Unnamed Group',
+				containerId: 'firefox-default',
+				rect: {x: 0, y: 0, w: 0.25, h: 0.5},
+				tabCount: 0,
+			}];
 
 
-		browser.sessions.setWindowValue(window.id, 'groups', groups);
-		browser.sessions.setWindowValue(window.id, 'activeGroup', groupId);
+			browser.sessions.setWindowValue(window.id, 'groups', groups);
+			browser.sessions.setWindowValue(window.id, 'activeGroup', groupId);
 
-		//const tabs = browser.tabs.query({windowId: window.id}); // why is this here..?
+			//const tabs = browser.tabs.query({windowId: window.id}); // why is this here..?
+		}
 	}
 }
 
