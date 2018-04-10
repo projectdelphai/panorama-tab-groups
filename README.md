@@ -1,7 +1,7 @@
 # Panorama View
 Tab Groups with Panorama View Add-on for Firefox
 
-https://addons.mozilla.org/en-US/firefox/addon/panorama-view/
+https://addons.mozilla.org/firefox/addon/panorama-view/
 
 ## Features
 
