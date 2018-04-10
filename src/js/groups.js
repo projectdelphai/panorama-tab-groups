@@ -47,8 +47,8 @@ const groups = (function(){
 				name: 'Unnamed Group',
 				windowId: windowId,
 				containerId: 'firefox-default',
-				rect: {x: 0, y: 0, w: 0.25, h: 0.5},
-				tabCount: 0,
+				rect: {x: 0, y: 0, w: 0.2, h: 0.2},
+				lastMoved: (new Date).getTime(),
 			};
 			groups.push(group);
 
@@ -73,6 +73,18 @@ const groups = (function(){
 				return;
 			}
 			groups[index].name = newName;
+
+			await func.save();
+		},
+
+		transform: async function(id, rect) {
+			var index = func.getIndex(id);
+			if(index == -1) {
+				return;
+			}
+
+			groups[index].rect = rect;
+			groups[index].lastMoved = (new Date).getTime();
 
 			await func.save();
 		},

@@ -201,15 +201,13 @@ async function createGroupInWindow(window) {
 				id: groupId,
 				name: 'Unnamed Group',
 				containerId: 'firefox-default',
-				rect: {x: 0, y: 0, w: 0.25, h: 0.5},
-				tabCount: 0,
+				rect: {x: 0, y: 0, w: 0.5, h: 0.5},
+				lastMoved: (new Date).getTime(),
 			}];
 
 
 			browser.sessions.setWindowValue(window.id, 'groups', groups);
 			browser.sessions.setWindowValue(window.id, 'activeGroup', groupId);
-
-			//const tabs = browser.tabs.query({windowId: window.id}); // why is this here..?
 		}
 	}
 }
@@ -251,6 +249,8 @@ async function init() {
 	await setupWindows();
 	await salvageGrouplessTabs();
 
+	await migrate(); //keep until everyone are on 0.8.0
+
 	browser.commands.onCommand.addListener(triggerCommand);
 	browser.browserAction.onClicked.addListener(toggleView);
 	browser.windows.onCreated.addListener(createGroupInWindow);
@@ -261,3 +261,39 @@ async function init() {
 }
 
 init();
+
+// migrate to transformable groups
+async function migrate() {
+
+	const windows = await browser.windows.getAll({});
+
+	for(const window of windows) {
+		var groups = await browser.sessions.getWindowValue(window.id, 'groups');
+
+		if(groups[0].lastMoved !== undefined) {
+			return;
+		}
+
+		var pitchX = 4;
+		var pitchY = 2;
+
+		if(groups.length > 8) {
+			pitchX = 6;
+			pitchY = 3;
+		}else if(groups.length > 18) {
+			pitchX = 8;
+			pitchY = 4;
+		}
+
+		for(var i in groups) {
+			groups[i].rect = {
+				x: (1/pitchX) * (i % pitchX),
+				y: (1/pitchY) * Math.floor(i / pitchX),
+				w: 1/pitchX,
+				h: 1/pitchY,
+			};
+			groups[i].lastMoved = (new Date).getTime();
+		}
+		await browser.sessions.setWindowValue(window.id, 'groups', groups);
+	}
+}

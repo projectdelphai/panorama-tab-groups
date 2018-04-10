@@ -87,6 +87,8 @@ async function initView() {
 	await initTabNodes();
 	await initGroupNodes();
 
+	resizeGroups();
+
 	captureThumbnails();
 	//view.intervalId = setInterval(captureThumbnails, 2000);
 
@@ -117,6 +119,8 @@ async function initView() {
 		}
 	}, false);
 
+	window.addEventListener("resize", resizeGroups);
+
 	// Listen for tabs being added/removed/switched/etc. and update appropriately
 	browser.tabs.onCreated.addListener(tabCreated);
 	browser.tabs.onRemoved.addListener(tabRemoved);
@@ -138,8 +142,7 @@ async function createGroup() {
 
 	view.groupsNode.appendChild(groupElement);
 
-	groupNodes[group.id].input.style.width = groupNodes[group.id].name.getBoundingClientRect().width + 'px';
-	updateGroupFit(group);
+	resizeGroups();
 
 	groupElement.scrollIntoView({behavior: "smooth"});
 }
