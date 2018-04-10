@@ -5,6 +5,7 @@ body {
 	background-color: #f9f9fa;
 
 	font-family: sans-serif;
+	-moz-user-select: none;
 }
 
 #groups {
@@ -13,21 +14,24 @@ body {
 	right: 42px;
 	bottom: 4px;
 	left: 4px;
+
+	overflow: auto;
 }
 
 #toolbar {
 	width: 28px;
-	padding: 5px;
+	padding: 0 5px;
 
 	position: fixed;
-	top: 0;
+	top: 8px;
 	right: 0;
+	bottom: 8px;
 
-	border-left: #cccccc 1px solid;
-	border-bottom: #cccccc 1px solid;
-	border-radius: 0 0 0 4px;
+	z-index: 1000000000;
 
-	background-color: #f2f2f2;
+	border-left: rgba(12, 12, 13, 0.1) 1px solid;
+
+	background-color: inherit;
 }
 
 #toolbar .button {
@@ -38,7 +42,7 @@ body {
 }
 
 #toolbar .button:hover {
-	background-color: #d6d6d6;
+	background-color: rgba(12, 12, 13, 0.1);
 }
 
 #newGroup {

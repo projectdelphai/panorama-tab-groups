@@ -1,19 +1,34 @@
 
 .group {
-	width: 450px;
-	height: 450px;
+	position: absolute;
+}
 
-	margin: 4px;
+.group > .inner {
+	position: absolute;
+	top: 4px;
+	left: 4px;
+	right: 4px;
+	bottom: 4px;
 
-	position: relative;
-
-	border: #ffffff 1px solid;
-	border-radius: 5px;
-	box-shadow: inset 0 0 1px rgba(0, 0, 0, 0.6);
+	border: #cccccc 1px solid;
+	border-radius: 4px;
 
 	background-color: #ededf0;
+}
 
-	float: left;
+.group > .inner:before {
+	content: '';
+
+	position: absolute;
+	z-index: -1;
+
+	top: -2px;
+	left: -2px;
+	right: -2px;
+	bottom: -2px;
+
+	border: 1px solid #ffffff;
+	border-radius: 5px;
 }
 
 .group .header {
@@ -29,49 +44,52 @@
 }
 
 .group .header input {
-	height: 25px;
+	width: calc(100% - 60px);
+	height: 20px;
 
 	position: absolute;
-	top: -3px;
+	top: 0px;
+
+	display: none;
 
 	border: none;
+	_border-bottom: 1px dashed #cccccc;
 
 	background: none;
 
 	color: #737373;
 	font-size: 13px;
 	font-family: inherit;
-	white-space: nowrap;
-	text-overflow: '..';
-}
-
-.group .header input.edit {
-	width: calc(100% - 80px);
-
-	color: #2a2a2e;
 }
 
 .group .header .name {
-	min-width: 40px;
-	max-width: calc(100% - 80px);
+	min-width: 50px;
+	max-width: calc(100% - 60px);
 
 	padding-right: 5px;
 
 	position: absolute;
-	top: 2px;
+	top: 3px;
 	left: 1px;
 
+	color: #737373;
 	font-size: 13px;
 	line-height: 16px;
+	white-space: nowrap;
+	text-overflow: '..';
 
-	opacity: 0;
+	overflow: hidden;
+
+	cursor: text;
 }
 
-.group .header.input input {
+.group .header.edit input {
 	display: block;
+
+	color: #2a2a2e;
 }
 
-.group .header.input .name {
+.group .header.edit .name {
 	display: none;
 }
 
@@ -84,9 +102,9 @@
 
 	border-radius: 0 0 3px 3px;
 
-	background-color: #CCCCCC;
+	background-color: #cccccc;
 
-	color: #FFFFFF;
+	color: #ffffff;
 	font-size: 12px;
 	font-family: inherit;
 	font-weight: bold;
@@ -103,7 +121,7 @@
 
 	cursor: pointer;
 
-	background-image: url(/icons/close_gray.svg);
+	background-image: url(/icons/group_close.svg);
 	background-repeat: no-repeat;
 	background-size: 12px;
 	background-position: center;
@@ -118,10 +136,10 @@
 }
 
 .group .top {
-	height: 5px;
+	height: 7px;
 
 	position: absolute;
-	top: 0;
+	top: -2px;
 	left: 20px;
 	right: 20px;
 
@@ -129,21 +147,21 @@
 }
 
 .group .right {
-	width: 5px;
+	width: 7px;
 
 	position: absolute;
 	top: 20px;
 	bottom: 20px;
-	right: 0;
+	right: -2px;
 
 	cursor: ew-resize;
 }
 
 .group .bottom {
-	height: 5px;
+	height: 7px;
 
 	position: absolute;
-	bottom: 0;
+	bottom: -2px;
 	left: 20px;
 	right: 20px;
 
@@ -151,56 +169,56 @@
 }
 
 .group .left {
-	width: 5px;
+	width: 7px;
 
 	position: absolute;
 	top: 20px;
 	bottom: 20px;
-	left: 0;
+	left: -2px;
 
 	cursor: ew-resize;
 }
 
 .group .top_right {
-	width: 20px;
-	height: 20px;
+	width: 22px;
+	height: 22px;
 
 	position: absolute;
-	top: 0;
-	right: 0;
+	top: -2px;
+	right: -2px;
 
 	cursor: nesw-resize;
 }
 
 .group .bottom_right {
-	width: 20px;
-	height: 20px;
+	width: 22px;
+	height: 22px;
 
 	position: absolute;
-	bottom: 0;
-	right: 0;
+	bottom: -2px;
+	right: -2px;
 
 	cursor: nwse-resize;
 }
 
 .group .bottom_left {
-	width: 20px;
-	height: 20px;
+	width: 22px;
+	height: 22px;
 
 	position: absolute;
-	bottom: 0;
-	left: 0;
+	bottom: -2px;
+	left: -2px;
 
 	cursor: nesw-resize;
 }
 
 .group .top_left {
-	width: 20px;
-	height: 20px;
+	width: 22px;
+	height: 22px;
 
 	position: absolute;
-	top: 0;
-	left: 0;
+	top: -2px;
+	left: -2px;
 
 	cursor: nwse-resize;
 }

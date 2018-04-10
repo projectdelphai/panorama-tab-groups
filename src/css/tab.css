@@ -9,11 +9,11 @@
 }
 
 .tab:hover .inner {
-	outline: #ff9400 1px solid;
+	outline-color: #ff9400 !important;
 }
 
 .tab.selected .inner {
-	outline: #45a1ff 2px solid;
+	outline: #45a1ff 2px solid !important;
 }
 
 .tab .inner, .newtab .inner {
@@ -26,25 +26,25 @@
 
 .tab.inactive .inner {
 	opacity: 0.75;
-	box-shadow: 0 0 1px rgba(0, 0, 0, 0.25);
 }
 
 .tab .inner {
 	border: #ffffff 3px solid;
 	border-bottom: #ffffff 24px solid;
-	box-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
+
+	outline: 1px solid #cccccc;
 
 	background-color: #f9f9fa;
 	background-size: cover;
 	background-position: top;
 
-	transition: opacity 500ms cubic-bezier(.08,.82,.17,1), transform 500ms cubic-bezier(.08,.82,.17,1), filter 500ms cubic-bezier(.08,.82,.17,1);
+	transition: opacity 500ms cubic-bezier(.08,.82,.17,1), transform 500ms cubic-bezier(.08,.82,.17,1);
 }
 
 .newtab .inner {
 	border: #cccccc 2px dashed;
 
-	background-image: url(/icons/plus.svg);
+	background-image: url(/icons/plus_gray.svg);
 	background-repeat: no-repeat;
 	background-size: 16px;
 	background-position: center;
@@ -90,7 +90,7 @@
 	right: 0;
 	top: 0;
 
-	background-image: url(/icons/close.svg);
+	background-image: url(/icons/tab_close.svg);
 	background-repeat: no-repeat;
 	background-size: 10px;
 	background-position: center;
@@ -113,7 +113,8 @@
 
 
 .tab.small .inner {
-	border-bottom: #ffffff 20px solid;
+	border-bottom-width: 20px;
+	border-bottom-style: solid;
 }
 
 .tab.small .favicon {

@@ -1,0 +1,67 @@
+
+/* view */
+body.dark {
+	background-color: #2a2a2e;
+}
+
+.dark #toolbar {
+	border-left-color: rgba(249, 249, 250, 0.2);
+}
+
+.dark #toolbar .button:hover {
+	background-color: rgba(249, 249, 250, 0.2);
+}
+
+.dark #newGroup {
+	background-image: url(/icons/plus_light.svg);
+}
+
+/* groups */
+.dark .group > .inner {
+	border-color: #4a4a4f;
+
+	background-color: #0c0c0d;
+}
+
+.group > .inner:before {
+	border: none;
+}
+
+.dark .group .header input {
+	color: #b1b1b3;
+}
+
+.dark .group .header input.edit {
+	color: #f9f9fa;
+}
+
+.dark .group .header .tab_count {
+	background-color: #4a4a4f;
+
+	color: #b1b1b3;
+}
+
+.dark .group .header .close {
+	background-image: url(/icons/group_close_dark.svg);
+}
+
+/* tabs */
+.dark .tab .inner {
+	border-color: #38383d;
+	border-bottom-color: #38383d;
+
+	outline-color: #58585b;
+
+	background-color: #f9f9fa;
+}
+
+.dark .tab .favicon {
+	border-right-color: #38383d;
+	border-bottom-color: #38383d;
+
+	background-color: #38383d;
+}
+
+.dark .tab .name {
+	color: #f9f9fa;
+}
