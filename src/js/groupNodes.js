@@ -450,7 +450,7 @@ function getFit(param) {
 		}
 	}
 
-	// make groups with verry few tabs prettier
+	// make groups with very few tabs prettier
 		b = Math.min(param.height / 1, param.maxWidth*param.ratio);
 		a = b / param.ratio;
 
@@ -498,7 +498,7 @@ function updateGroupFit(group) {
 			width: rect.width,
 			height: rect.height,
 
-			minWidth: 45,
+			minWidth: 35,
 			maxWidth: 89,
 
 			ratio: 1,
@@ -528,7 +528,7 @@ function updateGroupFit(group) {
 	var w = fit.width;
 	var h = w * fit.ratio;
 
-	if(w < 60) {
+	if(w < 55) {
 		small = true;
 	}
 

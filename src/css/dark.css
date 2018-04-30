@@ -12,18 +12,26 @@ body.dark {
 	background-color: rgba(249, 249, 250, 0.2);
 }
 
+.dark #toolbar .button:active {
+	background-color: rgba(249, 249, 250, 0.25);
+}
+
 .dark #newGroup {
 	background-image: url(/icons/plus_light.svg);
 }
 
+.dark #toggleTheme {
+	background-image: url(/icons/icon_light.svg);
+}
+
 /* groups */
 .dark .group > .inner {
-	border-color: #4a4a4f;
+	border-color: rgba(249, 249, 250, 0.2);
 
 	background-color: #0c0c0d;
 }
 
-.group > .inner:before {
+.dark .group > .inner:before {
 	border: none;
 }
 
@@ -36,7 +44,7 @@ body.dark {
 }
 
 .dark .group .header .tab_count {
-	background-color: #4a4a4f;
+	background-color: rgba(249, 249, 250, 0.2);
 
 	color: #b1b1b3;
 }
@@ -48,11 +56,26 @@ body.dark {
 /* tabs */
 .dark .tab .inner {
 	border-color: #38383d;
-	border-bottom-color: #38383d;
 
 	outline-color: #58585b;
 
-	background-color: #f9f9fa;
+	background-color: #38383d;
+}
+
+.dark .tab.inactive .inner {
+	opacity: 0.6;
+}
+
+.dark .newtab .inner {
+	border: rgba(249, 249, 250, 1) 2px dashed;
+
+	background-image: url(/icons/plus_light.svg);
+
+	opacity: 0.25;
+}
+
+.dark .tab .thumbnail {
+	filter: brightness(0.8);
 }
 
 .dark .tab .favicon {
@@ -63,5 +86,5 @@ body.dark {
 }
 
 .dark .tab .name {
-	color: #f9f9fa;
+	color: #d7d7db;
 }

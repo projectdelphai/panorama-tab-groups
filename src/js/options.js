@@ -30,7 +30,7 @@ async function getStatistics() {
 	const tabs = await browser.tabs.query({});
 
 	var totalSize = 0;
-	var numTabs = 0;
+	var numActiveTabs = 0;
 
 	for(const tab of tabs) {
 
@@ -39,14 +39,25 @@ async function getStatistics() {
 		if(thumbnail) {
 			totalSize += thumbnail.length;
 		}
+		if(!tab.discarded) {
+			numActiveTabs++;
+		}
 	}
 
 	document.getElementById('thumbnailCacheSize').innerHTML = '';
 	document.getElementById('thumbnailCacheSize').appendChild(document.createTextNode(formatByteSize(totalSize)));
 
 	document.getElementById('numberOfTabs').innerHTML = '';
-	document.getElementById('numberOfTabs').appendChild(document.createTextNode(tabs.length));
+	document.getElementById('numberOfTabs').appendChild(document.createTextNode(tabs.length + ' (Active: ' + numActiveTabs + ')'));
 }
+
+/*function changeTheme() {
+	var tabs = await browser.tabs.query({url: browser.extension.getURL("view.html"), currentWindow: true});
+
+	if(tabs.length > 0) {
+		browser.tabs.sendMessage(tabs[0].id, JSON.stringify({name: 'updateThumbnail', value: tabId}));
+	};
+}*/
 
 async function init() {
 

@@ -29,25 +29,24 @@
 }
 
 .tab .inner {
-	border: #ffffff 3px solid;
-	border-bottom: #ffffff 24px solid;
+	border: 3px solid #ffffff;
 
-	outline: 1px solid #cccccc;
+	outline: 1px solid rgba(12, 12, 13, 0.2);
 
-	background-color: #f9f9fa;
-	background-size: cover;
-	background-position: top;
+	background-color: #ffffff;
 
 	transition: opacity 500ms cubic-bezier(.08,.82,.17,1), transform 500ms cubic-bezier(.08,.82,.17,1);
 }
 
 .newtab .inner {
-	border: #cccccc 2px dashed;
+	border: rgba(12, 12, 13, 1) 2px dashed;
 
-	background-image: url(/icons/plus_gray.svg);
+	background-image: url(/icons/plus_dark.svg);
 	background-repeat: no-repeat;
 	background-size: 16px;
 	background-position: center;
+
+	opacity: 0.2;
 }
 
 .tab.drag .inner {
@@ -58,6 +57,18 @@
 	opacity: 0.5;
 	transform: scale(0.9);
 	backdrop-filter: blur(10px);
+}
+
+.tab .thumbnail {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 20px;
+	left: 0;
+
+	background-color: #f9f9fa;
+	background-size: cover;
+	background-position: top;
 }
 
 .tab .favicon {
@@ -97,12 +108,12 @@
 }
 
 .tab .name {
-	height: 23px;
+	height: 20px;
 
 	position: absolute;
-	bottom: -23px;
-	left: 1px;
-	right: 1px;
+	bottom: 0;
+	left: 2px;
+	right: 2px;
 
 	font-size: 12px;
 	text-align: center;
@@ -113,8 +124,12 @@
 
 
 .tab.small .inner {
-	border-bottom-width: 20px;
-	border-bottom-style: solid;
+	_border-bottom-width: 20px;
+	_border-bottom-style: solid;
+}
+
+.tab.small .thumbnail {
+	bottom: 0px;
 }
 
 .tab.small .favicon {
@@ -128,25 +143,9 @@
 }
 
 .tab.small .name {
-	height: 18px;
-
-	bottom: -20px;
-
-	font-size: 10px;
-	text-align: center;
-	line-height: 15px;
+	display: none;
 }
 
 .tab.small .close {
-	width: 12px;
-	height: 12px;
-
-	position: absolute;
-	right: 0;
-	top: 0;
-
-	background-image: url(/icons/close.svg);
-	background-repeat: no-repeat;
-	background-size: 10px;
-	background-position: center;
+	display: none;
 }

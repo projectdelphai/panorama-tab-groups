@@ -16,11 +16,13 @@ async function initTabNodes() {
 
 function makeTabNode(tab) {
 
+	var thumbnail = new_element('div', {class: 'thumbnail'});
 	var favicon = new_element('div', {class: 'favicon'});
 	var close = new_element('div', {class: 'close', title: 'Close Tab'});
 	var name = new_element('div', {class: 'name'});
 
 	var inner = new_element('div', {class: 'inner'}, [
+		thumbnail,
 		favicon,
 		close,
 		name
@@ -59,6 +61,7 @@ function makeTabNode(tab) {
 	tabNodes[tab.id] = {
 		tab: node,
 		inner: inner,
+		thumbnail: thumbnail,
 		favicon: favicon,
 		close: close,
 		name: name
@@ -127,9 +130,9 @@ async function updateThumbnail(tabId, thumbnail) {
 		}
 
 		if(thumbnail) {
-			node.inner.style.backgroundImage = 'url(' + thumbnail + ')';
+			node.thumbnail.style.backgroundImage = 'url(' + thumbnail + ')';
 		}else{
-			node.inner.style.backgroundImage = '';
+			node.thumbnail.style.backgroundImage = '';
 		}
 	}
 }

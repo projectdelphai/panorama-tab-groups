@@ -10,7 +10,7 @@
 	right: 4px;
 	bottom: 4px;
 
-	border: #cccccc 1px solid;
+	border: rgba(12, 12, 13, 0.2) 1px solid;
 	border-radius: 4px;
 
 	background-color: #ededf0;
@@ -48,17 +48,18 @@
 	height: 20px;
 
 	position: absolute;
-	top: 0px;
+	top: -2px;
+	left: -1px;
 
 	display: none;
 
 	border: none;
-	_border-bottom: 1px dashed #cccccc;
 
 	background: none;
 
 	color: #737373;
 	font-size: 13px;
+	line-height: 18px;
 	font-family: inherit;
 }
 
@@ -69,12 +70,12 @@
 	padding-right: 5px;
 
 	position: absolute;
-	top: 3px;
-	left: 1px;
+	top: 0;
+	left: 0;
 
 	color: #737373;
 	font-size: 13px;
-	line-height: 16px;
+	line-height: 18px;
 	white-space: nowrap;
 	text-overflow: '..';
 
@@ -102,7 +103,7 @@
 
 	border-radius: 0 0 3px 3px;
 
-	background-color: #cccccc;
+	background-color: rgba(12, 12, 13, 0.2);
 
 	color: #ffffff;
 	font-size: 12px;

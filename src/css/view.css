@@ -39,16 +39,25 @@ body {
 	height: 28px;
 
 	border-radius: 4px;
+
+	background-repeat: no-repeat;
+	background-position: center;
 }
 
 #toolbar .button:hover {
 	background-color: rgba(12, 12, 13, 0.1);
 }
 
+#toolbar .button:active {
+	background-color: rgba(12, 12, 13, 0.15);
+}
+
 #newGroup {
 	background-image: url(/icons/plus_dark.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+}
+
+#toggleTheme {
+	background-image: url(/icons/icon.svg);
 }
 
 .drag_indicator {
@@ -56,7 +65,7 @@ body {
 	height: 100px;
 
 	position: absolute;
-	z-index: 100;
+	z-index: 1000000000;
 
 	background-color: #00adff;
 

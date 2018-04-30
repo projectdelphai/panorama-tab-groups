@@ -10,6 +10,12 @@ section label {
 	line-height: 2em;
 }
 
+section input[type=radio] {
+	height: 2em;
+	display: inline-block;
+	vertical-align: bottom;
+}
+
 #keyboardShortcuts button {
 	width: 120px;
 	text-align: center;

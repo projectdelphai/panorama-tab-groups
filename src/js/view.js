@@ -97,6 +97,11 @@ async function initView() {
 	// Listen for clicks on new group button
 	document.getElementById('newGroup').addEventListener('click', createGroup, false);
 
+	// Toggle between light and dark theme
+	document.getElementById('toggleTheme').addEventListener('click', function() {
+		document.getElementsByTagName("body")[0].classList.toggle("dark");
+	}, false);
+
 	// Listen for middle clicks in background to open new group
 	document.getElementById('groups').addEventListener('auxclick', async function(event) {
 		event.preventDefault();
