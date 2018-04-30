@@ -105,7 +105,7 @@ function loadBackup(input) {
 				// nothing to do..
 
 			// if it's a tab groups backup
-			}else if(data.version && data.version[0] == 'tabGroups' && data.version[1] == 1) {
+			}else if((data.version && data.version[0] == 'tabGroups' || data.version && data.version[0] == 'sessionrestore') && data.version[1] == 1) {
 				data = convertBackup(data);
 			}else{
 				alert('Invalid file');
