@@ -32,8 +32,7 @@ async function triggerCommand(command) {
 
 /** Open the Panorama View tab, or return to the last open tab if Panorama View is currently open */
 async function toggleView() {
-
-	var extTabs = await browser.tabs.query({url: browser.extension.getURL("view.html"), currentWindow: true});
+        var extTabs = await browser.tabs.query({url: browser.extension.getURL("view.html"), currentWindow: true});
 
 	if(extTabs.length > 0) {
 

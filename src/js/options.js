@@ -59,24 +59,47 @@ async function getStatistics() {
 	};
 }*/
 
+const toggle = 'toggle-panorama-view';
+const nextView = 'activate-next-group';
+
 async function init() {
+    let commands = await browser.commands.getAll();
+    for (command of commands) {
+        if (command.name === toggle) {
+            document.querySelector('#toggleView').value = command.shortcut;
+        }
+        if (command.name === nextView) {
+            document.querySelector('#nextView').value = command.shortcut;
+        }
+    }
+}
 
-	var commands = await browser.commands.getAll();
-	var fragment = document.createDocumentFragment();
+async function updateToggle() {
+    await browser.commands.update({
+        name: toggle,
+        shortcut: document.querySelector('#toggleView').value
+    });
+}
 
-	for(var i in commands) {
-		var key = new_element('button', {content: commands[i].shortcut, disabled: true, title: 'Will be customizable from Firefox v60'}, [])
-		var label = new_element('label', {content: commands[i].description, for: key}, []);
+async function updateNextView() {
+    await browser.commands.update({
+        name: nextView,
+        shortcut: document.querySelector('#nextView').value
+    });
+}
 
-		var commandNode = new_element('div', {}, [label, key]);
-		fragment.appendChild(commandNode);
-	}
-	document.getElementById('keyboardShortcuts').appendChild(fragment);
+async function resetToggle() {
+    await browser.commands.reset(toggle);
+    init();
+}
 
-	getStatistics();
-
-	document.getElementById('backupFileInput').addEventListener('change', loadBackup);
-	document.getElementById('saveBackupButton').addEventListener('click', saveBackup);
+async function resetNextView() {
+    await browser.commands.reset(nextView);
+    init();
 }
 
 document.addEventListener('DOMContentLoaded', init);
+document.querySelector('#updateToggle').addEventListener('click', updateToggle);
+document.querySelector('#updateNextView').addEventListener('click', updateNextView);
+document.querySelector('#resetToggle').addEventListener('click', resetToggle);
+document.querySelector('#resetNextView').addEventListener('click', resetNextView);
