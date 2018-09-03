@@ -134,6 +134,9 @@ async function initView() {
 	browser.tabs.onAttached.addListener(tabAttached);
 	browser.tabs.onDetached.addListener(tabDetached);
 	browser.tabs.onActivated.addListener(tabActivated);
+
+        view.groupsNode.addEventListener('dragover', groupDragOver, false);
+        view.groupsNode.addEventListener('drop', outsideDrop, false);
 }
 
 

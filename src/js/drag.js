@@ -113,16 +113,36 @@ async function tabDrop(e) {
 
 function groupDragOver(e) {
 	e.preventDefault(); // Necessary. Allows us to drop.
-
 	e.dataTransfer.dropEffect = 'move';  // See the section on the DataTransfer object.
 
 	return false;
 }
 
-async function groupDrop(e) {
-	e.stopPropagation();
+async function outsideDrop(e) {
+        e.stopPropagation();
 
-	var groupId = Number(this.getAttribute('groupId'));
+        var group = await groups.create();
+        makeGroupNode(group);
+
+        group.rect.x = (e.clientX - 75) / window.innerWidth;
+        group.rect.y = (e.clientY - 75) / window.innerHeight;
+        group.rect.w = 150 / window.innerWidth;
+        group.rect.h = 150 / window.innerHeight;
+
+        var groupElement = groupNodes[group.id].group;
+
+        view.groupsNode.appendChild(groupElement);
+
+        resizeGroups();
+
+        putTabInGroup(group.id);
+
+        groupElement.scrollIntoView({behavior: "smooth"});
+
+        return false;
+}
+
+async function putTabInGroup(groupId) {
 	groupNodes[groupId].newtab.insertAdjacentElement('beforebegin', dragTab);
 
 	groups.forEach(function(group) {
@@ -137,6 +157,15 @@ async function groupDrop(e) {
 	browser.tabs.onMoved.removeListener(tabMoved);
 	await browser.tabs.move(tabId, {index: toIndex});
 	browser.tabs.onMoved.addListener(tabMoved);
+
+
+}
+async function groupDrop(e) {
+	e.stopPropagation();
+
+	var groupId = Number(this.getAttribute('groupId'));
+
+        putTabInGroup(groupId);
 
 	return false;
 }
