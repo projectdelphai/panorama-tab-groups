@@ -118,6 +118,23 @@ function groupDragOver(e) {
 	return false;
 }
 
+async function putTabInGroup(groupId) {
+	groupNodes[groupId].newtab.insertAdjacentElement('beforebegin', dragTab);
+
+	groups.forEach(function(group) {
+		updateGroupFit(group);
+	});
+
+	var tabId = Number(dragTab.getAttribute('tabId'));
+	view.tabs.setGroupId(tabId, groupId);
+
+	var toIndex = -1;
+
+	browser.tabs.onMoved.removeListener(tabMoved);
+	await browser.tabs.move(tabId, {index: toIndex});
+	browser.tabs.onMoved.addListener(tabMoved);
+}
+
 async function outsideDrop(e) {
         e.stopPropagation();
 
@@ -142,24 +159,6 @@ async function outsideDrop(e) {
         return false;
 }
 
-async function putTabInGroup(groupId) {
-	groupNodes[groupId].newtab.insertAdjacentElement('beforebegin', dragTab);
-
-	groups.forEach(function(group) {
-		updateGroupFit(group);
-	});
-
-	var tabId = Number(dragTab.getAttribute('tabId'));
-	view.tabs.setGroupId(tabId, groupId);
-
-	var toIndex = -1;
-
-	browser.tabs.onMoved.removeListener(tabMoved);
-	await browser.tabs.move(tabId, {index: toIndex});
-	browser.tabs.onMoved.addListener(tabMoved);
-
-
-}
 async function groupDrop(e) {
 	e.stopPropagation();
 
@@ -174,4 +173,15 @@ function tabDragEnd(e) {
 	dragCount = 0;
 	this.classList.remove('drag');
 	view.dragIndicator.classList.remove('show');
+
+        var i;
+        for (i in groupNodes) {
+            var tabCount = groupNodes[i].content.childNodes.length - 1;
+            if (tabCount == 0) {
+                groups.remove(i);
+                removeGroupNode(i);
+            }
+        }
+
+
 }
