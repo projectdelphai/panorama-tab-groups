@@ -1,8 +1,13 @@
 {
 	"manifest_version": 2,
-	"name": "Panorama View",
+	"name": "Panorama Tab Groups",
 	"description": "Tab Groups with Panorama View",
 	"version": "0.8.1",
+    "applications": {
+        "gecko": {
+            "id": "panorama-tab-groups@example.com"
+        }
+    },
 	"icons": {
 		"16": "icons/logo/logo-16.png",
 		"24": "icons/logo/logo-24.png",
@@ -11,12 +16,6 @@
 		"64": "icons/logo/logo-64.png",
 		"96": "icons/logo/logo-96.png"
 	},
-	"applications": {
-		"gecko": {
-			"id": "test@test.net"
-		}
-	},
-
 	"commands": {
 		"toggle-panorama-view": {
 			"suggested_key": {
@@ -28,7 +27,7 @@
 			"suggested_key": {
 				"default": "Alt+W"
 			},
-			"description": "Activate the next Tab Group"
+			"description": "Switch to the next Tab Group"
 		}
 	},
 
