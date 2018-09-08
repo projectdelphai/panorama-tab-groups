@@ -61,30 +61,34 @@ async function getStatistics() {
 
 const toggle = 'toggle-panorama-view';
 const nextView = 'activate-next-group';
+const previousView = 'activate-previous-group';
 
 async function init() {
     let commands = await browser.commands.getAll();
     for (command of commands) {
-        if (command.name === toggle) {
-            document.querySelector('#toggleView').value = command.shortcut;
-        }
-        if (command.name === nextView) {
-            document.querySelector('#nextView').value = command.shortcut;
-        }
+        document.querySelector("#" + command.name).value = command.shortcut;
+
     }
 }
 
 async function updateToggle() {
     await browser.commands.update({
         name: toggle,
-        shortcut: document.querySelector('#toggleView').value
+        shortcut: document.querySelector('#' + toggle).value
     });
 }
 
 async function updateNextView() {
     await browser.commands.update({
         name: nextView,
-        shortcut: document.querySelector('#nextView').value
+        shortcut: document.querySelector('#' + nextView).value
+    });
+}
+
+async function updatePreviousView() {
+    await browser.commands.update({
+        name: previousView,
+        shortcut: document.querySelector('#' + previousView).value
     });
 }
 
@@ -98,8 +102,15 @@ async function resetNextView() {
     init();
 }
 
+async function resetPreviousView() {
+    await browser.commands.reset(previousView);
+    init();
+}
+
 document.addEventListener('DOMContentLoaded', init);
 document.querySelector('#updateToggle').addEventListener('click', updateToggle);
 document.querySelector('#updateNextView').addEventListener('click', updateNextView);
+document.querySelector('#updatePreviousView').addEventListener('click', updatePreviousView);
 document.querySelector('#resetToggle').addEventListener('click', resetToggle);
 document.querySelector('#resetNextView').addEventListener('click', resetNextView);
+document.querySelector('#resetPreviousView').addEventListener('click', resetPreviousView);

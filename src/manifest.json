@@ -28,7 +28,13 @@
 				"default": "Alt+W"
 			},
 			"description": "Switch to the next Tab Group"
-		}
+		},
+                "activate-previous-group": {
+                        "suggested_key": {
+                                "default": "Alt+Shift+W"
+                        },
+                        "description": "Switch to the previous Tab Group"
+                }
 	},
 
 	"background": {

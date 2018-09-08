@@ -25,6 +25,19 @@ async function triggerCommand(command) {
 		await browser.sessions.setWindowValue(windowId, 'activeGroup', activeGroup);
 
 		await toggleVisibleTabs(activeGroup, true);
+        } else if (command === "activate-previous-group") {
+                const windowId = (await browser.windows.getCurrent()).id;
+		const groups = await browser.sessions.getWindowValue(windowId, 'groups');
+
+		var activeGroup = (await browser.sessions.getWindowValue(windowId, 'activeGroup'));
+		var activeIndex = groups.findIndex(function(group){ return group.id === activeGroup; });
+		var newIndex = activeIndex - 1;
+
+		activeGroup = newIndex in groups ? groups[newIndex].id : groups.length - 1;
+		await browser.sessions.setWindowValue(windowId, 'activeGroup', activeGroup);
+
+		await toggleVisibleTabs(activeGroup, true);
+        
 	}else if (command === "toggle-panorama-view") {
 		toggleView();
 	}
