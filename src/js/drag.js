@@ -174,14 +174,4 @@ function tabDragEnd(e) {
 	this.classList.remove('drag');
 	view.dragIndicator.classList.remove('show');
 
-        var i;
-        for (i in groupNodes) {
-            var tabCount = groupNodes[i].content.childNodes.length - 1;
-            if (tabCount == 0) {
-                groups.remove(i);
-                removeGroupNode(i);
-            }
-        }
-
-
 }
