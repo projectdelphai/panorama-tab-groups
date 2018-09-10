@@ -69,6 +69,10 @@ async function init() {
         document.querySelector("#" + command.name).value = command.shortcut;
 
     }
+
+	getStatistics();
+    document.getElementById('backupFileInput').addEventListener('change', loadBackup);
+    document.getElementById('saveBackupButton').addEventListener('click', saveBackup);
 }
 
 async function updateToggle() {
