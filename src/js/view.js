@@ -66,6 +66,14 @@ async function captureThumbnails() {
 	}
 }
 
+async function doubleClick(e) {
+    if (e.target.className === "content transition") {
+        var groupID = e.target.getAttribute("groupid");
+        var group = groups.get(groupID);
+        closeGroup(e.target, group);
+    }
+}
+
 /**
  * Initialize the Panorama View tab
  *
@@ -137,8 +145,8 @@ async function initView() {
 
         view.groupsNode.addEventListener('dragover', groupDragOver, false);
         view.groupsNode.addEventListener('drop', outsideDrop, false);
+        view.groupsNode.addEventListener('dblclick', doubleClick, false);
 }
-
 
 document.addEventListener('DOMContentLoaded', initView, false);
 
