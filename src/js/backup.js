@@ -73,6 +73,7 @@ async function openBackup(data) {
 			var tab = await browser.tabs.create({
 				url: data.windows[wi].tabs[ti].url,
 				active: false,
+				discarded: true,
 				windowId: window.id,
 			}).catch((err) => { console.log(err); });
 
