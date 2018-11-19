@@ -27,15 +27,19 @@ function convertBackup(tgData) {
 		for(const ti in tgData.windows[wi].tabs) {
 
 			var tab = tgData.windows[wi].tabs[ti];
-
-			data.windows[wi].tabs.push({
-				url: tab.entries[0].url,
-				title: tab.entries[0].title,
-				groupId: JSON.parse(tab.extData['tabview-tab']).groupID,
-				index: Number(ti),
-				lastAccessed: tab.lastAccessed,
-				pinned: false,
-			});
+			// Pinned tabs have no extData --> ignore them right now
+			if(tab.extData['tabview-tab'] == 'null' || typeof tab.extData['tabview-tab'] == "undefined") {
+				continue;
+			}else{
+				data.windows[wi].tabs.push({
+					url: tab.entries[0].url,
+					title: tab.entries[0].title,
+					groupId: JSON.parse(tab.extData['tabview-tab']).groupID,
+					index: Number(ti),
+					lastAccessed: tab.lastAccessed,
+					pinned: false,
+				});
+			}
 		}
 	}
 
