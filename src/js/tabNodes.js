@@ -78,10 +78,18 @@ async function updateTabNode(tab) {
 
 		node.inner.title = tab.title + ((tab.url.substr(0, 5) !== 'data:') ? ' - ' + decodeURI(tab.url) : '');
 
-		if(tab.discarded) {
+		if ( tab.discarded ) {
 			node.tab.classList.add('inactive');
-		}else{
+		} else {
 			node.tab.classList.remove('inactive');
+		}
+
+		if ( tab.pinned ) {
+			node.tab.classList.add( 'pinned' )
+			node.tab.style.width = '';
+			node.tab.style.height = '';
+		} else {
+			node.tab.classList.remove( 'pinned' )
 		}
 	}
 }
@@ -121,7 +129,6 @@ function deleteTabNode(tabId) {
 }
 
 async function updateThumbnail(tabId, thumbnail) {
-
 	var node = tabNodes[tabId];
 
 	if(node) {

@@ -5,11 +5,15 @@ var groupNodes = {};
 
 async function initGroupNodes() {
 
-        groups.forEach(function(group) {
-                makeGroupNode(group);
-                view.groupsNode.appendChild(groupNodes[group.id].group);
-        });
-        fillGroupNodes();
+	groups.forEach(function(group) {
+		makeGroupNode(group);
+		view.groupsNode.appendChild(groupNodes[group.id].group);
+	});
+	fillGroupNodes();
+
+	groupNodes.pinned = {
+		content: document.getElementById( 'pinnedTabs' ),
+	};
 }
 
 function snapValue(a, b, dst) {
@@ -336,23 +340,31 @@ function removeGroupNode(groupId) {
 }
 
 async function fillGroupNodes() {
-        var fragment = {};
+	var fragment = {
+		pinned: document.createDocumentFragment(),
+	};
 
-        groups.forEach(function(group) {
-                fragment[group.id] = document.createDocumentFragment();
-        });
+	groups.forEach(function(group) {
+		fragment[group.id] = document.createDocumentFragment();
+	});
 
-        await view.tabs.forEach(async function(tab) {
-                var groupId = await view.tabs.getGroupId(tab.id);
-                if(groupId != -1 && fragment[groupId]) {
-                        fragment[groupId].appendChild(tabNodes[tab.id].tab);
-                }
-        });
+	await view.tabs.forEach( async function( tab ) {
+		if ( ! tab.pinned ) {
+			const groupId = await view.tabs.getGroupId( tab.id );
+			if ( groupId != -1 && fragment[ groupId ] ) {
+				fragment[ groupId ].appendChild( tabNodes[ tab.id ].tab );
+			}
+		} else {
+			fragment.pinned.appendChild( tabNodes[ tab.id ].tab );
+		}
+	});
 
-        groups.forEach(function(group) {
-                groupNodes[group.id].content.insertBefore(fragment[group.id], groupNodes[group.id].newtab);
-                updateGroupFit(group);
-        });
+	groups.forEach(function(group) {
+		groupNodes[group.id].content.insertBefore(fragment[group.id], groupNodes[group.id].newtab);
+		updateGroupFit(group);
+	});
+
+	groupNodes.pinned.content.appendChild( fragment.pinned );
 }
 
 // there is a bug in here! moving a tab to the right in the tab bar does nothing..
