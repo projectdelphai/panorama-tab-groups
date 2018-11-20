@@ -27,19 +27,19 @@ function convertBackup(tgData) {
 		for(const ti in tgData.windows[wi].tabs) {
 
 			var tab = tgData.windows[wi].tabs[ti];
-			// Pinned tabs have no extData --> ignore them right now
-			if(tab.extData['tabview-tab'] == 'null' || typeof tab.extData['tabview-tab'] == "undefined") {
-				continue;
+			if(tab.pinned == true) {
+				var groupId = 0;
 			}else{
-				data.windows[wi].tabs.push({
-					url: tab.entries[0].url,
-					title: tab.entries[0].title,
-					groupId: JSON.parse(tab.extData['tabview-tab']).groupID,
-					index: Number(ti),
-					lastAccessed: tab.lastAccessed,
-					pinned: false,
-				});
+				var groupId = JSON.parse(tab.extData['tabview-tab']).groupID;
 			}
+			data.windows[wi].tabs.push({
+				url: tab.entries[0].url,
+				title: tab.entries[0].title,
+				groupId: groupId,
+				index: Number(ti),
+				lastAccessed: tab.lastAccessed,
+				pinned: tab.pinned,
+			});
 		}
 	}
 
@@ -73,12 +73,19 @@ async function openBackup(data) {
 		await browser.sessions.setWindowValue(window.id, 'groupIndex', data.windows[wi].groupIndex);
 
 		for(var ti in data.windows[wi].tabs) {
-
+			// pinned tabs are not allowed to be discarded
+			if (data.windows[wi].tabs[ti].pinned == true) {
+				var bdiscarded = false;
+			} else {
+				var bdiscarded = true;
+			}
+			
 			var tab = await browser.tabs.create({
 				url: data.windows[wi].tabs[ti].url,
 				active: false,
-				discarded: true,
+				discarded: bdiscarded,
 				windowId: window.id,
+				pinned: data.windows[wi].tabs[ti].pinned,
 			}).catch((err) => { console.log(err); });
 
 			if(tab) {
