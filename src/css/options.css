@@ -16,7 +16,12 @@ section input[type=radio] {
 	vertical-align: bottom;
 }
 
-#keyboardShortcuts button {
-	width: 120px;
+.keyboardShortcuts button {
+	width: 80px;
 	text-align: center;
+	margin: 0em;
+}
+
+.keyboardShortcuts input {
+	width: 120px;
 }
