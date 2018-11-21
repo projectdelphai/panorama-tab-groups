@@ -7,24 +7,31 @@
 	<body>
 		<section>
 			<h2>Keyboard Shortcuts</h2>
-			<div id="keyboardShortcuts">
-                                <label>Toggle Panorama View</label>
-                                <input type="text" id="toggle-panorama-view">
-                                <button id="updateToggle">Update</button>
-                                <button id="resetToggle">Reset</button>
-                        </div>
-                        <div id="keyboardShortcuts">
-                                <label>Activate the next TabGroup</label>
-                                <input type="text" id="activate-next-group">
-                                <button id="updateNextView">Update</button>
-                                <button id="resetNextView">Reset</button>
-                        </div>
-                        <div id="keyboardShortcuts">
-                                <label>Activate the previous TabGroup</label>
-                                <input type="text" id="activate-previous-group">
-                                <button id="updatePreviousView">Update</button>
-                                <button id="resetPreviousView">Reset</button>
-                        </div>
+			<div class="keyboardShortcuts">
+				<form class="browser-style">
+					<label>Toggle Panorama View</label>
+					<input type="text" id="toggle-panorama-view">
+					<button id="updateToggle" class="browser-style">Update</button>
+					<button id="resetToggle" class="browser-style">Reset</button>
+				</form>
+			</div>
+			<div class="keyboardShortcuts">
+				<form class="browser-style">
+					<label>Activate the next TabGroup</label>
+					<input type="text" id="activate-next-group">
+					<button id="updateNextView" class="browser-style">Update</button>
+					<button id="resetNextView" class="browser-style">Reset</button>
+				</form>
+			</div>
+			<div class="keyboardShortcuts">
+				<form class="browser-style">
+					<label>Activate the previous TabGroup</label>
+					<input type="text" id="activate-previous-group">
+					<button id="updatePreviousView" class="browser-style">Update</button>
+					<button id="resetPreviousView" class="browser-style">Reset</button>
+				</form>
+			</div>
+		<em><a href="https://developer.mozilla.org/en-US/Add-ons/WebExtensions/manifest.json/commands#Key_combinations" target="_blank">The format for the shortcut option is detailed here</a></em>
 		</section>
 		<!--section>
 			<h2>Themes</h2>
@@ -43,11 +50,20 @@
 		<section>
 			<h2>Backups</h2>
 			<h3>Import</h3>
-			<p>Imported backups will open in new windows and not overwrite anything.<br>You can also import backups from the old "Tab Groups" add-on.</p>
-			<p><input id="backupFileInput" name="backupFile" type="file" accept=".json"></p>
+			<p>
+				Imported backups will open in new windows and not overwrite anything.<br>
+				You can also import backups from the old "Tab Groups" add-on.
+			</p>
+			<div class="browser-style">
+				<input id="backupFileInput" name="backupFile" type="file" accept=".json">
+			</div>
 			<h3>Export</h3>
-			<p>This section might be made obsolete once proper session management is possible in Firefox.</p>
-			<p><button id="saveBackupButton">Save backup</button></p>
+			<p>
+				This section might be made obsolete once proper session management is possible in Firefox.
+			</p>
+			<div>
+				<button id="saveBackupButton" class="browser-style">Save backup</button>
+			</div>
 		</section>
 		<section>
 			<h2>Statistics</h2>
