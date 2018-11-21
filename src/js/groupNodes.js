@@ -425,7 +425,11 @@ function resizeGroups(groupId, groupRect) {
                 node.style.bottom	= groupsRect.height - ((rect.y + rect.h) * groupsRect.height) + 'px';
                 node.style.left		= (rect.x * groupsRect.width)  + 'px';
 
-                node.style.zIndex	= group.lastMoved.toString().substr(-9);
+		var zIndex = group.id;
+		if (group.lastMoved) {
+			zIndex = group.lastMoved.toString().substr(-9);
+		}
+		node.style.zIndex	= zIndex;
 
                 updateGroupFit(group);
         });
