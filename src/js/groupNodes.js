@@ -409,37 +409,41 @@ function resizeGroups(groupId, groupRect) {
         var rect = {};
 
         groups.forEach(function(group) {
-                var node = groupNodes[group.id].group;
+			var node = groupNodes[group.id].group;
 
-                if(groupId !== undefined && groupId === group.id) {
-                        rect.x = groupRect.x;
-                        rect.y = groupRect.y;
-                        rect.w = groupRect.w;
-                        rect.h = groupRect.h;
-                }else{
-                        rect.x = group.rect.x;
-                        rect.y = group.rect.y;
-                        rect.w = group.rect.w;
-                        rect.h = group.rect.h;
-                }
+			if(groupId !== undefined && groupId === group.id) {
+					rect.x = groupRect.x;
+					rect.y = groupRect.y;
+					rect.w = groupRect.w;
+					rect.h = groupRect.h;
+			}else{
+					rect.x = group.rect.x;
+					rect.y = group.rect.y;
+					rect.w = group.rect.w;
+					rect.h = group.rect.h;
+			}
 
-                // do magic
+			// do magic
 
-                rect.w = Math.max(rect.w, minw);
-                rect.h = Math.max(rect.h, minh);
+			rect.w = Math.max(rect.w, minw);
+			rect.h = Math.max(rect.h, minh);
 
-                // automatic move out of the way stuff
+			// automatic move out of the way stuff
 
-                // ----
+			// ----
 
-                node.style.top		= (rect.y * groupsRect.height) + 'px';
-                node.style.right	= groupsRect.width - ((rect.x + rect.w) * groupsRect.width)  + 'px';
-                node.style.bottom	= groupsRect.height - ((rect.y + rect.h) * groupsRect.height) + 'px';
-                node.style.left		= (rect.x * groupsRect.width)  + 'px';
+			node.style.top		= (rect.y * groupsRect.height) + 'px';
+			node.style.right	= groupsRect.width - ((rect.x + rect.w) * groupsRect.width)  + 'px';
+			node.style.bottom	= groupsRect.height - ((rect.y + rect.h) * groupsRect.height) + 'px';
+			node.style.left		= (rect.x * groupsRect.width)  + 'px';
 
-                node.style.zIndex	= group.lastMoved.toString().substr(-9);
+			var zIndex = group.id;
+			if (group.lastMoved) {
+				zIndex = group.lastMoved.toString().substr(-9);
+			}
+			node.style.zIndex	= zIndex;
 
-                updateGroupFit(group);
+			updateGroupFit(group);
         });
 }
 function getFit(param) {
