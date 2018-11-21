@@ -57,7 +57,7 @@ body {
 }
 
 #toggleTheme {
-	background-image: url(/icons/icon.svg);
+	background-image: url(/icons/theme_dark.svg);
 }
 
 .drag_indicator {

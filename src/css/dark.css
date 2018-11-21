@@ -21,7 +21,7 @@ body.dark {
 }
 
 .dark #toggleTheme {
-	background-image: url(/icons/icon_light.svg);
+	background-image: url(/icons/theme_light.svg);
 }
 
 /* groups */
