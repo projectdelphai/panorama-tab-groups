@@ -60,6 +60,10 @@ body {
 	background-image: url(/icons/icon.svg);
 }
 
+#settings {
+	background-image: url(/icons/preferences_dark.svg);
+}
+
 .drag_indicator {
 	width: 2px;
 	height: 100px;
