@@ -24,6 +24,10 @@ body.dark {
 	background-image: url(/icons/icon_light.svg);
 }
 
+.dark #settings {
+	background-image: url(/icons/preferences_light.svg);
+}
+
 /* groups */
 .dark .group > .inner {
 	border-color: rgba(249, 249, 250, 0.2);

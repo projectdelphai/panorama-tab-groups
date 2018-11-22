@@ -109,6 +109,11 @@ async function initView() {
 	document.getElementById('toggleTheme').addEventListener('click', function() {
 		document.getElementsByTagName("body")[0].classList.toggle("dark");
 	}, false);
+	
+	// Listen for clicks on settings button
+	document.getElementById('settings').addEventListener('click', function() {
+		browser.runtime.openOptionsPage();
+	}, false);
 
 	// Listen for middle clicks in background to open new group
 	document.getElementById('groups').addEventListener('auxclick', async function(event) {
