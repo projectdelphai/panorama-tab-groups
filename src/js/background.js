@@ -178,7 +178,8 @@ async function setupWindows() {
 
 		var groups = await browser.sessions.getWindowValue(window.id, 'groups');
 
-		if(groups === undefined) {
+		if(!groups || !groups.length) {
+			console.log(`no groups found for window ${window.id}!`);
 			createGroupInWindow(window);
 		}
 	}
@@ -201,11 +202,10 @@ async function newGroupUid(windowId) {
  * that do not yet have a group */
 async function createGroupInWindow(window) {
 
-	if(!openingBackup) {
-
-		var currentGroups = await browser.sessions.getWindowValue(window.id, 'groups');
-
-		if(!currentGroups) {
+	if(openingBackup) {
+		console.log('skipping creation of groups scince we are opening backup');
+		return;
+	}
 
 			var groupId = await newGroupUid(window.id);
 
@@ -221,8 +221,6 @@ async function createGroupInWindow(window) {
 			browser.sessions.setWindowValue(window.id, 'groups', groups);
 			browser.sessions.setWindowValue(window.id, 'activeGroup', groupId);
 		}
-	}
-}
 
 /** Put any tabs that do not have a group into the active group */
 async function salvageGrouplessTabs() {
