@@ -185,7 +185,7 @@ async function setupWindows() {
 		var groups = await browser.sessions.getWindowValue(window.id, 'groups');	
 
 		if(!groups || !groups.length) {
-			console.log(`no groups found for window ${window.id}!`);
+			console.log(`No groups found for window ${window.id}!`);
 			createGroupInWindow(window);
 		}
 	}
@@ -209,7 +209,7 @@ async function newGroupUid(windowId) {
 async function createGroupInWindow(window) {
 
 	if(openingBackup) {
-		console.log('skipping creation of groups scince we are opening backup');
+		console.log('Skipping creation of groups since we are opening backup');
 		return;
 	}
 
@@ -263,12 +263,12 @@ async function salvageGrouplessTabs() {
 
 async function init() {
 
-	console.log('init Panorama Tab View');
+	console.log('Initializing Panorama Tab View');
 
 	await setupWindows();
 	await salvageGrouplessTabs();
 
-	console.log('setup done');
+	console.log('Finished setup');
 
 	await migrate(); //keep until everyone are on 0.8.0
 
