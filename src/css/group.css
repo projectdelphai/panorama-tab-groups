@@ -225,7 +225,7 @@
 }
 
 #pinnedTabs {
-	border-top: 1px solid #ccc;
+	border-left: 1px solid #ccc;
 }
 
 #pinnedTabs .tab {
@@ -233,7 +233,7 @@
 	height: 28px;
 	position: relative;
 	background: #fff;
-	margin-top: 5px;
+	margin-left: 5px;
 }
 
 #pinnedTabs .tab .close,
