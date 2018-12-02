@@ -48,6 +48,16 @@ function convertBackup(tgData) {
 
 var background = browser.extension.getBackgroundPage()
 
+function getGroupIdsFromTabs(window) {
+	var allGroupIds = [];
+	for(var ti in window.tabs) {
+		allGroupIds.push(window.tabs[ti].groupId);
+	}
+	
+	let uniqueGroupIds = [...new Set(allGroupIds)];
+	return uniqueGroupIds;
+}
+
 async function openBackup(data) {
 
 	background.openingBackup = true;
@@ -55,6 +65,31 @@ async function openBackup(data) {
 	for(var wi in data.windows) {
 
 		var groups = [];
+
+		if(data.windows[wi].groups.length === 0) {
+			console.log('no groups in backup, trying to retrieve them from tabs');
+			var newGroupIds = getGroupIdsFromTabs(data.windows[wi]);
+
+			// TODO: eval rect by minimum size and fit it optimally on screen
+
+			var curX = 0.0;
+			var delta = 1 / newGroupIds.length;
+
+			for(var i = 0; i < newGroupIds.length; i++) {
+				var gId = newGroupIds[i];
+				data.windows[wi].groups.push({
+					id: gId,
+					name: `Group ${gId}`,
+					rect: {
+						x: curX,
+						y: 0,
+						w: delta,
+						h: 0.5
+					}
+				});
+				curX += delta;
+			}
+		}
 
 		for(var gi in data.windows[wi].groups) {
 			groups.push({
