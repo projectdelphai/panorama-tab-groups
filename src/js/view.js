@@ -72,6 +72,10 @@ async function doubleClick(e) {
         var group = groups.get(groupID);
         closeGroup(e.target, group);
     }
+    else if (e.target.id === "groups")
+    {
+        createGroup();
+    }
 }
 
 /**
