@@ -29,9 +29,30 @@ var view = {
 	groupsNode: null,
 	dragIndicator: null,
 	//intervalId: null,
-
+	settings: {},
 	tabs: {},
 };
+
+// Load settings
+browser.storage.sync.get({
+	useDarkTheme: false,
+}).then((settings) => {
+	view.settings = settings;
+
+	if (view.settings.useDarkTheme) {
+			useDarkTheme();
+	}
+
+	initView();
+});
+
+function useDarkTheme() {
+	document.getElementsByTagName("body")[0].classList.add('dark');
+}
+
+function useLightTheme() {
+	document.getElementsByTagName("body")[0].classList.remove('dark');
+}
 
 async function captureThumbnail(tabId) {
 
@@ -107,9 +128,18 @@ async function initView() {
 
 	// Toggle between light and dark theme
 	document.getElementById('toggleTheme').addEventListener('click', function() {
-		document.getElementsByTagName("body")[0].classList.toggle("dark");
+		// Switch
+		view.settings.useDarkTheme = !view.settings.useDarkTheme;
+		if (view.settings.useDarkTheme) {
+			useDarkTheme();
+		} else {
+			useLightTheme();
+		}
+
+		// Save
+		browser.storage.sync.set(view.settings);
 	}, false);
-	
+
 	// Listen for clicks on settings button
 	document.getElementById('settings').addEventListener('click', function() {
 		browser.runtime.openOptionsPage();
@@ -153,9 +183,6 @@ async function initView() {
         view.groupsNode.addEventListener('drop', outsideDrop, false);
         view.groupsNode.addEventListener('dblclick', doubleClick, false);
 }
-
-document.addEventListener('DOMContentLoaded', initView, false);
-
 
 async function createGroup() {
 	var group = await groups.create();
