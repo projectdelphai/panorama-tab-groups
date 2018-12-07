@@ -217,7 +217,7 @@ function makeGroupNode(group) {
         var inner = new_element('div', {class: 'inner'}, [top, right, bottom, left, top_right, bottom_right, bottom_left, top_left, header, content]);
         var node = new_element('div', {class: 'group'}, [inner]);
 
-        close.addEventListener('click', function(event) {
+        close.addEventListener('click', function(event) { 
             event.stopPropagation();
             closeGroup(content, group);
         }, false);
@@ -497,7 +497,7 @@ function updateGroupFit(group) {
         // fit
         var rect = node.content.getBoundingClientRect();
 
-        var ratio = 0.7134385060597683;
+        var ratio = 0.68;
         var small = false;
         var deck = false;
 
@@ -553,7 +553,7 @@ function updateGroupFit(group) {
         }
 
         if(!deck){
-                node.newtab.style.display = '';
+                node.newtab.style.display = 'block';
         }else{
                 node.newtab.style.display = 'none';
         }

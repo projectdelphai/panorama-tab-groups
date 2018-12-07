@@ -79,8 +79,10 @@ body {
 }
 
 #pinnedTabs .tab .inner {
-	margin: 0;
-	padding: 1px;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
 	background-image: none !important;
 	border: 0;
 	display: flex;
@@ -96,6 +98,8 @@ body {
 }
 
 #pinnedTabs .tab .thumbnail {
-	width: 100%;
-	padding-top: 100%;
+	top: 1px;
+	right: 1px;
+	bottom: 1px;
+	left: 1px;
 }
