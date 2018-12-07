@@ -1,55 +1,35 @@
 
 .group {
+	display: flex;
 	position: absolute;
 }
 
 .group > .inner {
-	position: absolute;
-	top: 4px;
-	left: 4px;
-	right: 4px;
-	bottom: 4px;
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	margin: 4px;
+	position: relative;
 
 	border: rgba(12, 12, 13, 0.2) 1px solid;
 	border-radius: 4px;
 
 	background-color: #ededf0;
-}
-
-.group > .inner:before {
-	content: '';
-
-	position: absolute;
-	z-index: -1;
-
-	top: -2px;
-	left: -2px;
-	right: -2px;
-	bottom: -2px;
-
-	border: 1px solid #ffffff;
-	border-radius: 5px;
+	box-shadow: 0 0 1px #fff;
 }
 
 .group .header {
+	display: flex;
+	justify-content: stretch;
 	height: 23px;
-
-	position: absolute;
-	top: 5px;
-	right: 10px;
-	left: 10px;
-	z-index: 100;
+	margin: 5px 10px 0;
 
 	cursor: move;
 }
 
 .group .header input {
-	width: calc(100% - 60px);
+	flex: 1;
 	height: 20px;
-
-	position: absolute;
-	top: -2px;
-	left: -1px;
 
 	display: none;
 
@@ -64,14 +44,8 @@
 }
 
 .group .header .name {
-	min-width: 50px;
-	max-width: calc(100% - 60px);
-
+	flex: 1;
 	padding-right: 5px;
-
-	position: absolute;
-	top: 0;
-	left: 0;
 
 	color: #737373;
 	font-size: 13px;
@@ -95,11 +69,9 @@
 }
 
 .group .header .tab_count {
+	margin-top: -5px;
+	margin-right: 5px;
 	padding: 3px 5px 3px 5px;
-
-	position: absolute;
-	top: -5px;
-	right: 20px;
 
 	border-radius: 0 0 3px 3px;
 
@@ -115,10 +87,8 @@
 .group .header .close {
 	width: 20px;
 	height: 20px;
-
-	position: absolute;
-	top: 0;
-	right: -5px;
+	margin-right: -5px;
+	position: relative;
 
 	cursor: pointer;
 
@@ -129,11 +99,9 @@
 }
 
 .group .content {
-	position: absolute;
-	top: 28px;
-	right: 4px;
-	left: 4px;
-	bottom: 4px;
+	flex-grow: 1;
+	margin: 4px;
+	position: relative;
 }
 
 .group .top {
