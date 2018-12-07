@@ -1,5 +1,7 @@
 
 .tab, .newtab {
+	display: flex;
+	flex-direction: column;
 	position: absolute;
 
 	cursor: pointer;
@@ -17,11 +19,8 @@
 }
 
 .tab .inner, .newtab .inner {
-	position: absolute;
-	top: 4px;
-	left: 4px;
-	right: 4px;
-	bottom: 4px;
+	margin: 4px;
+	position: relative;
 }
 
 .tab.inactive .inner {
@@ -39,6 +38,7 @@
 }
 
 .newtab .inner {
+	flex-grow: 1;
 	border: rgba(12, 12, 13, 1) 2px dashed;
 
 	background-image: url(/icons/plus_dark.svg);
@@ -60,11 +60,7 @@
 }
 
 .tab .thumbnail {
-	position: absolute;
-	top: 0;
-	right: 0;
-	bottom: 20px;
-	left: 0;
+	padding-top: 51.07713690062543%;
 
 	background-color: #f9f9fa;
 	background-size: cover;
@@ -109,11 +105,7 @@
 
 .tab .name {
 	height: 20px;
-
-	position: absolute;
-	bottom: 0;
-	left: 2px;
-	right: 2px;
+	margin: 0 2px;
 
 	font-size: 12px;
 	text-align: center;
