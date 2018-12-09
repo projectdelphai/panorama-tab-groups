@@ -21,31 +21,17 @@
 .group .header {
 	display: flex;
 	justify-content: stretch;
+	align-items: flex-start;
 	height: 23px;
 	margin: 5px 10px 0;
 
 	cursor: move;
 }
 
-.group .header input {
-	flex: 1;
-	height: 20px;
-
-	display: none;
-
-	border: none;
-
-	background: none;
-
-	color: #737373;
-	font-size: 13px;
-	line-height: 18px;
-	font-family: inherit;
-}
-
+.group .header input,
 .group .header .name {
 	flex: 1;
-	padding-right: 5px;
+	padding: 0 5px 0 0;
 
 	color: #737373;
 	font-size: 13px;
@@ -54,7 +40,19 @@
 	text-overflow: '..';
 
 	overflow: hidden;
+}
 
+.group .header input {
+	display: none;
+
+	border: none;
+
+	background: none;
+
+	font-family: inherit;
+}
+
+.group .header .name {
 	cursor: text;
 }
 
