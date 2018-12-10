@@ -1,9 +1,12 @@
 
 .group {
+	display: flex;
 	position: absolute;
 }
 
 .group > .inner {
+	display: flex;
+	flex-direction: column;
 	position: absolute;
 	top: 4px;
 	left: 4px;
@@ -14,64 +17,23 @@
 	border-radius: 4px;
 
 	background-color: #ededf0;
-}
-
-.group > .inner:before {
-	content: '';
-
-	position: absolute;
-	z-index: -1;
-
-	top: -2px;
-	left: -2px;
-	right: -2px;
-	bottom: -2px;
-
-	border: 1px solid #ffffff;
-	border-radius: 5px;
+	box-shadow: 0 0 1px #fff;
 }
 
 .group .header {
+	display: flex;
+	justify-content: stretch;
+	align-items: flex-start;
 	height: 23px;
-
-	position: absolute;
-	top: 5px;
-	right: 10px;
-	left: 10px;
-	z-index: 100;
+	margin: 5px 10px 0;
 
 	cursor: move;
 }
 
-.group .header input {
-	width: calc(100% - 60px);
-	height: 20px;
-
-	position: absolute;
-	top: -2px;
-	left: -1px;
-
-	display: none;
-
-	border: none;
-
-	background: none;
-
-	color: #737373;
-	font-size: 13px;
-	line-height: 18px;
-	font-family: inherit;
-}
-
+.group .header input,
 .group .header .name {
-	min-width: 50px;
-	max-width: calc(100% - 60px);
-
-	padding-right: 5px;
-
-	position: absolute;
-	top: 0;
-	left: 0;
+	flex: 1;
+	padding: 0 5px 0 0;
 
 	color: #737373;
 	font-size: 13px;
@@ -80,7 +42,19 @@
 	text-overflow: '..';
 
 	overflow: hidden;
+}
 
+.group .header input {
+	display: none;
+
+	border: none;
+
+	background: none;
+
+	font-family: inherit;
+}
+
+.group .header .name {
 	cursor: text;
 }
 
@@ -95,11 +69,9 @@
 }
 
 .group .header .tab_count {
+	margin-top: -5px;
+	margin-right: 5px;
 	padding: 3px 5px 3px 5px;
-
-	position: absolute;
-	top: -5px;
-	right: 20px;
 
 	border-radius: 0 0 3px 3px;
 
@@ -115,10 +87,8 @@
 .group .header .close {
 	width: 20px;
 	height: 20px;
-
-	position: absolute;
-	top: 0;
-	right: -5px;
+	margin-right: -5px;
+	position: relative;
 
 	cursor: pointer;
 
@@ -129,11 +99,9 @@
 }
 
 .group .content {
-	position: absolute;
-	top: 28px;
-	right: 4px;
-	left: 4px;
-	bottom: 4px;
+	flex-grow: 1;
+	margin: 4px;
+	position: relative;
 }
 
 .group .top {

@@ -5,7 +5,7 @@ body.dark {
 }
 
 .dark #toolbar {
-	border-left-color: rgba(249, 249, 250, 0.2);
+	border-color: rgba(249, 249, 250, 0.2);
 }
 
 .dark #toolbar .button:hover {
@@ -26,6 +26,10 @@ body.dark {
 
 .dark #settings {
 	background-image: url(/icons/preferences_light.svg);
+}
+
+.dark #pinnedTabs {
+	border-color: rgba(249, 249, 250, 0.2);
 }
 
 /* groups */
