@@ -2,6 +2,7 @@
 'use strict';
 
 var tabNodes = {};
+var activeTabId = -1; // tabid of active tab in view
 
 async function initTabNodes() {
 
@@ -119,6 +120,22 @@ async function setActiveTabNode() {
 	});
 
 	tabNodes[lastActive].tab.classList.add('selected');
+    activeTabId = lastActive;
+}
+
+// Remove selected from all other thumbnails, add to tab with id given
+async function setActiveTabNodeById(tabId) {
+    await view.tabs.forEach(async function(tab) {
+        if (tabNodes[tab.id]) {
+            tabNodes[tab.id].tab.classList.remove('selected');
+        }
+    });
+    tabNodes[tabId].tab.classList.add('selected');
+    activeTabId = tabId;
+}
+
+function getActiveTabId() {
+    return activeTabId;
 }
 
 function deleteTabNode(tabId) {
