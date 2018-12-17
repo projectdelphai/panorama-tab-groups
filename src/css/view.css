@@ -91,10 +91,12 @@ body {
 }
 
 #pinnedTabs .tab .favicon {
+	background-color: transparent;
 	border: 0;
 	position: relative;
 }
 
 #pinnedTabs .tab .thumbnail {
 	bottom: 0;
+	filter: brightness(0.8);
 }
