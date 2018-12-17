@@ -43,6 +43,7 @@
 
     "browser_action": {
         "browser_style": true,
+        "default_area": "tabstrip",
         "default_icon": "icons/icon.svg",
         "theme_icons": [{
             "light": "icons/icon_light.svg",
