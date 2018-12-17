@@ -94,3 +94,7 @@ body {
 	border: 0;
 	position: relative;
 }
+
+#pinnedTabs .tab .thumbnail {
+	bottom: 0;
+}
