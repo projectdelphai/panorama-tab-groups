@@ -209,12 +209,14 @@ async function keyInput(e) {
         if (i == max || i == childNodes.length) {
             var newGroupId = -1;
             var groupsLength = Object.keys(groupNodes).length;
-            
-            // check if at last tab in group and switch to next group
-            if (groupId == groupsLength - 2) {
-                groupId = 0;
+           
+            var last = Object.keys(groupNodes)[groupsLength - 2];
+            if (groupId == last) {
+                var first = Object.keys(groupNodes)[0];
+                groupId = first;
             } else {
-                groupId++;
+                var index = Object.keys(groupNodes).indexOf(groupId.toString());
+                groupId = Object.keys(groupNodes)[index+1];
             }
             childNodes = groupNodes[groupId].content.childNodes;
             newTabId = Number(childNodes[0].getAttribute('tabId'));
@@ -244,10 +246,12 @@ async function keyInput(e) {
             var groupsLength = Object.keys(groupNodes).length;
             
             // check if at last tab in group and switch to next group
-            if (groupId == 0) {
-                groupId = groupsLength - 2;
+            var first = Object.keys(groupNodes)[0];
+            if (groupId == first) {
+                groupId = Object.keys(groupNodes)[groupsLength - 2];
             } else {
-                groupId--;
+                var index = Object.keys(groupNodes).indexOf(groupId.toString());
+                groupId = Object.keys(groupNodes)[index - 1];
             }
             childNodes = groupNodes[groupId].content.childNodes;
             var childNodesSize = Object.keys(childNodes).length - 2;
