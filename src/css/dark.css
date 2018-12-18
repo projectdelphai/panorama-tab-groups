@@ -82,10 +82,6 @@ body.dark {
 	opacity: 0.25;
 }
 
-.dark .tab .thumbnail {
-	filter: brightness(0.8);
-}
-
 .dark .tab .favicon {
 	border-right-color: #38383d;
 	border-bottom-color: #38383d;
