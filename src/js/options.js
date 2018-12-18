@@ -64,6 +64,8 @@ const nextView = 'activate-next-group';
 const previousView = 'activate-previous-group';
 
 async function init() {
+	restoreOptions();
+
     let commands = await browser.commands.getAll();
     for (command of commands) {
         document.querySelector("#" + command.name).value = command.shortcut;
@@ -111,6 +113,21 @@ async function resetPreviousView() {
     init();
 }
 
+function saveOptionToolbarPosition() {
+  browser.storage.sync.set({
+    toolbarPosition: document.querySelector('input[name="toolbarPosition"]:checked').value
+  });
+}
+
+function restoreOptions() {
+  browser.storage.sync.get({
+		toolbarPosition: 'top',
+	}).then((options) => {
+		// Toolbar
+    document.querySelector(`input[name="toolbarPosition"][value="${options.toolbarPosition}"]`).checked = true;
+  });
+}
+
 document.addEventListener('DOMContentLoaded', init);
 document.querySelector('#updateToggle').addEventListener('click', updateToggle);
 document.querySelector('#updateNextView').addEventListener('click', updateNextView);
@@ -118,3 +135,4 @@ document.querySelector('#updatePreviousView').addEventListener('click', updatePr
 document.querySelector('#resetToggle').addEventListener('click', resetToggle);
 document.querySelector('#resetNextView').addEventListener('click', resetNextView);
 document.querySelector('#resetPreviousView').addEventListener('click', resetPreviousView);
+document.querySelector('form[name="formToolbarPosition"]').addEventListener('change', saveOptionToolbarPosition);

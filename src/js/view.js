@@ -36,12 +36,15 @@ var view = {
 // Load settings
 browser.storage.sync.get({
     useDarkTheme: false,
-}).then((settings) => {
-    view.settings = settings;
+    toolbarPosition: 'top',
+}).then((options) => {
+    view.settings = options;
 
     if (view.settings.useDarkTheme) {
         useDarkTheme();
     }
+
+    setToolbarPosition(options.toolbarPosition);
 
     initView();
 });
@@ -52,6 +55,10 @@ function useDarkTheme() {
 
 function useLightTheme() {
     document.getElementsByTagName("body")[0].classList.remove('dark');
+}
+
+function setToolbarPosition(position) {
+    document.getElementsByTagName("body")[0].classList.add(`toolbar-${position}`);
 }
 
 async function captureThumbnail(tabId) {
@@ -209,7 +216,7 @@ async function keyInput(e) {
         if (i == max || i == childNodes.length) {
             var newGroupId = -1;
             var groupsLength = Object.keys(groupNodes).length;
-           
+
             var last = Object.keys(groupNodes)[groupsLength - 2];
             if (groupId == last) {
                 var first = Object.keys(groupNodes)[0];
@@ -244,7 +251,7 @@ async function keyInput(e) {
         if (i == 0 || i == childNodes.length) {
             var newGroupId = -1;
             var groupsLength = Object.keys(groupNodes).length;
-            
+
             // check if at last tab in group and switch to next group
             var first = Object.keys(groupNodes)[0];
             if (groupId == first) {
