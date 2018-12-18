@@ -50,10 +50,6 @@ body {
 	background-image: url(/icons/plus_dark.svg);
 }
 
-#toggleTheme {
-	background-image: url(/icons/theme_dark.svg);
-}
-
 #settings {
 	background-image: url(/icons/preferences_dark.svg);
 }

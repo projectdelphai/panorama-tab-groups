@@ -35,26 +35,17 @@ var view = {
 
 // Load settings
 browser.storage.sync.get({
-    useDarkTheme: false,
+    theme: 'light',
     toolbarPosition: 'top',
 }).then((options) => {
-    view.settings = options;
-
-    if (view.settings.useDarkTheme) {
-        useDarkTheme();
-    }
-
+    setTheme(options.theme);
     setToolbarPosition(options.toolbarPosition);
 
     initView();
 });
 
-function useDarkTheme() {
-    document.getElementsByTagName("body")[0].classList.add('dark');
-}
-
-function useLightTheme() {
-    document.getElementsByTagName("body")[0].classList.remove('dark');
+function setTheme(theme) {
+    document.getElementsByTagName("body")[0].classList.add(`theme-${theme}`);
 }
 
 function setToolbarPosition(position) {
@@ -136,20 +127,6 @@ async function initView() {
 
     // Listen for clicks on new group button
     document.getElementById('newGroup').addEventListener('click', createGroup, false);
-
-    // Toggle between light and dark theme
-    document.getElementById('toggleTheme').addEventListener('click', function() {
-        // Switch
-        view.settings.useDarkTheme = !view.settings.useDarkTheme;
-        if (view.settings.useDarkTheme) {
-            useDarkTheme();
-        } else {
-            useLightTheme();
-        }
-
-        // Save
-        browser.storage.sync.set(view.settings);
-    }, false);
 
     // Listen for clicks on settings button
     document.getElementById('settings').addEventListener('click', function() {

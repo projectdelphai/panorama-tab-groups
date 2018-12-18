@@ -113,6 +113,12 @@ async function resetPreviousView() {
     init();
 }
 
+function saveOptionTheme() {
+  browser.storage.sync.set({
+    theme: document.querySelector('input[name="theme"]:checked').value
+  });
+}
+
 function saveOptionToolbarPosition() {
   browser.storage.sync.set({
     toolbarPosition: document.querySelector('input[name="toolbarPosition"]:checked').value
@@ -121,8 +127,12 @@ function saveOptionToolbarPosition() {
 
 function restoreOptions() {
   browser.storage.sync.get({
+		theme: 'light',
 		toolbarPosition: 'top',
 	}).then((options) => {
+		// Theme
+    document.querySelector(`input[name="theme"][value="${options.theme}"]`).checked = true;
+
 		// Toolbar
     document.querySelector(`input[name="toolbarPosition"][value="${options.toolbarPosition}"]`).checked = true;
   });
@@ -135,4 +145,5 @@ document.querySelector('#updatePreviousView').addEventListener('click', updatePr
 document.querySelector('#resetToggle').addEventListener('click', resetToggle);
 document.querySelector('#resetNextView').addEventListener('click', resetNextView);
 document.querySelector('#resetPreviousView').addEventListener('click', resetPreviousView);
+document.querySelector('form[name="formTheme"]').addEventListener('change', saveOptionTheme);
 document.querySelector('form[name="formToolbarPosition"]').addEventListener('change', saveOptionToolbarPosition);
