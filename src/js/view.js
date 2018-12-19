@@ -29,15 +29,26 @@ var view = {
     groupsNode: null,
     dragIndicator: null,
     //intervalId: null,
-    settings: {},
     tabs: {},
 };
 
 // Load settings
 browser.storage.sync.get({
+    useDarkTheme: false,
     theme: 'light',
     toolbarPosition: 'top',
 }).then((options) => {
+    /*
+     * Migrate legacy theme setting
+     * @deprecate should be removed in v1.0.0
+     */
+    if (options.useDarkTheme) {
+      options.theme = 'dark';
+      browser.storage.sync.set({
+        useDarkTheme: null,
+        theme: 'dark',
+      });
+    }
     setTheme(options.theme);
     setToolbarPosition(options.toolbarPosition);
 
