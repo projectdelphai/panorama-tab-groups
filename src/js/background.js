@@ -1,6 +1,8 @@
 
 'use strict';
 
+let manifest = browser.runtime.getManifest();
+
 /*var config = {
 	tab: {
 		minWidth: 100,
@@ -37,7 +39,7 @@ async function triggerCommand(command) {
 		await browser.sessions.setWindowValue(windowId, 'activeGroup', activeGroup);
 
 		await toggleVisibleTabs(activeGroup, true);
-        
+
 	}else if (command === "toggle-panorama-view") {
 		toggleView();
 	}
@@ -116,14 +118,14 @@ function tabDetached(tabId, detachInfo) {
 }
 
 
-/** Callback function which will be called whenever the user switches tabs. 
- * This callback needed for properly switch between groups, when current tab 
+/** Callback function which will be called whenever the user switches tabs.
+ * This callback needed for properly switch between groups, when current tab
  * is from another group (or is Panorama Tab Groups tab).
 */
 async function tabActivated(activeInfo) {
 
 	var tab = await browser.tabs.get(activeInfo.tabId);
-	
+
 	if(tab.pinned) {
 		return;
 	}
@@ -182,7 +184,7 @@ async function setupWindows() {
 	const windows = browser.windows.getAll({});
 
 	for(const window of await windows) {
-		var groups = await browser.sessions.getWindowValue(window.id, 'groups');	
+		var groups = await browser.sessions.getWindowValue(window.id, 'groups');
 
 		if(!groups || !groups.length) {
 			console.log(`No groups found for window ${window.id}!`);
@@ -325,10 +327,24 @@ function handleMessage(message, sender) {
     }
     else if (message == "activate-next-group") {
         triggerCommand("activate-next-group");
-    } 
+    }
     else if (message == "activate-previous-group") {
         triggerCommand("activate-previous-group");
     }
 }
 
 browser.runtime.onMessageExternal.addListener(handleMessage);
+
+/*
+ * Handle upboarding
+ */
+function onRuntimeInstallNotification(details) {
+	// Open new tab to the release notes after update
+  if (details.reason = 'update') {
+    browser.tabs.create({
+      url: `https://github.com/projectdelphai/panorama-tab-groups/releases/tag/${manifest.version}`
+    });
+  }
+}
+
+browser.runtime.onInstalled.addListener(onRuntimeInstallNotification);
