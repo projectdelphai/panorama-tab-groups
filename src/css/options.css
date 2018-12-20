@@ -4,16 +4,10 @@ h2 {
 	line-height: 2em;
 }
 
-section label {
+.keyboardShortcuts label {
 	width: 220px;
 	display: inline-block;
 	line-height: 2em;
-}
-
-section input[type=radio] {
-	height: 2em;
-	display: inline-block;
-	vertical-align: bottom;
 }
 
 .keyboardShortcuts button {

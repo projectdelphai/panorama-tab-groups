@@ -29,29 +29,38 @@ var view = {
     groupsNode: null,
     dragIndicator: null,
     //intervalId: null,
-    settings: {},
     tabs: {},
 };
 
 // Load settings
 browser.storage.sync.get({
     useDarkTheme: false,
-}).then((settings) => {
-    view.settings = settings;
-
-    if (view.settings.useDarkTheme) {
-        useDarkTheme();
+    theme: 'light',
+    toolbarPosition: 'top',
+}).then((options) => {
+    /*
+     * Migrate legacy theme setting
+     * @deprecate should be removed in v1.0.0
+     */
+    if (options.useDarkTheme) {
+      options.theme = 'dark';
+      browser.storage.sync.set({
+        useDarkTheme: null,
+        theme: 'dark',
+      });
     }
+    setTheme(options.theme);
+    setToolbarPosition(options.toolbarPosition);
 
     initView();
 });
 
-function useDarkTheme() {
-    document.getElementsByTagName("body")[0].classList.add('dark');
+function setTheme(theme) {
+    document.getElementsByTagName("body")[0].classList.add(`theme-${theme}`);
 }
 
-function useLightTheme() {
-    document.getElementsByTagName("body")[0].classList.remove('dark');
+function setToolbarPosition(position) {
+    document.getElementsByTagName("body")[0].classList.add(`toolbar-${position}`);
 }
 
 async function captureThumbnail(tabId) {
@@ -130,20 +139,6 @@ async function initView() {
     // Listen for clicks on new group button
     document.getElementById('newGroup').addEventListener('click', createGroup, false);
 
-    // Toggle between light and dark theme
-    document.getElementById('toggleTheme').addEventListener('click', function() {
-        // Switch
-        view.settings.useDarkTheme = !view.settings.useDarkTheme;
-        if (view.settings.useDarkTheme) {
-            useDarkTheme();
-        } else {
-            useLightTheme();
-        }
-
-        // Save
-        browser.storage.sync.set(view.settings);
-    }, false);
-
     // Listen for clicks on settings button
     document.getElementById('settings').addEventListener('click', function() {
         browser.runtime.openOptionsPage();
@@ -209,7 +204,7 @@ async function keyInput(e) {
         if (i == max || i == childNodes.length) {
             var newGroupId = -1;
             var groupsLength = Object.keys(groupNodes).length;
-           
+
             var last = Object.keys(groupNodes)[groupsLength - 2];
             if (groupId == last) {
                 var first = Object.keys(groupNodes)[0];
@@ -244,7 +239,7 @@ async function keyInput(e) {
         if (i == 0 || i == childNodes.length) {
             var newGroupId = -1;
             var groupsLength = Object.keys(groupNodes).length;
-            
+
             // check if at last tab in group and switch to next group
             var first = Object.keys(groupNodes)[0];
             if (groupId == first) {

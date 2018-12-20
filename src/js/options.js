@@ -64,6 +64,8 @@ const nextView = 'activate-next-group';
 const previousView = 'activate-previous-group';
 
 async function init() {
+	restoreOptions();
+
     let commands = await browser.commands.getAll();
     for (command of commands) {
         document.querySelector("#" + command.name).value = command.shortcut;
@@ -111,6 +113,31 @@ async function resetPreviousView() {
     init();
 }
 
+function saveOptionTheme() {
+  browser.storage.sync.set({
+    theme: document.querySelector('input[name="theme"]:checked').value
+  });
+}
+
+function saveOptionToolbarPosition() {
+  browser.storage.sync.set({
+    toolbarPosition: document.querySelector('input[name="toolbarPosition"]:checked').value
+  });
+}
+
+function restoreOptions() {
+  browser.storage.sync.get({
+		theme: 'light',
+		toolbarPosition: 'top',
+	}).then((options) => {
+		// Theme
+    document.querySelector(`input[name="theme"][value="${options.theme}"]`).checked = true;
+
+		// Toolbar
+    document.querySelector(`input[name="toolbarPosition"][value="${options.toolbarPosition}"]`).checked = true;
+  });
+}
+
 document.addEventListener('DOMContentLoaded', init);
 document.querySelector('#updateToggle').addEventListener('click', updateToggle);
 document.querySelector('#updateNextView').addEventListener('click', updateNextView);
@@ -118,3 +145,5 @@ document.querySelector('#updatePreviousView').addEventListener('click', updatePr
 document.querySelector('#resetToggle').addEventListener('click', resetToggle);
 document.querySelector('#resetNextView').addEventListener('click', resetNextView);
 document.querySelector('#resetPreviousView').addEventListener('click', resetPreviousView);
+document.querySelector('form[name="formTheme"]').addEventListener('change', saveOptionTheme);
+document.querySelector('form[name="formToolbarPosition"]').addEventListener('change', saveOptionToolbarPosition);

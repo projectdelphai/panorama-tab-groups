@@ -22,7 +22,7 @@ body {
 	flex-wrap: wrap;
 	padding: 4px;
 
-	border-bottom: rgba(12, 12, 13, 0.1) 1px solid;
+	border-bottom: 1px solid rgba(12, 12, 13, 0.1);
 
 	background-color: inherit;
 }
@@ -48,10 +48,6 @@ body {
 
 #newGroup {
 	background-image: url(/icons/plus_dark.svg);
-}
-
-#toggleTheme {
-	background-image: url(/icons/theme_dark.svg);
 }
 
 #settings {
@@ -99,4 +95,43 @@ body {
 #pinnedTabs .tab .thumbnail {
 	bottom: 0;
 	filter: brightness(0.8);
+}
+
+.toolbar-right,
+.toolbar-left {
+	flex-direction: row;
+}
+
+.toolbar-right #toolbar,
+.toolbar-left #toolbar {
+	flex-direction: column;
+	border-bottom: none;
+}
+
+.toolbar-bottom #toolbar,
+.toolbar-right #toolbar {
+	order: 1;
+}
+
+.toolbar-right #toolbar {
+	border-left: 1px solid rgba(12, 12, 13, 0.1);
+}
+
+.toolbar-bottom #toolbar {
+	border-top: 1px solid rgba(12, 12, 13, 0.1);
+	border-bottom: none;
+}
+
+.toolbar-left #toolbar {
+	border-right: 1px solid rgba(12, 12, 13, 0.1);
+}
+
+.toolbar-right #pinnedTabs,
+.toolbar-left #pinnedTabs {
+	flex-direction: column;
+	border-top: 1px solid #ccc;
+	border-left: none;
+	margin-top: 4px;
+	margin-left: 0;
+	padding: 4px 0;
 }

@@ -1,68 +1,64 @@
 
 /* view */
-body.dark {
+body.theme-dark {
 	background-color: #2a2a2e;
 }
 
-.dark #toolbar {
+.theme-dark #toolbar {
 	border-color: rgba(249, 249, 250, 0.2);
 }
 
-.dark #toolbar .button:hover {
+.theme-dark #toolbar .button:hover {
 	background-color: rgba(249, 249, 250, 0.2);
 }
 
-.dark #toolbar .button:active {
+.theme-dark #toolbar .button:active {
 	background-color: rgba(249, 249, 250, 0.25);
 }
 
-.dark #newGroup {
+.theme-dark #newGroup {
 	background-image: url(/icons/plus_light.svg);
 }
 
-.dark #toggleTheme {
-	background-image: url(/icons/theme_light.svg);
-}
-
-.dark #settings {
+.theme-dark #settings {
 	background-image: url(/icons/preferences_light.svg);
 }
 
-.dark #pinnedTabs {
+.theme-dark #pinnedTabs {
 	border-color: rgba(249, 249, 250, 0.2);
 }
 
 /* groups */
-.dark .group > .inner {
+.theme-dark .group > .inner {
 	border-color: rgba(249, 249, 250, 0.2);
 
 	background-color: #0c0c0d;
 }
 
-.dark .group > .inner:before {
+.theme-dark .group > .inner:before {
 	border: none;
 }
 
-.dark .group .header input {
+.theme-dark .group .header input {
 	color: #b1b1b3;
 }
 
-.dark .group .header input.edit {
+.theme-dark .group .header input.edit {
 	color: #f9f9fa;
 }
 
-.dark .group .header .tab_count {
+.theme-dark .group .header .tab_count {
 	background-color: rgba(249, 249, 250, 0.2);
 
 	color: #b1b1b3;
 }
 
-.dark .group .header .close {
+.theme-dark .group .header .close {
 	background-image: url(/icons/group_close_dark.svg);
 }
 
 /* tabs */
-.dark .tab .inner {
+.theme-dark .tab .inner {
 	border-color: #38383d;
 
 	outline-color: #58585b;
@@ -70,11 +66,11 @@ body.dark {
 	background-color: #38383d;
 }
 
-.dark .tab.inactive .inner {
+.theme-dark .tab.inactive .inner {
 	opacity: 0.6;
 }
 
-.dark .newtab .inner {
+.theme-dark .newtab .inner {
 	border: rgba(249, 249, 250, 1) 2px dashed;
 
 	background-image: url(/icons/plus_light.svg);
@@ -82,13 +78,13 @@ body.dark {
 	opacity: 0.25;
 }
 
-.dark .tab .favicon {
+.theme-dark .tab .favicon {
 	border-right-color: #38383d;
 	border-bottom-color: #38383d;
 
 	background-color: #38383d;
 }
 
-.dark .tab .name {
+.theme-dark .tab .name {
 	color: #d7d7db;
 }
