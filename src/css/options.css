@@ -35,11 +35,6 @@ h2 {
 
 .input-radio-image img {
 	display: block;
-	opacity: .75;
-}
-
-.input-radio-image input:checked ~ label img {
-	opacity: 1;
 }
 
 .input-radio-image input:checked ~ label:before {
