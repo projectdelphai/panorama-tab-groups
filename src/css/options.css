@@ -19,3 +19,35 @@ h2 {
 .keyboardShortcuts input {
 	width: 120px;
 }
+
+.input-radio-image {
+	display: inline-block;
+	margin-right: 10px;
+	text-align: center;
+	position: relative;
+}
+
+.input-radio-image input {
+	position: absolute;
+	z-index: -1;
+	opacity: 0;
+}
+
+.input-radio-image img {
+	display: block;
+	opacity: .75;
+}
+
+.input-radio-image input:checked ~ label img {
+	opacity: 1;
+}
+
+.input-radio-image input:checked ~ label:before {
+	content: '';
+	border: 2px solid #0a84ff;
+	width: 36px;
+	height: 36px;
+	position: absolute;
+	top: 0;
+	left: 0;
+}
