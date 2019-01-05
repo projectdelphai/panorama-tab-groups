@@ -1,27 +1,8 @@
-
-'use strict';
-
-/**
- * Helper function to create a new element with the given attributes and children
- */
-function new_element(name, attributes, children) {
-
-    const e = document.createElement(name);
-
-    for(const key in attributes) {
-        if(key == 'content') {
-            e.appendChild(document.createTextNode(attributes[key]));
-        }else{
-            e.setAttribute(key.replace(/_/g, '-'), attributes[key]);
-        }
-    }
-
-    for(const child of children || []) {
-        e.appendChild(child);
-    }
-
-    return e;
-}
+import { getGroupId } from './tabs.js';
+import { groupDragOver, outsideDrop, createDragIndicator } from './drag.js';
+import { groupNodes, initGroupNodes, closeGroup, makeGroupNode, fillGroupNodes, insertTab, resizeGroups, updateGroupFit } from './groupNodes.js';
+import { initTabNodes, makeTabNode, updateTabNode, setActiveTabNode, setActiveTabNodeById, getActiveTabId, deleteTabNode, updateThumbnail, updateFavicon } from './tabNodes.js';
+import * as groups from './groups.js';
 
 var view = {
     windowId: -1,
@@ -120,14 +101,13 @@ async function initView() {
     view.tabId = (await browser.tabs.getCurrent()).id;
     view.groupsNode = document.getElementById('groups');
 
-    view.dragIndicator = new_element('div', {class: 'drag_indicator'});
-    view.groupsNode.appendChild(view.dragIndicator);
+    view.groupsNode.appendChild(createDragIndicator());
 
     await groups.init();
 
     // init Nodes
-    await initTabNodes();
-    await initGroupNodes();
+    await initTabNodes(view.tabId);
+    await initGroupNodes(view.groupsNode);
 
     resizeGroups();
 
@@ -187,7 +167,7 @@ async function initView() {
 async function keyInput(e) {
     if (e.key === "ArrowRight") {
         var activeTabId = getActiveTabId();
-        var groupId = await view.tabs.getGroupId(activeTabId);
+        var groupId = await getGroupId(activeTabId);
         var childNodes = groupNodes[groupId].content.childNodes;
 
         for (var i = 0; i < childNodes.length; i++) {
@@ -222,7 +202,7 @@ async function keyInput(e) {
         setActiveTabNodeById(newTabId);
     } else if (e.key === "ArrowLeft") {
         var activeTabId = getActiveTabId();
-        var groupId = await view.tabs.getGroupId(activeTabId);
+        var groupId = await getGroupId(activeTabId);
         var childNodes = groupNodes[groupId].content.childNodes;
 
         for (var i = 0; i < childNodes.length; i++) {
@@ -282,7 +262,7 @@ async function tabCreated(tab) {
         // Wait for background script to assign this tab to a group
         var groupId = undefined;
         while(groupId === undefined) {
-            groupId = await view.tabs.getGroupId(tab.id);
+            groupId = await getGroupId(tab.id);
         }
 
         var group = groups.get(groupId);
@@ -347,5 +327,5 @@ async function tabActivated(activeInfo) {
         } );
     }
 
-    setActiveTabNode();
+    setActiveTabNode(view.tabId);
 }
