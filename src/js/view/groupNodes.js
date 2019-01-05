@@ -199,13 +199,14 @@ export function makeGroupNode(group) {
 
         // header
         var name = new_element('span', {class: 'name', content: group.name});
+        var spacer = new_element('span', {class: 'spacer'});
         var input = new_element('input', {type: 'text', value: group.name});
 
         var tabCount = new_element('span', {class: 'tab_count'});
 
         var close = new_element('div', {class: 'close'});
 
-        var header = new_element('div', {class: 'header'}, [name, input, tabCount, close]);
+        var header = new_element('div', {class: 'header'}, [name, input, spacer, tabCount, close]);
 
         // newtab
         var newtab = new_element('div', {class: 'newtab'}, [new_element('div', {class: 'inner'})]);
