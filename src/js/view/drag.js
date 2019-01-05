@@ -161,7 +161,7 @@ export async function outsideDrop(e) {
 
         var groupElement = groupNodes[group.id].group;
 
-        view.groupsNode.appendChild(groupElement);
+        e.target.appendChild(groupElement);
 
         resizeGroups();
 

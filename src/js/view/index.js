@@ -85,7 +85,7 @@ async function doubleClick(e) {
     }
     else if (e.target.id === "groups")
     {
-        createGroup();
+        createGroup(e.clientX, e.clientY);
     }
 }
 
@@ -117,7 +117,7 @@ async function initView() {
     // set all listeners
 
     // Listen for clicks on new group button
-    document.getElementById('newGroup').addEventListener('click', createGroup, false);
+    document.getElementById('newGroup').addEventListener('click', e => createGroup(), false);
 
     // Listen for clicks on settings button
     document.getElementById('settings').addEventListener('click', function() {
@@ -132,7 +132,7 @@ async function initView() {
         if ( event.target != document.getElementById('groups') ) return; // ignore middle clicks in foreground
         if ( event.button != 1 ) return; // middle mouse
 
-        createGroup();
+        createGroup(e.clientX, e.clientY);
     }, false);
 
     document.addEventListener('visibilitychange', function() {
@@ -241,10 +241,15 @@ async function keyInput(e) {
     }
 }
 
-async function createGroup() {
+async function createGroup(x = 75, y = 75) {
     var group = await groups.create();
-    makeGroupNode(group);
-    var groupElement = groupNodes[group.id].group
+
+    group.rect.x = (x - 75) / window.innerWidth;
+    group.rect.y = (y - 75) / window.innerHeight;
+    group.rect.w = 150 / window.innerWidth;
+    group.rect.h = 150 / window.innerHeight;
+
+    var groupElement = makeGroupNode(group);
 
     view.groupsNode.appendChild(groupElement);
 
