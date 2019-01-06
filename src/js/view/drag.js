@@ -1,12 +1,32 @@
-
-'use strict';
+import { setGroupId, getGroupId } from './tabs.js';
+import { groupNodes, makeGroupNode, resizeGroups, updateGroupFit, insertTab } from './groupNodes.js';
+import * as groups from './groups.js';
+import { new_element } from './utils.js';
 
 var dragTab = null;
 var dragOverTab = null;
 var dragCount = 0;
 var dragDropBefore;
+var dragIndicator;
 
-function tabDragStart( e ) {
+export function createDragIndicator() {
+	dragIndicator = new_element('div', {class: 'drag_indicator'});
+	return dragIndicator;
+}
+
+export async function tabMoved(tabId, moveInfo) {
+    var windowId = (await browser.windows.getCurrent()).id;
+    if (windowId == moveInfo.windowId) {
+        browser.tabs.get(tabId).then(async function(tab) {
+            await insertTab(tab);
+            groups.forEach(async function(group) {
+                updateGroupFit(group);
+            });
+        });
+    }
+}
+
+export function tabDragStart( e ) {
 	if ( this.classList.contains( 'pinned' ) ) {
 		e.preventDefault();
 		return;
@@ -24,11 +44,11 @@ function tabDragStart( e ) {
 	dragTab = this;
 }
 
-function tabDragEnter(e) {
+export function tabDragEnter(e) {
 	e.preventDefault();
 
 	if(dragOverTab && this != dragOverTab) {
-		view.dragIndicator.classList.remove('show');
+		dragIndicator.classList.remove('show');
 		dragOverTab = this;
 	}
 
@@ -38,17 +58,17 @@ function tabDragEnter(e) {
 	dragCount++;
 }
 
-function tabDragLeave(e) {
+export function tabDragLeave(e) {
 	e.preventDefault();
 
 	dragCount--;
 	if(dragCount == 0) {
-		view.dragIndicator.classList.remove('show');
+		dragIndicator.classList.remove('show');
 		dragOverTab = null;
 	}
 }
 
-function tabDragOver(e) {
+export function tabDragOver(e) {
 	e.preventDefault();
 
 	e.dataTransfer.dropEffect = 'move';  // See the section on the DataTransfer object.
@@ -56,15 +76,15 @@ function tabDragOver(e) {
 	if(dragOverTab && dragTab != dragOverTab) {
 		var rect = dragOverTab.getBoundingClientRect();
 
-		view.dragIndicator.classList.add('show');
-		view.dragIndicator.style.height = (rect.height - 8) + 'px';
-		view.dragIndicator.style.top = (window.scrollY + rect.top) + 'px';
+		dragIndicator.classList.add('show');
+		dragIndicator.style.height = (rect.height - 8) + 'px';
+		dragIndicator.style.top = (window.scrollY + rect.top) + 'px';
 
 		if(e.clientX < rect.left+(rect.width/2)) {
-			view.dragIndicator.style.left = (rect.left - 5) + 'px';
+			dragIndicator.style.left = (rect.left - 5) + 'px';
 			dragDropBefore = true;
 		}else{
-			view.dragIndicator.style.left = (rect.left + rect.width - 5) + 'px';
+			dragIndicator.style.left = (rect.left + rect.width - 5) + 'px';
 			dragDropBefore = false;
 		}
 	}
@@ -72,7 +92,7 @@ function tabDragOver(e) {
 	return false;
 }
 
-async function tabDrop(e) {
+export async function tabDrop(e) {
 	e.stopPropagation();
 
 	if(dragTab !== dragOverTab) {
@@ -87,10 +107,10 @@ async function tabDrop(e) {
 		});
 
 		var toTabId = Number(dragOverTab.getAttribute('tabId'));
-		var groupId = await view.tabs.getGroupId(toTabId);
+		var groupId = await getGroupId(toTabId);
 
 		var tabId = Number(dragTab.getAttribute('tabId'));
-		view.tabs.setGroupId(tabId, groupId);
+		setGroupId(tabId, groupId);
 
 
 		var tab = await browser.tabs.get(tabId);
@@ -116,7 +136,7 @@ async function tabDrop(e) {
 	return false;
 }
 
-function groupDragOver(e) {
+export function groupDragOver(e) {
 	e.preventDefault(); // Necessary. Allows us to drop.
 	e.dataTransfer.dropEffect = 'move';  // See the section on the DataTransfer object.
 
@@ -131,7 +151,7 @@ async function putTabInGroup(groupId) {
 	});
 
 	var tabId = Number(dragTab.getAttribute('tabId'));
-	view.tabs.setGroupId(tabId, groupId);
+	setGroupId(tabId, groupId);
 
 	var toIndex = -1;
 
@@ -140,7 +160,7 @@ async function putTabInGroup(groupId) {
 	browser.tabs.onMoved.addListener(tabMoved);
 }
 
-async function outsideDrop(e) {
+export async function outsideDrop(e) {
         e.stopPropagation();
 
         var group = await groups.create();
@@ -153,7 +173,7 @@ async function outsideDrop(e) {
 
         var groupElement = groupNodes[group.id].group;
 
-        view.groupsNode.appendChild(groupElement);
+        e.target.appendChild(groupElement);
 
         resizeGroups();
 
@@ -164,7 +184,7 @@ async function outsideDrop(e) {
         return false;
 }
 
-async function groupDrop(e) {
+export async function groupDrop(e) {
 	e.stopPropagation();
 
 	var groupId = Number(this.getAttribute('groupId'));
@@ -174,9 +194,8 @@ async function groupDrop(e) {
 	return false;
 }
 
-function tabDragEnd(e) {
+export function tabDragEnd(e) {
 	dragCount = 0;
 	this.classList.remove('drag');
-	view.dragIndicator.classList.remove('show');
-
+	dragIndicator.classList.remove('show');
 }

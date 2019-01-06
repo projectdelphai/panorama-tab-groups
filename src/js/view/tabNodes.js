@@ -1,21 +1,26 @@
+import { forEachTab } from './tabs.js';
+import { tabDragStart, tabDragEnter, tabDragOver, tabDragLeave, tabDrop, tabDragEnd } from './drag.js';
+import { new_element } from './utils.js';
 
-'use strict';
-
-var tabNodes = {};
+export var tabNodes = {};
 var activeTabId = -1; // tabid of active tab in view
 
-async function initTabNodes() {
+export function getTabNode(tabId){
+	return tabNodes[ tabId ].tab;
+}
 
-	await view.tabs.forEach(async function(tab) {
+export async function initTabNodes(tabId) {
+
+	await forEachTab(async function(tab) {
 		makeTabNode(tab);
 		updateTabNode(tab);
 		updateFavicon(tab);
 		updateThumbnail(tab.id);
 	});
-	setActiveTabNode();
+	setActiveTabNode(tabId);
 }
 
-function makeTabNode(tab) {
+export function makeTabNode(tab) {
 
 	var thumbnail = new_element('div', {class: 'thumbnail'});
 	var favicon = new_element('div', {class: 'favicon'});
@@ -69,7 +74,7 @@ function makeTabNode(tab) {
 	};
 }
 
-async function updateTabNode(tab) {
+export async function updateTabNode(tab) {
 
 	var node = tabNodes[tab.id];
 
@@ -99,12 +104,12 @@ async function updateTabNode(tab) {
  * Find the most recently accessed tab and give its thumbnail the selected
  * class, removing selected from all other thumbnails
  */
-async function setActiveTabNode() {
+export async function setActiveTabNode(tabId) {
 
 	var lastActive = -1;
 	var lastAccessed = 0;
 
-	await view.tabs.forEach(async function(tab) {
+	await forEachTab(async function(tab) {
 
 		// Can race if deleteTabNode is called at the same time (e.g. every time
 		// the active tab is closed, since a new tab becomes active), so confirm
@@ -113,7 +118,7 @@ async function setActiveTabNode() {
 			tabNodes[tab.id].tab.classList.remove('selected');
 		}
 
-		if(tab.lastAccessed > lastAccessed && tab.id != view.tabId) {
+		if(tab.lastAccessed > lastAccessed && tab.id != tabId) {
 			lastAccessed = tab.lastAccessed;
 			lastActive = tab.id;
 		}
@@ -124,8 +129,8 @@ async function setActiveTabNode() {
 }
 
 // Remove selected from all other thumbnails, add to tab with id given
-async function setActiveTabNodeById(tabId) {
-    await view.tabs.forEach(async function(tab) {
+export async function setActiveTabNodeById(tabId) {
+    await forEachTab(async function(tab) {
         if (tabNodes[tab.id]) {
             tabNodes[tab.id].tab.classList.remove('selected');
         }
@@ -134,18 +139,18 @@ async function setActiveTabNodeById(tabId) {
     activeTabId = tabId;
 }
 
-function getActiveTabId() {
+export function getActiveTabId() {
     return activeTabId;
 }
 
-function deleteTabNode(tabId) {
+export function deleteTabNode(tabId) {
 	if(tabNodes[tabId]) {
 		tabNodes[tabId].tab.parentNode.removeChild(tabNodes[tabId].tab);
 		delete tabNodes[tabId];
 	}
 }
 
-async function updateThumbnail(tabId, thumbnail) {
+export async function updateThumbnail(tabId, thumbnail) {
 	var node = tabNodes[tabId];
 
 	if(node) {
@@ -178,7 +183,7 @@ async function testImage(url) {
 	});
 }
 
-async function updateFavicon(tab) {
+export async function updateFavicon(tab) {
 
 	var node = tabNodes[tab.id];
 

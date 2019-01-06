@@ -32,7 +32,6 @@
 
 .group .header input,
 .group .header .name {
-	flex: 1;
 	padding: 0 5px 0 0;
 
 	color: #737373;
@@ -58,13 +57,27 @@
 	cursor: text;
 }
 
+.group .header .spacer {
+	flex: 1;
+}
+
 .group .header.edit input {
+	flex: 1;
 	display: block;
 
 	color: #2a2a2e;
+	background: #f9f9f9;
+	border: rgba(12, 12, 13, 0.2) 1px solid;
+	border-radius: 4px;
+	padding: 4px 0px 4px 9px;
+	margin: -4px 5px 0 -9px;
 }
 
 .group .header.edit .name {
+	display: none;
+}
+
+.group .header.edit .spacer {
 	display: none;
 }
 

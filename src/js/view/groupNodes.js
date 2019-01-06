@@ -1,13 +1,15 @@
+import { getGroupId, forEachTab } from './tabs.js';
+import { groupDragOver, groupDrop } from './drag.js';
+import * as groups from './groups.js';
+import { new_element } from './utils.js';
+import { tabNodes, getTabNode } from './tabNodes.js';
 
-'use strict';
+export var groupNodes = {};
 
-var groupNodes = {};
-
-async function initGroupNodes() {
+export async function initGroupNodes(groupsNode) {
 
 	groups.forEach(function(group) {
-		makeGroupNode(group);
-		view.groupsNode.appendChild(groupNodes[group.id].group);
+		groupsNode.appendChild(makeGroupNode(group));
 	});
 	fillGroupNodes();
 
@@ -28,8 +30,7 @@ function groupTransform(group, node, top, right, bottom, left, elem) {
 
         document.getElementsByTagName("body")[0].setAttribute('style', 'cursor: ' + window.getComputedStyle(elem).cursor);
 
-        var groupsRect = view.groupsNode.getBoundingClientRect();
-        var nodeRect = node.getBoundingClientRect();
+        var groupsRect = node.parentNode.getBoundingClientRect();
 
         var minw = 150 / groupsRect.width;
         var minh = 150 / groupsRect.height;
@@ -152,7 +153,7 @@ function groupTransform(group, node, top, right, bottom, left, elem) {
 
 }
 
-async function closeGroup(content, group) {
+export async function closeGroup(content, group) {
 
         var childNodes = content.childNodes;
         var tabCount = childNodes.length-1;
@@ -162,8 +163,8 @@ async function closeGroup(content, group) {
                         groups.remove(group.id);
                         removeGroupNode(group.id);
 
-                        view.tabs.forEach(async function(tab) {
-                                var groupId = await view.tabs.getGroupId(tab.id);
+                        forEachTab(async function(tab) {
+                                var groupId = await getGroupId(tab.id);
                                 if(groupId == group.id) {
                                         browser.tabs.remove(tab.id);
                                 }
@@ -183,7 +184,7 @@ async function closeGroup(content, group) {
 }
 
 
-function makeGroupNode(group) {
+export function makeGroupNode(group) {
         // edges
         var top = new_element('div', {class: 'top'});
         var right = new_element('div', {class: 'right'});
@@ -198,13 +199,14 @@ function makeGroupNode(group) {
 
         // header
         var name = new_element('span', {class: 'name', content: group.name});
+        var spacer = new_element('span', {class: 'spacer'});
         var input = new_element('input', {type: 'text', value: group.name});
 
         var tabCount = new_element('span', {class: 'tab_count'});
 
         var close = new_element('div', {class: 'close'});
 
-        var header = new_element('div', {class: 'header'}, [name, input, tabCount, close]);
+        var header = new_element('div', {class: 'header'}, [name, input, spacer, tabCount, close]);
 
         // newtab
         var newtab = new_element('div', {class: 'newtab'}, [new_element('div', {class: 'inner'})]);
@@ -217,7 +219,7 @@ function makeGroupNode(group) {
         var inner = new_element('div', {class: 'inner'}, [top, right, bottom, left, top_right, bottom_right, bottom_left, top_left, header, content]);
         var node = new_element('div', {class: 'group'}, [inner]);
 
-        close.addEventListener('click', function(event) { 
+        close.addEventListener('click', function(event) {
             event.stopPropagation();
             closeGroup(content, group);
         }, false);
@@ -332,6 +334,7 @@ function makeGroupNode(group) {
                 name: name,
                 input: input
         };
+        return node;
 }
 
 function removeGroupNode(groupId) {
@@ -339,7 +342,7 @@ function removeGroupNode(groupId) {
         delete groupNodes[groupId];
 }
 
-async function fillGroupNodes() {
+export async function fillGroupNodes() {
 	var fragment = {
 		pinned: document.createDocumentFragment(),
 	};
@@ -348,14 +351,14 @@ async function fillGroupNodes() {
 		fragment[group.id] = document.createDocumentFragment();
 	});
 
-	await view.tabs.forEach( async function( tab ) {
+	await forEachTab( async function( tab ) {
 		if ( ! tab.pinned ) {
-			const groupId = await view.tabs.getGroupId( tab.id );
+			const groupId = await getGroupId( tab.id );
 			if ( groupId != -1 && fragment[ groupId ] ) {
-				fragment[ groupId ].appendChild( tabNodes[ tab.id ].tab );
+				fragment[ groupId ].appendChild( getTabNode(tab.id) );
 			}
 		} else {
-			fragment.pinned.appendChild( tabNodes[ tab.id ].tab );
+			fragment.pinned.appendChild( getTabNode(tab.id) );
 		}
 	});
 
@@ -368,9 +371,9 @@ async function fillGroupNodes() {
 }
 
 // there is a bug in here! moving a tab to the right in the tab bar does nothing..
-async function insertTab(tab) {
+export async function insertTab(tab) {
 
-        var groupId = await view.tabs.getGroupId(tab.id);
+        var groupId = await getGroupId(tab.id);
 
         if(groupId != -1) {
 
@@ -399,17 +402,16 @@ async function insertTab(tab) {
         }
 }
 
-function resizeGroups(groupId, groupRect) {
-
-        var groupsRect = view.groupsNode.getBoundingClientRect();
-
-        var minw = 150 / groupsRect.width;
-        var minh = 150 / groupsRect.height;
+export function resizeGroups(groupId, groupRect) {
 
         var rect = {};
 
         groups.forEach(function(group) {
-			var node = groupNodes[group.id].group;
+                        var node = groupNodes[group.id].group;
+                        var groupsRect = node.parentNode.getBoundingClientRect();
+
+                        var minw = 150 / groupsRect.width;
+                        var minh = 150 / groupsRect.height;
 
 			if(groupId !== undefined && groupId === group.id) {
 					rect.x = groupRect.x;
@@ -446,6 +448,7 @@ function resizeGroups(groupId, groupRect) {
 			updateGroupFit(group);
         });
 }
+
 function getFit(param) {
 
         var a, b, ta, tb;
@@ -486,7 +489,7 @@ function getFit(param) {
         return {pitch: pitch, width: w, ratio: param.ratio};
 }
 
-function updateGroupFit(group) {
+export function updateGroupFit(group) {
 
         var node = groupNodes[group.id];
         var childNodes = node.content.childNodes;
