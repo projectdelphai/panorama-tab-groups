@@ -2,7 +2,7 @@ import { forEachTab } from './tabs.js';
 import { tabDragStart, tabDragEnter, tabDragOver, tabDragLeave, tabDrop, tabDragEnd } from './drag.js';
 import { new_element } from './utils.js';
 
-var tabNodes = {};
+export var tabNodes = {};
 var activeTabId = -1; // tabid of active tab in view
 
 export function getTabNode(tabId){

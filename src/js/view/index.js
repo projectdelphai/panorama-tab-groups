@@ -1,5 +1,5 @@
 import { getGroupId } from './tabs.js';
-import { groupDragOver, outsideDrop, createDragIndicator } from './drag.js';
+import { tabMoved, groupDragOver, outsideDrop, createDragIndicator } from './drag.js';
 import { groupNodes, initGroupNodes, closeGroup, makeGroupNode, fillGroupNodes, insertTab, resizeGroups, updateGroupFit } from './groupNodes.js';
 import { initTabNodes, makeTabNode, updateTabNode, setActiveTabNode, setActiveTabNodeById, getActiveTabId, deleteTabNode, updateThumbnail, updateFavicon } from './tabNodes.js';
 import * as groups from './groups.js';
@@ -294,17 +294,6 @@ async function tabUpdated( tabId, changeInfo, tab ) {
     if ( 'pinned' in changeInfo ) {
         fillGroupNodes();
         updateTabNode( tab );
-    }
-}
-
-async function tabMoved(tabId, moveInfo) {
-    if(view.windowId == moveInfo.windowId){
-        browser.tabs.get(tabId).then(async function(tab) {
-            await insertTab(tab);
-            groups.forEach(async function(group) {
-                updateGroupFit(group);
-            });
-        });
     }
 }
 

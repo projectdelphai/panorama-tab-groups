@@ -1,5 +1,5 @@
 import { setGroupId, getGroupId } from './tabs.js';
-import { groupNodes, makeGroupNode, resizeGroups, updateGroupFit } from './groupNodes.js';
+import { groupNodes, makeGroupNode, resizeGroups, updateGroupFit, insertTab } from './groupNodes.js';
 import * as groups from './groups.js';
 import { new_element } from './utils.js';
 
@@ -12,6 +12,18 @@ var dragIndicator;
 export function createDragIndicator() {
 	dragIndicator = new_element('div', {class: 'drag_indicator'});
 	return dragIndicator;
+}
+
+export async function tabMoved(tabId, moveInfo) {
+    var windowId = (await browser.windows.getCurrent()).id;
+    if (windowId == moveInfo.windowId) {
+        browser.tabs.get(tabId).then(async function(tab) {
+            await insertTab(tab);
+            groups.forEach(async function(group) {
+                updateGroupFit(group);
+            });
+        });
+    }
 }
 
 export function tabDragStart( e ) {

@@ -1,5 +1,3 @@
-
-
 var windowId;
 var groups;
 

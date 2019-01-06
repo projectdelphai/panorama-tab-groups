@@ -2,7 +2,7 @@ import { getGroupId, forEachTab } from './tabs.js';
 import { groupDragOver, groupDrop } from './drag.js';
 import * as groups from './groups.js';
 import { new_element } from './utils.js';
-import { getTabNode } from './tabNodes.js';
+import { tabNodes, getTabNode } from './tabNodes.js';
 
 export var groupNodes = {};
 
