@@ -96,6 +96,9 @@ async function doubleClick(e) {
  * to respond to user actions and react to changes
  */
 async function initView() {
+    // set locale specific titles
+    document.getElementById('newGroup').title = browser.i18n.getMessage("newGroupButton");
+    document.getElementById('settings').title = browser.i18n.getMessage("settingsButton");
 
     view.windowId = (await browser.windows.getCurrent()).id;
     view.tabId = (await browser.tabs.getCurrent()).id;

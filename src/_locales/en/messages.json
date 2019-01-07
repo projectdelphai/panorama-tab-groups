@@ -2,10 +2,13 @@
     "newGroupButton": {
         "message": "Add new group"
     },
-    "toggleThemeButton": {
-        "message": "Toggle between light and dark theme"
-    },
     "settingsButton": {
         "message": "Settings"
+    },
+    "defaultGroupName": {
+        "message": "Unnamed Group"
+    },
+    "closeGroupWarning": {
+        "message": "Closing this group will close the $1 tab$2 within it. Are you sure you want to do this?"
     }
 }

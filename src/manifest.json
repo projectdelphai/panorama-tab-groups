@@ -3,7 +3,7 @@
     "name": "Panorama Tab Groups",
     "description": "Tab Groups with Panorama View",
     "version": "0.8.6",
-    "default_ocale": "en",
+    "default_locale": "en",
     "applications": {
         "gecko": {
             "id": "panorama-tab-groups@example.com"

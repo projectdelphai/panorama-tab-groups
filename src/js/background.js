@@ -219,7 +219,7 @@ async function createGroupInWindow(window) {
 
 	var groups = [{
 		id: groupId,
-		name: 'Unnamed Group',
+		name: browser.i18n.getMessage("defaultGroupName"),
 		containerId: 'firefox-default',
 		rect: {x: 0, y: 0, w: 0.5, h: 0.5},
 		lastMoved: (new Date).getTime(),

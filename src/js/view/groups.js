@@ -38,7 +38,7 @@ export async function init() {
 export async function create() {
 	var group = {
 		id: await newUid(),
-		name: 'Unnamed Group',
+		name: browser.i18n.getMessage("defaultGroupName"),
 		windowId: windowId,
 		containerId: 'firefox-default',
 		rect: {x: 0, y: 0, w: 0.2, h: 0.2},
