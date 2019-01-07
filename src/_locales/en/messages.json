@@ -1,0 +1,11 @@
+{
+    "newGroupButton": {
+        "message": "Add new group"
+    },
+    "toggleThemeButton": {
+        "message": "Toggle between light and dark theme"
+    },
+    "settingsButton": {
+        "message": "Settings"
+    }
+}
