@@ -8,6 +8,12 @@
     "defaultGroupName": {
         "message": "Namenlose Gruppe"
     },
+    "dragGroup": {
+        "message": "Gruppe bewegen"
+    },
+    "closeGroup": {
+        "message": "Gruppe schließen"
+    },
     "closeGroupWarning": {
         "message": "Sie sind dabei, mit dieser Gruppe $1 Tab$2 zu schließen. Soll dieser Vorgang wirklich fortgesetzt werden?"
     }

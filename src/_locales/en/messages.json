@@ -8,6 +8,12 @@
     "defaultGroupName": {
         "message": "Unnamed group"
     },
+    "dragGroup": {
+        "message": "Drag group"
+    },
+    "closeGroup": {
+        "message": "Close group"
+    },
     "closeGroupWarning": {
         "message": "Closing this group will close the $1 tab$2 within it. Are you sure you want to do this?"
     }
