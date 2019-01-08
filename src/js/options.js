@@ -64,6 +64,7 @@ const nextView = 'activate-next-group';
 const previousView = 'activate-previous-group';
 
 async function init() {
+	addTranslations();
 	restoreOptions();
 
     let commands = await browser.commands.getAll();
@@ -75,6 +76,18 @@ async function init() {
 	getStatistics();
     document.getElementById('backupFileInput').addEventListener('change', loadBackup);
     document.getElementById('saveBackupButton').addEventListener('click', saveBackup);
+}
+
+async function addTranslations() {
+	document.querySelector('#optionsTheme h2').innerHTML = browser.i18n.getMessage("optionsTheme");
+	document.querySelector('label[for="themeLight"] span').innerHTML = browser.i18n.getMessage("optionsThemeLight");
+	document.querySelector('label[for="themeDark"] span').innerHTML = browser.i18n.getMessage("optionsThemeDark");
+	document.querySelector('#optionsToolbar h2').innerHTML = browser.i18n.getMessage("optionsToolbar");
+	document.querySelector('#optionsToolbar h3').innerHTML = browser.i18n.getMessage("optionsToolbarPosition");
+	document.querySelector('label[for="toolbarPositionTop"] span').innerHTML = browser.i18n.getMessage("optionsToolbarPositionTop");
+	document.querySelector('label[for="toolbarPositionRight"] span').innerHTML = browser.i18n.getMessage("optionsToolbarPositionRight");
+	document.querySelector('label[for="toolbarPositionBottom"] span').innerHTML = browser.i18n.getMessage("optionsToolbarPositionBottom");
+	document.querySelector('label[for="toolbarPositionLeft"] span').innerHTML = browser.i18n.getMessage("optionsToolbarPositionLeft");
 }
 
 async function updateToggle() {

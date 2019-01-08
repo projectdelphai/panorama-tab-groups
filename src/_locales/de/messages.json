@@ -16,5 +16,32 @@
     },
     "closeGroupWarning": {
         "message": "Sie sind dabei, mit dieser Gruppe $1 Tab$2 zu schließen. Soll dieser Vorgang wirklich fortgesetzt werden?"
+    },
+    "optionsTheme": {
+        "message": "Farbschema"
+    },
+    "optionsThemeLight": {
+        "message": "hell"
+    },
+    "optionsThemeDark": {
+        "message": "dunkel"
+    },
+    "optionsToolbar": {
+        "message": "Werkzeugleiste"
+    },
+    "optionsToolbarPosition": {
+        "message": "Position"
+    },
+    "optionsToolbarPositionTop": {
+        "message": "oben"
+    },
+    "optionsToolbarPositionRight": {
+        "message": "rechts"
+    },
+    "optionsToolbarPositionBottom": {
+        "message": "unten"
+    },
+    "optionsToolbarPositionLeft": {
+        "message": "links"
     }
 }

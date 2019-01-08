@@ -16,5 +16,32 @@
     },
     "closeGroupWarning": {
         "message": "Closing this group will close the $1 tab$2 within it. Are you sure you want to do this?"
+    },
+    "optionsTheme": {
+        "message": "Theme"
+    },
+    "optionsThemeLight": {
+        "message": "light"
+    },
+    "optionsThemeDark": {
+        "message": "dark"
+    },
+    "optionsToolbar": {
+        "message": "Toolbar"
+    },
+    "optionsToolbarPosition": {
+        "message": "Position"
+    },
+    "optionsToolbarPositionTop": {
+        "message": "top"
+    },
+    "optionsToolbarPositionRight": {
+        "message": "right"
+    },
+    "optionsToolbarPositionBottom": {
+        "message": "bottom"
+    },
+    "optionsToolbarPositionLeft": {
+        "message": "left"
     }
 }
