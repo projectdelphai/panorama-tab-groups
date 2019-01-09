@@ -17,6 +17,30 @@
     "closeGroupWarning": {
         "message": "Closing this group will close the $1 tab$2 within it. Are you sure you want to do this?"
     },
+    "optionKeyboardShortcuts": {
+        "message": "Keyboard Shortcuts"
+    },
+    "optionKeyboardShortcutsHelpLink": {
+        "message": "https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/commands#Key_combinations"
+    },
+    "optionKeyboardShortcutsHelpLinkText": {
+        "message": "The format for the shortcut option is detailed here."
+    },
+    "optionKeyboardShortcutsButtonsUpdate": {
+        "message": "Update"
+    },
+    "optionKeyboardShortcutsButtonsReset": {
+        "message": "Reset"
+    },
+    "optionKeyboardShortcutsToggle": {
+        "message": "Toggle Panorama View"
+    },
+    "optionKeyboardShortcutsNextGroup": {
+        "message": "Activate the next Tab Group"
+    },
+    "optionKeyboardShortcutsPreviousGroup": {
+        "message": "Activate the previous Tab Group"
+    },
     "optionsTheme": {
         "message": "Theme"
     },

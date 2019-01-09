@@ -79,6 +79,17 @@ async function init() {
 }
 
 async function addTranslations() {
+	document.querySelector('#optionKeyboardShortcuts h2').innerHTML = browser.i18n.getMessage("optionKeyboardShortcuts");
+	const optionKeyboardShortcutsLink = document.querySelector('#optionKeyboardShortcuts a');
+	optionKeyboardShortcutsLink.href = browser.i18n.getMessage("optionKeyboardShortcutsHelpLink");
+	optionKeyboardShortcutsLink.innerHTML = browser.i18n.getMessage("optionKeyboardShortcutsHelpLinkText");
+	const optionKeyboardShortcutsButtonsUpdate = document.querySelectorAll('#optionKeyboardShortcuts button[id^="update"]');
+	optionKeyboardShortcutsButtonsUpdate.forEach((button) => { button.innerHTML = browser.i18n.getMessage("optionKeyboardShortcutsButtonsUpdate") });
+	const optionKeyboardShortcutsButtonsReset = document.querySelectorAll('#optionKeyboardShortcuts button[id^="reset"]');
+	optionKeyboardShortcutsButtonsReset.forEach((button) => { button.innerHTML = browser.i18n.getMessage("optionKeyboardShortcutsButtonsReset") });
+	document.querySelector('label[for="toggle-panorama-view"]').innerHTML = browser.i18n.getMessage("optionKeyboardShortcutsToggle");
+	document.querySelector('label[for="activate-next-group"]').innerHTML = browser.i18n.getMessage("optionKeyboardShortcutsNextGroup");
+	document.querySelector('label[for="activate-previous-group"]').innerHTML = browser.i18n.getMessage("optionKeyboardShortcutsPreviousGroup");
 	document.querySelector('#optionsTheme h2').innerHTML = browser.i18n.getMessage("optionsTheme");
 	document.querySelector('label[for="themeLight"] span').innerHTML = browser.i18n.getMessage("optionsThemeLight");
 	document.querySelector('label[for="themeDark"] span').innerHTML = browser.i18n.getMessage("optionsThemeDark");

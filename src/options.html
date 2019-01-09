@@ -5,11 +5,14 @@
 		<link rel="stylesheet" type="text/css" href="css/options.css">
 	</head>
 	<body>
-		<section>
+		<section id="optionKeyboardShortcuts">
 			<h2>Keyboard Shortcuts</h2>
+			<p>
+				<em><a href="https://developer.mozilla.org/en-US/Add-ons/WebExtensions/manifest.json/commands#Key_combinations" target="_blank">The format for the shortcut option is detailed here.</a></em>
+			</p>
 			<div class="keyboardShortcuts">
 				<form class="browser-style">
-					<label>Toggle Panorama View</label>
+					<label for="toggle-panorama-view">Toggle Panorama View</label>
 					<input type="text" id="toggle-panorama-view">
 					<button id="updateToggle" class="browser-style">Update</button>
 					<button id="resetToggle" class="browser-style">Reset</button>
@@ -17,7 +20,7 @@
 			</div>
 			<div class="keyboardShortcuts">
 				<form class="browser-style">
-					<label>Activate the next TabGroup</label>
+					<label for="activate-next-group">Activate the next Tab Group</label>
 					<input type="text" id="activate-next-group">
 					<button id="updateNextView" class="browser-style">Update</button>
 					<button id="resetNextView" class="browser-style">Reset</button>
@@ -25,13 +28,12 @@
 			</div>
 			<div class="keyboardShortcuts">
 				<form class="browser-style">
-					<label>Activate the previous TabGroup</label>
+					<label for="activate-previous-group">Activate the previous Tab Group</label>
 					<input type="text" id="activate-previous-group">
 					<button id="updatePreviousView" class="browser-style">Update</button>
 					<button id="resetPreviousView" class="browser-style">Reset</button>
 				</form>
 			</div>
-		<em><a href="https://developer.mozilla.org/en-US/Add-ons/WebExtensions/manifest.json/commands#Key_combinations" target="_blank">The format for the shortcut option is detailed here</a></em>
 		</section>
 		<section id="optionsTheme">
 			<h2>Theme</h2>
@@ -54,7 +56,6 @@
 		</section>
 		<section id="optionsToolbar">
 			<h2>Toolbar</h2>
-
 			<h3>Position</h3>
 			<form class="browser-style" name="formToolbarPosition">
 				<div class="input-radio-image">

@@ -17,6 +17,30 @@
     "closeGroupWarning": {
         "message": "Sie sind dabei, mit dieser Gruppe $1 Tab$2 zu schließen. Soll dieser Vorgang wirklich fortgesetzt werden?"
     },
+    "optionKeyboardShortcuts": {
+        "message": "Tastenkombinationen"
+    },
+    "optionKeyboardShortcutsHelpLink": {
+        "message": "https://developer.mozilla.org/de/docs/Mozilla/Add-ons/WebExtensions/manifest.json/commands#Tastenk%C3%BCrzel-Werte"
+    },
+    "optionKeyboardShortcutsHelpLinkText": {
+        "message": "Eine Beschreibung für das Format der Tastenkombinationen ist hier zu finden."
+    },
+    "optionKeyboardShortcutsButtonsUpdate": {
+        "message": "Aktualisieren"
+    },
+    "optionKeyboardShortcutsButtonsReset": {
+        "message": "Zurücksetzen"
+    },
+    "optionKeyboardShortcutsToggle": {
+        "message": "Panorama View umschalten"
+    },
+    "optionKeyboardShortcutsNextGroup": {
+        "message": "Die nächste Tab Gruppe aktivieren"
+    },
+    "optionKeyboardShortcutsPreviousGroup": {
+        "message": "Die vorherige Tab Gruppe aktivieren"
+    },
     "optionsTheme": {
         "message": "Farbschema"
     },
