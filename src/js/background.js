@@ -184,12 +184,7 @@ async function setupWindows() {
 	const windows = browser.windows.getAll({});
 
 	for(const window of await windows) {
-		var groups = await browser.sessions.getWindowValue(window.id, 'groups');
-
-		if(!groups || !groups.length) {
-			console.log(`No groups found for window ${window.id}!`);
-			createGroupInWindow(window);
-		}
+		createGroupInWindowIfMissing(window);
 	}
 }
 
@@ -203,6 +198,20 @@ async function newGroupUid(windowId) {
 	await browser.sessions.setWindowValue(windowId, 'groupIndex', newGroupIndex);
 
 	return uid;
+}
+
+/** Checks that group is missing before creating new one in window
+ * This makes sure existing/restored windows are not reinitialized.
+ * For example, windows that are restored by user (e.g. Ctrl+Shift+N) will
+ * trigger the onCreated event but still have the existing group data.
+ */
+async function createGroupInWindowIfMissing(window) {
+	var groups = await browser.sessions.getWindowValue(window.id, 'groups');
+
+	if (!groups || !groups.length) {
+		console.log(`No groups found for window ${window.id}!`);
+		createGroupInWindow(window);
+	}
 }
 
 /** Create the first group in a window
@@ -276,7 +285,7 @@ async function init() {
 
 	browser.commands.onCommand.addListener(triggerCommand);
 	browser.browserAction.onClicked.addListener(toggleView);
-	browser.windows.onCreated.addListener(createGroupInWindow);
+	browser.windows.onCreated.addListener(createGroupInWindowIfMissing);
 	browser.tabs.onCreated.addListener(tabCreated);
 	browser.tabs.onAttached.addListener(tabAttached);
 	browser.tabs.onDetached.addListener(tabDetached);
