@@ -205,9 +205,9 @@ export function makeGroupNode(group) {
 
     var tabCount = new_element('span', {class: 'tab_count'});
 
-    var close = new_element('div', {class: 'close'});
+    var close = new_element('div', {class: 'close', title: browser.i18n.getMessage("closeGroup")});
 
-    var header = new_element('div', {class: 'header'}, [name, input, spacer, tabCount, close]);
+    var header = new_element('div', {class: 'header', title: browser.i18n.getMessage("dragGroup")}, [name, input, spacer, tabCount, close]);
 
     // newtab
     var newtab = new_element('div', {class: 'newtab'}, [new_element('div', {class: 'inner'})]);

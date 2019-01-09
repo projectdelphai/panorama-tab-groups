@@ -1,47 +1,47 @@
 {
     "newGroupButton": {
-        "message": "Add new group"
+        "message": "Neue Gruppe hinzufügen"
     },
     "settingsButton": {
-        "message": "Settings"
+        "message": "Einstellungen"
     },
     "defaultGroupName": {
-        "message": "Unnamed group"
+        "message": "Namenlose Gruppe"
     },
     "dragGroup": {
-        "message": "Drag group"
+        "message": "Gruppe bewegen"
     },
     "closeGroup": {
-        "message": "Close group"
+        "message": "Gruppe schließen"
     },
     "closeGroupWarning": {
-        "message": "Closing this group will close the $1 tab$2 within it. Are you sure you want to do this?"
+        "message": "Sie sind dabei, mit dieser Gruppe $1 Tab$2 zu schließen. Soll dieser Vorgang wirklich fortgesetzt werden?"
     },
     "optionsTheme": {
-        "message": "Theme"
+        "message": "Farbschema"
     },
     "optionsThemeLight": {
-        "message": "light"
+        "message": "hell"
     },
     "optionsThemeDark": {
-        "message": "dark"
+        "message": "dunkel"
     },
     "optionsToolbar": {
-        "message": "Toolbar"
+        "message": "Werkzeugleiste"
     },
     "optionsToolbarPosition": {
         "message": "Position"
     },
     "optionsToolbarPositionTop": {
-        "message": "top"
+        "message": "oben"
     },
     "optionsToolbarPositionRight": {
-        "message": "right"
+        "message": "rechts"
     },
     "optionsToolbarPositionBottom": {
-        "message": "bottom"
+        "message": "unten"
     },
     "optionsToolbarPositionLeft": {
-        "message": "left"
+        "message": "links"
     }
 }
