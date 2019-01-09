@@ -75,13 +75,16 @@
         "message": "Importieren"
     },
     "optionsBackupImportText": {
-        "message": "Importierte Sicherung werden in ein neues Fenster geöffnet und überschreiben dabei nichts. Es ist ebenso möglich Links von der alten Tab Gruppen Erweiterung zu importieren."
+        "message": "Importierte Sicherungen werden in ein neues Fenster geöffnet ohne etwas zu überschreiben.<br />Es ist ebenfalls möglich Links von der alten Tab Gruppen Erweiterung zu importieren."
     },
     "optionsBackupExport": {
         "message": "Exportieren"
     },
     "optionsBackupExportText": {
-        "message": "Dieser Abschnitt wird in Zukunft vielleicht wegfallen, sobald ein passendes Session Mangement im Firefox verfügbar ist."
+        "message": "Dieser Abschnitt wird in Zukunft vielleicht wegfallen, sobald ein passendes Session Management im Firefox verfügbar ist."
+    },
+    "optionsBackupExportButton": {
+        "message": "Sicherung exportieren"
     },
     "optionsStatistics": {
         "message": "Statistik"
@@ -89,7 +92,10 @@
     "optionsStatisticsNumberOfTabs": {
         "message": "Anzahl der Tabs:"
     },
+    "optionsStatisticsNumberOfTabsActive": {
+        "message": "Aktive:"
+    },
     "optionsStatisticsThumbnailCacheSize": {
-        "message": "Cache Größe der Vorschaubilder:"
+        "message": "Cache-Größe der Vorschaubilder:"
     }
 }
