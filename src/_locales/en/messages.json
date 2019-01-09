@@ -67,5 +67,20 @@
     },
     "optionsToolbarPositionLeft": {
         "message": "left"
+    },
+    "optionsBackup": {
+        "message": "Backup"
+    },
+    "optionsBackupImport": {
+        "message": "Import"
+    },
+    "optionsBackupImportText": {
+        "message": "Imported backups will open in new windows and not overwrite anything. You can also import backups from the old \"Tab Groups\" add-on."
+    },
+    "optionsBackupExport": {
+        "message": "Export"
+    },
+    "optionsBackupExportText": {
+        "message": "This section might be made obsolete once proper session management is possible in Firefox."
     }
 }

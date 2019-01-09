@@ -67,5 +67,20 @@
     },
     "optionsToolbarPositionLeft": {
         "message": "links"
+    },
+    "optionsBackup": {
+        "message": "Sicherung"
+    },
+    "optionsBackupImport": {
+        "message": "Importieren"
+    },
+    "optionsBackupImportText": {
+        "message": "Importierte Sicherung werden in ein neues Fenster geöffnet und überschreiben dabei nichts. Es ist ebenso möglich Links von der alten Tab Gruppen Erweiterung zu importieren."
+    },
+    "optionsBackupExport": {
+        "message": "Exportieren"
+    },
+    "optionsBackupExportText": {
+        "message": "Dieser Abschnitt wird in Zukunft vielleicht wegfallen, sobald ein passendes Session Mangement im Firefox verfügbar ist."
     }
 }

@@ -99,6 +99,11 @@ async function addTranslations() {
 	document.querySelector('label[for="toolbarPositionRight"] span').innerHTML = browser.i18n.getMessage("optionsToolbarPositionRight");
 	document.querySelector('label[for="toolbarPositionBottom"] span').innerHTML = browser.i18n.getMessage("optionsToolbarPositionBottom");
 	document.querySelector('label[for="toolbarPositionLeft"] span').innerHTML = browser.i18n.getMessage("optionsToolbarPositionLeft");
+	document.querySelector('#optionsBackup h2').innerHTML = browser.i18n.getMessage("optionsBackup");
+	document.querySelector('#optionsBackup h3:nth-of-type(1)').innerHTML = browser.i18n.getMessage("optionsBackupImport");
+	document.querySelector('#optionsBackup p:nth-of-type(1)').innerHTML = browser.i18n.getMessage("optionsBackupImportText");
+	document.querySelector('#optionsBackup h3:nth-of-type(2)').innerHTML = browser.i18n.getMessage("optionsBackupExport");
+	document.querySelector('#optionsBackup p:nth-of-type(2)').innerHTML = browser.i18n.getMessage("optionsBackupExportText");
 }
 
 async function updateToggle() {
