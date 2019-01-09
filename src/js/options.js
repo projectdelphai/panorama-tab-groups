@@ -104,6 +104,9 @@ async function addTranslations() {
 	document.querySelector('#optionsBackup p:nth-of-type(1)').innerHTML = browser.i18n.getMessage("optionsBackupImportText");
 	document.querySelector('#optionsBackup h3:nth-of-type(2)').innerHTML = browser.i18n.getMessage("optionsBackupExport");
 	document.querySelector('#optionsBackup p:nth-of-type(2)').innerHTML = browser.i18n.getMessage("optionsBackupExportText");
+	document.querySelector('#optionsStatistics h2').innerHTML = browser.i18n.getMessage("optionsStatistics");
+	document.querySelector('label[for="numberOfTabs"]').innerHTML = browser.i18n.getMessage("optionsStatisticsNumberOfTabs");
+	document.querySelector('label[for="thumbnailCacheSize"]').innerHTML = browser.i18n.getMessage("optionsStatisticsThumbnailCacheSize");
 }
 
 async function updateToggle() {

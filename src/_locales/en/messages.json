@@ -82,5 +82,14 @@
     },
     "optionsBackupExportText": {
         "message": "This section might be made obsolete once proper session management is possible in Firefox."
+    },
+    "optionsStatistics": {
+        "message": "Statistics"
+    },
+    "optionsStatisticsNumberOfTabs": {
+        "message": "Number of Tabs:"
+    },
+    "optionsStatisticsThumbnailCacheSize": {
+        "message": "Thumbnail Cache Size:"
     }
 }
