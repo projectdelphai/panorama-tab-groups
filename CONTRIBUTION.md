@@ -10,7 +10,7 @@ If you've never contributed to a project before, [this guide](https://github.com
 
 ## Translations
 
-The translations are located in `/src/_locales/`. Beneath this directory each language is split into it's own directory. In the language directory the translations are structured in the JSON-file `messages.json`.
+The translations are located in `/src/_locales/`. Beneath this directory each language is split into its own directory. In the language directory the translations are structured in the `messages.json` file.
 
 For deeper insight it's recommended to read the [Internationalization guide for web extensions](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Internationalization).
 
