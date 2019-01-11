@@ -6,7 +6,7 @@
 
 ## In General
 
-If you never contributed to an project, [this guide](https://github.com/firstcontributions/first-contributions/blob/master/README.md) is a good way to start. It's also available in multiple languages.
+If you've never contributed to a project before, [this guide](https://github.com/firstcontributions/first-contributions/blob/master/README.md) is a good place to start. It's also available in multiple languages.
 
 ## Translations
 
