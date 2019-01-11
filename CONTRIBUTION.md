@@ -21,7 +21,7 @@ For deeper insight it's recommended to read the [Internationalization guide for 
 
 ### Add language
 
-1. Create a directory with the short language code. Allowed are identifiers like `de_DE` or `de`. Where the latter on is the fallback.
+1. Create a directory with the short language code. Allowed are identifiers like `de_DE` or `de`, where the latter is the fallback.
 1. Copy the `messages.json` file from the directory `en` in the new directory.
 1. Replace all `message`s.
 
