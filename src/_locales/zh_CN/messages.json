@@ -1,0 +1,101 @@
+{
+    "newGroupButton": {
+        "message": "新增组"
+    },
+    "settingsButton": {
+        "message": "设置"
+    },
+    "defaultGroupName": {
+        "message": "无名组"
+    },
+    "dragGroup": {
+        "message": "拖曳组"
+    },
+    "closeGroup": {
+        "message": "关闭组"
+    },
+    "closeGroupWarning": {
+        "message": "$1 个标签页在本标签页组会关闭。您确定吗？"
+    },
+    "optionKeyboardShortcuts": {
+        "message": "键盘快捷键"
+    },
+    "optionKeyboardShortcutsHelpLink": {
+        "message": "https://developer.mozilla.org/zh-CN/docs/Mozilla/Add-ons/WebExtensions/manifest.json/commands#Key_combinations"
+    },
+    "optionKeyboardShortcutsHelpLinkText": {
+        "message": "此处详细介键盘快捷键选项的格式。"
+    },
+    "optionKeyboardShortcutsButtonsUpdate": {
+        "message": "更新"
+    },
+    "optionKeyboardShortcutsButtonsReset": {
+        "message": "重置"
+    },
+    "optionKeyboardShortcutsToggle": {
+        "message": "打开或关闭 Panorama View"
+    },
+    "optionKeyboardShortcutsNextGroup": {
+        "message": "下一个标签页组"
+    },
+    "optionKeyboardShortcutsPreviousGroup": {
+        "message": "上一个标签页组"
+    },
+    "optionsTheme": {
+        "message": "主题"
+    },
+    "optionsThemeLight": {
+        "message": "光亮"
+    },
+    "optionsThemeDark": {
+        "message": "黑色"
+    },
+    "optionsToolbar": {
+        "message": "工具栏"
+    },
+    "optionsToolbarPosition": {
+        "message": "位置"
+    },
+    "optionsToolbarPositionTop": {
+        "message": "上面"
+    },
+    "optionsToolbarPositionRight": {
+        "message": "右面"
+    },
+    "optionsToolbarPositionBottom": {
+        "message": "下面"
+    },
+    "optionsToolbarPositionLeft": {
+        "message": "左面"
+    },
+    "optionsBackup": {
+        "message": "备份"
+    },
+    "optionsBackupImport": {
+        "message": "恢复"
+    },
+    "optionsBackupImportText": {
+        "message": "备份恢复会开启新的视窗，不会开启在现有的视窗。<br />可以恢复旧 “Tab Groups” 扩展的备份。"
+    },
+    "optionsBackupExport": {
+        "message": "输出"
+    },
+    "optionsBackupExportText": {
+        "message": "当 Firefox 有改进会话管理，本特征可能被替换掉。"
+    },
+    "optionsBackupExportButton": {
+        "message": "保存备份"
+    },
+    "optionsStatistics": {
+        "message": "统计"
+    },
+    "optionsStatisticsNumberOfTabs": {
+        "message": "标签页的数量："
+    },
+    "optionsStatisticsNumberOfTabsActive": {
+        "message": "活跃的标签页："
+    },
+    "optionsStatisticsThumbnailCacheSize": {
+        "message": "小视图高速缓存的大小："
+    }
+}
