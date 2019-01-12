@@ -24,7 +24,3 @@ For deeper insight it's recommended to read the [Internationalization guide for 
 1. Create a directory with the short language code. Allowed are identifiers like `de_DE` or `de`, where the latter is the fallback.
 1. Copy the `messages.json` file from the directory `en` in the new directory.
 1. Replace all `message`s.
-
-### Translate new element
-
-...to define...
