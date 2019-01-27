@@ -1,0 +1,101 @@
+{
+    "newGroupButton": {
+        "message": "新增組"
+    },
+    "settingsButton": {
+        "message": "設定"
+    },
+    "defaultGroupName": {
+        "message": "無名組"
+    },
+    "dragGroup": {
+        "message": "拖曳組"
+    },
+    "closeGroup": {
+        "message": "刪除組"
+    },
+    "closeGroupWarning": {
+        "message": "$1 個標籤頁在本標籤頁組會關閉。您確定嗎？"
+    },
+    "optionKeyboardShortcuts": {
+        "message": "鍵盤快捷鍵"
+    },
+    "optionKeyboardShortcutsHelpLink": {
+        "message": "https://developer.mozilla.org/zh-TW/docs/Mozilla/Add-ons/WebExtensions/manifest.json/commands#Key_combinations"
+    },
+    "optionKeyboardShortcutsHelpLinkText": {
+        "message": "此處詳細介鍵盤快捷鍵選項的格式。"
+    },
+    "optionKeyboardShortcutsButtonsUpdate": {
+        "message": "更新"
+    },
+    "optionKeyboardShortcutsButtonsReset": {
+        "message": "重設"
+    },
+    "optionKeyboardShortcutsToggle": {
+        "message": "打開或關閉 Panorama View"
+    },
+    "optionKeyboardShortcutsNextGroup": {
+        "message": "下一個標籤頁組"
+    },
+    "optionKeyboardShortcutsPreviousGroup": {
+        "message": "上一個標籤頁組"
+    },
+    "optionsTheme": {
+        "message": "主題"
+    },
+    "optionsThemeLight": {
+        "message": "光亮"
+    },
+    "optionsThemeDark": {
+        "message": "黑色"
+    },
+    "optionsToolbar": {
+        "message": "工具列"
+    },
+    "optionsToolbarPosition": {
+        "message": "位置"
+    },
+    "optionsToolbarPositionTop": {
+        "message": "上面"
+    },
+    "optionsToolbarPositionRight": {
+        "message": "右面"
+    },
+    "optionsToolbarPositionBottom": {
+        "message": "下面"
+    },
+    "optionsToolbarPositionLeft": {
+        "message": "左面"
+    },
+    "optionsBackup": {
+        "message": "備份"
+    },
+    "optionsBackupImport": {
+        "message": "恢復"
+    },
+    "optionsBackupImportText": {
+        "message": "備份恢復會開啟新的視窗，不會開啟在現有的視窗。<br />可以恢復舊「 Tab Groups 」擴充套件的備份。"
+    },
+    "optionsBackupExport": {
+        "message": "輸出"
+    },
+    "optionsBackupExportText": {
+        "message": "當 Firefox 有改進會話管理，本特徵可能被替換掉。"
+    },
+    "optionsBackupExportButton": {
+        "message": "保存備份"
+    },
+    "optionsStatistics": {
+        "message": "統計"
+    },
+    "optionsStatisticsNumberOfTabs": {
+        "message": "標籤頁的數量："
+    },
+    "optionsStatisticsNumberOfTabsActive": {
+        "message": "活躍的標籤頁："
+    },
+    "optionsStatisticsThumbnailCacheSize": {
+        "message": "小視圖高速緩存的大小："
+    }
+}
