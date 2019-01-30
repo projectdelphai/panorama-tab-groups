@@ -10,6 +10,7 @@ import {
 } from "./shortcuts.js";
 import { saveOptionTheme } from "./theme.js";
 import { saveOptionToolbarPosition } from "./toolbar.js";
+import { saveOptionTabGroupStartNumber } from "./tabGroup.js";
 import { loadBackup, saveBackup } from "./backup.js";
 import { getStatistics } from "./statistics.js";
 
@@ -40,6 +41,10 @@ function restoreOptions(options, shortcuts) {
   document.querySelector(
     `input[name="toolbarPosition"][value="${options.toolbarPosition}"]`
   ).checked = true;
+
+  // Tab group
+  document.querySelector('#tabGroupsStartNumber').value = options.tabGroupsStartNumber;
+  document.querySelector('#tabGroupsStartNumberView').value = options.tabGroupsStartNumber;
 }
 
 function attachEventHandler(options, shortcuts) {
@@ -70,11 +75,16 @@ function attachEventHandler(options, shortcuts) {
     .querySelector('form[name="formToolbarPosition"]')
     .addEventListener("change", saveOptionToolbarPosition);
 
+  // Tab group
+  document
+    .getElementById('tabGroupsStartNumber')
+    .addEventListener('change', saveOptionTabGroupStartNumber);
+
   // Backup
   document
-    .getElementById("backupFileInput")
+    .getElementById('backupFileInput')
     .addEventListener("change", loadBackup);
   document
-    .getElementById("saveBackupButton")
+    .getElementById('saveBackupButton')
     .addEventListener("click", saveBackup);
 }
