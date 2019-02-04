@@ -1,0 +1,101 @@
+{
+    "newGroupButton": {
+        "message": "Utwórz nową grupę"
+    },
+    "settingsButton": {
+        "message": "Ustawienia"
+    },
+    "defaultGroupName": {
+        "message": "Grupa bez nazwy"
+    },
+    "dragGroup": {
+        "message": "Przeciągnij grupę"
+    },
+    "closeGroup": {
+        "message": "Zamknij grupę"
+    },
+    "closeGroupWarning": {
+        "message": "Zamknięcie tej grupy spowoduje również zamknięcie jej $1 kart. Na pewno chcesz to zrobić?"
+    },
+    "optionKeyboardShortcuts": {
+        "message": "Skróty klawiszowe"
+    },
+    "optionKeyboardShortcutsHelpLink": {
+        "message": "https://developer.mozilla.org/pl/docs/Mozilla/Add-ons/WebExtensions/manifest.json/commands#Key_combinations"
+    },
+    "optionKeyboardShortcutsHelpLinkText": {
+        "message": "Szczegóły formatu wymaganego przy konfiguracji skrótów klawiszowych."
+    },
+    "optionKeyboardShortcutsButtonsUpdate": {
+        "message": "Aktualizuj"
+    },
+    "optionKeyboardShortcutsButtonsReset": {
+        "message": "Resetuj"
+    },
+    "optionKeyboardShortcutsToggle": {
+        "message": "Przełącz do widoku Panoramy"
+    },
+    "optionKeyboardShortcutsNextGroup": {
+        "message": "Przejdź do następnej grupy kart"
+    },
+    "optionKeyboardShortcutsPreviousGroup": {
+        "message": "Przejdź do poprzedniej grupy kart"
+    },
+    "optionsTheme": {
+        "message": "Motyw"
+    },
+    "optionsThemeLight": {
+        "message": "jasny"
+    },
+    "optionsThemeDark": {
+        "message": "ciemny"
+    },
+    "optionsToolbar": {
+        "message": "Pasek narzędzi"
+    },
+    "optionsToolbarPosition": {
+        "message": "Pozycja"
+    },
+    "optionsToolbarPositionTop": {
+        "message": "góra"
+    },
+    "optionsToolbarPositionRight": {
+        "message": "prawo"
+    },
+    "optionsToolbarPositionBottom": {
+        "message": "dół"
+    },
+    "optionsToolbarPositionLeft": {
+        "message": "lewo"
+    },
+    "optionsBackup": {
+        "message": "Kopia zapasowa"
+    },
+    "optionsBackupImport": {
+        "message": "Import"
+    },
+    "optionsBackupImportText": {
+        "message": "Zaimportowane grupy kart zostaną otwarte w nowych oknach i niczego nie nadpiszą.<br />Możesz również zaimportować dane ze starego rozszerzenia \"Grupy Kart\"."
+    },
+    "optionsBackupExport": {
+        "message": "Eksport"
+    },
+    "optionsBackupExportText": {
+        "message": "Ta sekcja być może stanie się zbędna kiedy Firefox umożliwi obsługę pełnoprawnych menedżerów sesji."
+    },
+    "optionsBackupExportButton": {
+        "message": "Zapisz kopię zapasową"
+    },
+    "optionsStatistics": {
+        "message": "Statystyki"
+    },
+    "optionsStatisticsNumberOfTabs": {
+        "message": "Ilość kart:"
+    },
+    "optionsStatisticsNumberOfTabsActive": {
+        "message": "Aktywnych:"
+    },
+    "optionsStatisticsThumbnailCacheSize": {
+        "message": "Pamięć podręczna miniaturek:"
+    }
+}
