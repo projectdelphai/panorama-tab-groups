@@ -1,4 +1,7 @@
 {
+    "pluralRule": {
+        "message": "2"
+    },
     "newGroupButton": {
         "message": "Ajouter un nouveau groupe"
     },
@@ -15,7 +18,7 @@
         "message": "Fermer le groupe"
     },
     "closeGroupWarning": {
-        "message": "La fermeture de ce groupe fermera $1 onglet$2 à l'intérieur de celui-ci. Êtes-vous sûr de vouloir faire ça ?"
+        "message": "La fermeture de ce groupe fermera $1 onglet à l'intérieur de celui-ci. Êtes-vous sûr de vouloir faire ça ?`|La fermeture de ce groupe fermera $1 onglets à l'intérieur de celui-ci. Êtes-vous sûr de vouloir faire ça ?`"
     },
     "optionKeyboardShortcuts": {
         "message": "Raccourcis clavier"
