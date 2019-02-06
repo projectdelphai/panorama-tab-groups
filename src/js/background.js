@@ -349,7 +349,7 @@ browser.runtime.onMessageExternal.addListener(handleMessage);
  */
 function onRuntimeInstallNotification(details) {
 	// Open new tab to the release notes after update
-  if (details.reason = 'update') {
+  if (details.reason === 'update') {
     browser.tabs.create({
       url: `https://github.com/projectdelphai/panorama-tab-groups/releases/tag/${manifest.version}`
     });
