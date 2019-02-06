@@ -348,6 +348,7 @@ browser.runtime.onMessageExternal.addListener(handleMessage);
  * Handle upboarding
  */
 function onRuntimeInstallNotification(details) {
+  if (details.temporary) return;
 	// Open new tab to the release notes after update
   if (details.reason === 'update') {
     browser.tabs.create({
