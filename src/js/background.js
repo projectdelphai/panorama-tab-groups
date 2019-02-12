@@ -1,48 +1,41 @@
 
 'use strict';
 
-let manifest = browser.runtime.getManifest();
+const manifest = browser.runtime.getManifest();
 
-/*var config = {
-	tab: {
-		minWidth: 100,
-		maxWidth: 250,
-		ratio: 0.68,
-	},
-};*/
+let openingView = false;
+let openingBackup = false;
 
-var openingView = false;
-var openingBackup = false;
+/** Modulo in javascript does not behave like modulo in mathematics when x is negative.
+ * Following code is based from this:
+ * https://stackoverflow.com/questions/4467539/javascript-modulo-gives-a-negative-result-for-negative-numbers */
+function mod(x, n) {
+	return (x % n + n) % n;
+}
 
 async function triggerCommand(command) {
 	if (command === "activate-next-group") {
-		const windowId = (await browser.windows.getCurrent()).id;
-		const groups = await browser.sessions.getWindowValue(windowId, 'groups');
-
-		var activeGroup = (await browser.sessions.getWindowValue(windowId, 'activeGroup'));
-		var activeIndex = groups.findIndex(function(group){ return group.id === activeGroup; });
-		var newIndex = activeIndex + 1;
-
-		activeGroup = newIndex in groups ? groups[newIndex].id : 0;
-		await browser.sessions.setWindowValue(windowId, 'activeGroup', activeGroup);
-
-		await toggleVisibleTabs(activeGroup, true);
-    } else if (command === "activate-previous-group") {
-                const windowId = (await browser.windows.getCurrent()).id;
-		const groups = await browser.sessions.getWindowValue(windowId, 'groups');
-
-		var activeGroup = (await browser.sessions.getWindowValue(windowId, 'activeGroup'));
-		var activeIndex = groups.findIndex(function(group){ return group.id === activeGroup; });
-		var newIndex = activeIndex - 1;
-
-		activeGroup = newIndex in groups ? groups[newIndex].id : groups.length - 1;
-		await browser.sessions.setWindowValue(windowId, 'activeGroup', activeGroup);
-
-		await toggleVisibleTabs(activeGroup, true);
-
+		await changeActiveGroupBy(1);
+	} else if (command === "activate-previous-group") {
+		await changeActiveGroupBy(-1);
 	}else if (command === "toggle-panorama-view") {
-		toggleView();
+		await toggleView();
 	}
+}
+
+/** Shift current active group by offset  */
+async function changeActiveGroupBy(offset) {
+	const windowId = (await browser.windows.getCurrent()).id;
+	const groups = await browser.sessions.getWindowValue(windowId, 'groups');
+
+	let activeGroup = (await browser.sessions.getWindowValue(windowId, 'activeGroup'));
+	let activeIndex = groups.findIndex(function (group) { return group.id === activeGroup; });
+	let newIndex = activeIndex + offset;
+
+	activeGroup = groups[mod(newIndex, groups.length)].id;
+	await browser.sessions.setWindowValue(windowId, 'activeGroup', activeGroup);
+
+	await toggleVisibleTabs(activeGroup, true);
 }
 
 /** Open the Panorama View tab, or return to the last open tab if Panorama View is currently open */
