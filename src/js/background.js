@@ -23,7 +23,7 @@ async function triggerCommand(command) {
 	}
 }
 
-/** Shift current active group by offset  */
+/** Shift current active group by offset */
 async function changeActiveGroupBy(offset) {
 	const windowId = (await browser.windows.getCurrent()).id;
 	const groups = await browser.sessions.getWindowValue(windowId, 'groups');
@@ -40,35 +40,26 @@ async function changeActiveGroupBy(offset) {
 
 /** Open the Panorama View tab, or return to the last open tab if Panorama View is currently open */
 async function toggleView() {
-    var extTabs = await browser.tabs.query({url: browser.extension.getURL("view.html"), currentWindow: true});
-
-	if(extTabs.length > 0) {
-
-		var currentTab = (await browser.tabs.query({active: true, currentWindow: true}))[0];
-
+	let extTabs = await browser.tabs.query({url: browser.extension.getURL("view.html"), currentWindow: true});
+	if (extTabs.length > 0) {
+		let currentTab = (await browser.tabs.query({active: true, currentWindow: true}))[0];
 		// switch to last accessed tab in window
-		if(extTabs[0].id == currentTab.id) {
-
-			var tabs = await browser.tabs.query({currentWindow: true});
-
-			tabs.sort(function(tabA, tabB) {
-				return tabB.lastAccessed - tabA.lastAccessed;
-			});
+		if (extTabs[0].id == currentTab.id) {
+			let tabs = await browser.tabs.query({currentWindow: true});
+			tabs.sort((tabA, tabB) => tabB.lastAccessed - tabA.lastAccessed);
 
 			// skip first tab which will be the panorama view
-			if(tabs.length > 1) {
-				browser.tabs.update(tabs[1].id, {active: true});
+			if (tabs.length > 1) {
+				await browser.tabs.update(tabs[1].id, {active: true});
 			}
 
 		// switch to Panorama View tab
-		}else{
-			browser.tabs.update(extTabs[0].id, {active: true});
+		} else {
+			await browser.tabs.update(extTabs[0].id, {active: true});
 		}
-
-	// if there is no Panorama View tab, make one
-	}else{
+	} else { // if there is no Panorama View tab, make one
 		openingView = true;
-		browser.tabs.create({url: "/view.html", active: true});
+		await browser.tabs.create({url: "/view.html", active: true});
 	}
 }
 
