@@ -1,4 +1,7 @@
 {
+    "pluralRule": {
+        "message": "9"
+    },
     "newGroupButton": {
         "message": "Utwórz nową grupę"
     },
