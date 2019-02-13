@@ -67,6 +67,7 @@
         "tabHide",
         "storage",
         "sessions",
-        "downloads"
+        "downloads",
+        "menus"
     ]
 }

@@ -259,6 +259,8 @@ async function createGroup(x = 75, y = 75) {
     resizeGroups();
 
     groupElement.scrollIntoView({behavior: "smooth"});
+
+    //browser.runtime.sendMessage({"title": "testTitle", "id": "1"});
 }
 
 async function tabCreated(tab) {

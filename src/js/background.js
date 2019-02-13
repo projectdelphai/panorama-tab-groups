@@ -1,4 +1,3 @@
-
 'use strict';
 
 let manifest = browser.runtime.getManifest();
@@ -13,6 +12,32 @@ let manifest = browser.runtime.getManifest();
 
 var openingView = false;
 var openingBackup = false;
+
+browser.menus.create({
+    id: "send-tab",
+    title: "Send To Group",
+    contexts: ["tab"]
+});
+
+browser.runtime.onMessage.addListener(addGroupToMenu);
+
+function addGroupToMenu(message) {
+    browser.menus.create({
+        id: message.id,
+        title: message.title,
+        parentId: "send-tab",
+        contexts: ["tab"]
+    });
+}
+
+browser.menus.onClicked.addListener(function(info, tab) {
+    switch (info.menuItemId) {
+        case "send-tab":
+            console.log(info);
+            console.log(groups);
+            break;
+    }
+})
 
 async function triggerCommand(command) {
 	if (command === "activate-next-group") {
@@ -357,3 +382,5 @@ function onRuntimeInstallNotification(details) {
 }
 
 browser.runtime.onInstalled.addListener(onRuntimeInstallNotification);
+
+
