@@ -1,0 +1,104 @@
+{
+    "pluralRule": {
+        "message": "7"
+    },
+    "newGroupButton": {
+        "message": "Новая группа"
+    },
+    "settingsButton": {
+        "message": "Настройки"
+    },
+    "defaultGroupName": {
+        "message": "Группа без названия"
+    },
+    "dragGroup": {
+        "message": "Переместить"
+    },
+    "closeGroup": {
+        "message": "Закрыть"
+    },
+    "closeGroupWarning": {
+        "message": "Закрывая эту группу, вы закроете $1 вкладку в ней. Вы уверенны что хотите этого?|Закрывая эту группу, вы закроете $1 вкладки в ней. Вы уверенны что хотите этого?|Закрывая эту группу, вы закроете $1 вкладок в ней. Вы уверенны что хотите этого?"
+    },
+    "optionKeyboardShortcuts": {
+        "message": "Сочетания клавиш"
+    },
+    "optionKeyboardShortcutsHelpLink": {
+        "message": "https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/commands#Key_combinations"
+    },
+    "optionKeyboardShortcutsHelpLinkText": {
+        "message": "Подробности о правилах синтаксиса команд, можно найти тут."
+    },
+    "optionKeyboardShortcutsButtonsUpdate": {
+        "message": "Задать"
+    },
+    "optionKeyboardShortcutsButtonsReset": {
+        "message": "Сброс"
+    },
+    "optionKeyboardShortcutsToggle": {
+        "message": "Просмотр в режиме панорамы"
+    },
+    "optionKeyboardShortcutsNextGroup": {
+        "message": "Выбрать следующую группу вкладок"
+    },
+    "optionKeyboardShortcutsPreviousGroup": {
+        "message": "Выбрать предыдущую группу вкладок"
+    },
+    "optionsTheme": {
+        "message": "Тема оформления"
+    },
+    "optionsThemeLight": {
+        "message": "светлая"
+    },
+    "optionsThemeDark": {
+        "message": "тёмная"
+    },
+    "optionsToolbar": {
+        "message": "Панель инструментов"
+    },
+    "optionsToolbarPosition": {
+      "message": "Положение"
+    },
+    "optionsToolbarPositionTop": {
+        "message": "сверху"
+    },
+    "optionsToolbarPositionRight": {
+        "message": "справа"
+    },
+    "optionsToolbarPositionBottom": {
+        "message": "снизу"
+    },
+    "optionsToolbarPositionLeft": {
+        "message": "слева"
+    },
+    "optionsBackup": {
+        "message": "Резервное копирование"
+    },
+    "optionsBackupImport": {
+        "message": "Импорт"
+    },
+    "optionsBackupImportText": {
+        "message": "Импортируемые резервные копии открываются в новом окне, не затрагивая уже открытые вами окна и вкладки.<br />Вы также можете импортировать резервные копии, сделанные старым расширением \"Tab Groups\"."
+    },
+    "optionsBackupExport": {
+        "message": "Экспорт"
+    },
+    "optionsBackupExportText": {
+        "message": "Здесь вы можете сохранить абсолютно все параметры текущей сессии, доступные в Firefox."
+    },
+    "optionsBackupExportButton": {
+        "message": "Сохранить резервную копию"
+    },
+    "optionsStatistics": {
+        "message": "Статистика"
+    },
+    "optionsStatisticsNumberOfTabs": {
+        "message": "Число открытых вкладок:"
+    },
+    "optionsStatisticsNumberOfTabsActive": {
+        "message": "Активных:"
+    },
+    "optionsStatisticsThumbnailCacheSize": {
+        "message": "Размер кэша миниатюр:"
+    }
+}

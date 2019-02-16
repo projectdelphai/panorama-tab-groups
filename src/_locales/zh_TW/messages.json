@@ -1,4 +1,7 @@
 {
+    "pluralRule": {
+        "message": "0"
+    },
     "newGroupButton": {
         "message": "新增組"
     },

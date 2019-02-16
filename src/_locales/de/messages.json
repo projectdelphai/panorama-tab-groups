@@ -1,4 +1,7 @@
 {
+    "pluralRule": {
+        "message": "1"
+    },
     "newGroupButton": {
         "message": "Neue Gruppe hinzufügen"
     },
@@ -15,7 +18,7 @@
         "message": "Gruppe schließen"
     },
     "closeGroupWarning": {
-        "message": "Sie sind dabei, mit dieser Gruppe $1 Tab$2 zu schließen. Soll dieser Vorgang wirklich fortgesetzt werden?"
+        "message": "Sie sind dabei, mit dieser Gruppe $1 Tab zu schließen. Soll dieser Vorgang wirklich fortgesetzt werden?|Sie sind dabei, mit dieser Gruppe $1 Tabs zu schließen. Soll dieser Vorgang wirklich fortgesetzt werden?"
     },
     "optionKeyboardShortcuts": {
         "message": "Tastenkombinationen"
