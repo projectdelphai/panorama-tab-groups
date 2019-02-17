@@ -1,4 +1,7 @@
 {
+    "pluralRule": {
+        "message": "1"
+    },
     "newGroupButton": {
         "message": "Add new group"
     },
@@ -15,7 +18,7 @@
         "message": "Close group"
     },
     "closeGroupWarning": {
-        "message": "Closing this group will close the $1 tab$2 within it. Are you sure you want to do this?"
+        "message": "Closing this group will close the $1 tab within it. Are you sure you want to do this?|Closing this group will close the $1 tabs within it. Are you sure you want to do this?"
     },
     "optionKeyboardShortcuts": {
         "message": "Keyboard Shortcuts"

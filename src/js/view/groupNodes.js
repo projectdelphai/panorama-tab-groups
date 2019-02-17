@@ -1,7 +1,7 @@
 import { getGroupId, forEachTab } from './tabs.js';
 import { groupDragOver, groupDrop } from './drag.js';
 import * as groups from './groups.js';
-import { new_element } from './utils.js';
+import { new_element, getPluralForm } from './utils.js';
 import { tabNodes, getTabNode } from './tabNodes.js';
 
 export var groupNodes = {};
@@ -153,14 +153,16 @@ function groupTransform(group, node, top, right, bottom, left, elem) {
 
 }
 
+
+
 export async function closeGroup(content, group) {
 
     var childNodes = content.childNodes;
     var tabCount = childNodes.length-1;
 
     if(tabCount > 0) {
-        var tabsPlural = (tabCount == 1 ? '' : 's')
-        if(window.confirm(browser.i18n.getMessage("closeGroupWarning", [tabCount, tabsPlural]))) {
+        const confirmationText = getPluralForm(tabCount, browser.i18n.getMessage("closeGroupWarning", [tabCount]));
+        if(window.confirm(confirmationText)) {
             groups.remove(group.id);
             removeGroupNode(group.id);
 

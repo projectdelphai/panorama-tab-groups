@@ -1,0 +1,104 @@
+{
+    "pluralRule": {
+        "message": "2"
+    },
+    "newGroupButton": {
+        "message": "Ajouter un nouveau groupe"
+    },
+    "settingsButton": {
+        "message": "Réglages"
+    },
+    "defaultGroupName": {
+        "message": "Groupe sans nom"
+    },
+    "dragGroup": {
+        "message": "Glisser le groupe"
+    },
+    "closeGroup": {
+        "message": "Fermer le groupe"
+    },
+    "closeGroupWarning": {
+        "message": "La fermeture de ce groupe fermera $1 onglet à l'intérieur de celui-ci. Êtes-vous sûr de vouloir faire ça ?`|La fermeture de ce groupe fermera $1 onglets à l'intérieur de celui-ci. Êtes-vous sûr de vouloir faire ça ?`"
+    },
+    "optionKeyboardShortcuts": {
+        "message": "Raccourcis clavier"
+    },
+    "optionKeyboardShortcutsHelpLink": {
+        "message": "https://developer.mozilla.org/fr/docs/Mozilla/Add-ons/WebExtensions/manifest.json/commands#Combinaisons_de_touches"
+    },
+    "optionKeyboardShortcutsHelpLinkText": {
+        "message": "Le format de l'option de raccourci est détaillé ici."
+    },
+    "optionKeyboardShortcutsButtonsUpdate": {
+        "message": "Mettre à jour"
+    },
+    "optionKeyboardShortcutsButtonsReset": {
+        "message": "Réinitialiser"
+    },
+    "optionKeyboardShortcutsToggle": {
+        "message": "Basculer vers Panorama View"
+    },
+    "optionKeyboardShortcutsNextGroup": {
+        "message": "Activer le prochain Groupe d'onglets"
+    },
+    "optionKeyboardShortcutsPreviousGroup": {
+        "message": "Activer le Groupe d'onglets précédent"
+    },
+    "optionsTheme": {
+        "message": "Thème"
+    },
+    "optionsThemeLight": {
+        "message": "clair"
+    },
+    "optionsThemeDark": {
+        "message": "sombre"
+    },
+    "optionsToolbar": {
+        "message": "Barre d'outils"
+    },
+    "optionsToolbarPosition": {
+        "message": "Position"
+    },
+    "optionsToolbarPositionTop": {
+        "message": "haut"
+    },
+    "optionsToolbarPositionRight": {
+        "message": "droite"
+    },
+    "optionsToolbarPositionBottom": {
+        "message": "bas"
+    },
+    "optionsToolbarPositionLeft": {
+        "message": "gauche"
+    },
+    "optionsBackup": {
+        "message": "Sauvegarde"
+    },
+    "optionsBackupImport": {
+        "message": "Importation"
+    },
+    "optionsBackupImportText": {
+        "message": "Les sauvegardes importées s'ouvriront dans une nouvelle fenêtre, sans rien écraser.<br />Vous pouvez également importer des sauvegardes à partir de l'ancienne extension \"Tab Groups\"."
+    },
+    "optionsBackupExport": {
+        "message": "Exportation"
+    },
+    "optionsBackupExportText": {
+        "message": "Cette section peut devenir obsolète une fois qu'une gestion de session correcte est incorporée dans Firefox."
+    },
+    "optionsBackupExportButton": {
+        "message": "Enregistrer la sauvegarde"
+    },
+    "optionsStatistics": {
+        "message": "Statistiques"
+    },
+    "optionsStatisticsNumberOfTabs": {
+        "message": "Nombre d'onglets:"
+    },
+    "optionsStatisticsNumberOfTabsActive": {
+        "message": "Actif:"
+    },
+    "optionsStatisticsThumbnailCacheSize": {
+        "message": "Taille du cache des miniatures:"
+    }
+}
