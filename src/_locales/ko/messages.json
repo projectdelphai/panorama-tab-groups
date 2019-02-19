@@ -1,0 +1,101 @@
+{
+    "newGroupButton": {
+        "message": "새 그룹 추가"
+    },
+    "settingsButton": {
+        "message": "설정"
+    },
+    "defaultGroupName": {
+        "message": "명명하지 않은 그룹"
+    },
+    "dragGroup": {
+        "message": "그룹 드래그"
+    },
+    "closeGroup": {
+        "message": "그룹 닫기"
+    },
+    "closeGroupWarning": {
+        "message": "이 탭 그룹을 닫을 경우 $1 tab$2 개의 탭들을 닫게 됩니다. 정말로 닫으시겠습니까?"
+    },
+    "optionKeyboardShortcuts": {
+        "message": "키보드 단축키"
+    },
+    "optionKeyboardShortcutsHelpLink": {
+        "message": "https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/commands#Key_combinations"
+    },
+    "optionKeyboardShortcutsHelpLinkText": {
+        "message": "단축키 옵션을 위한 양식은 이 주소에서 상세하게 확인 가능합니다."
+    },
+    "optionKeyboardShortcutsButtonsUpdate": {
+        "message": "업데이트"
+    },
+    "optionKeyboardShortcutsButtonsReset": {
+        "message": "리셋"
+    },
+    "optionKeyboardShortcutsToggle": {
+        "message": "Panorama View 토글"
+    },
+    "optionKeyboardShortcutsNextGroup": {
+        "message": "다음 탭 그룹을 활성화"
+    },
+    "optionKeyboardShortcutsPreviousGroup": {
+        "message": "이전 탭 그룹을 활성화"
+    },
+    "optionsTheme": {
+        "message": "테마"
+    },
+    "optionsThemeLight": {
+        "message": "밝음"
+    },
+    "optionsThemeDark": {
+        "message": "어두움"
+    },
+    "optionsToolbar": {
+        "message": "툴바"
+    },
+    "optionsToolbarPosition": {
+        "message": "위치"
+    },
+    "optionsToolbarPositionTop": {
+        "message": "상단"
+    },
+    "optionsToolbarPositionRight": {
+        "message": "우측"
+    },
+    "optionsToolbarPositionBottom": {
+        "message": "하단"
+    },
+    "optionsToolbarPositionLeft": {
+        "message": "좌측"
+    },
+    "optionsBackup": {
+        "message": "백업"
+    },
+    "optionsBackupImport": {
+        "message": "들여오기"
+    },
+    "optionsBackupImportText": {
+        "message": "들여온 백업파일은 현재의 탭그룹들을 덮어쓰지 않으며 새 창에 열립니다.<br />또한 구 \"Tab Groups\" 확장기능에서 백업파일을 들여올 수도 있습니다."
+    },
+    "optionsBackupExport": {
+        "message": "내보내기"
+    },
+    "optionsBackupExportText": {
+        "message": "향후 파이어 폭스에서 적절한 세션 관리가 가능 해질 경우 이 섹션은 쓸모 없어 질 수도 있습니다."
+    },
+    "optionsBackupExportButton": {
+        "message": "백업 저장"
+    },
+    "optionsStatistics": {
+        "message": "통계"
+    },
+    "optionsStatisticsNumberOfTabs": {
+        "message": "탭들의 갯수:"
+    },
+    "optionsStatisticsNumberOfTabsActive": {
+        "message": "활성화됨:"
+    },
+    "optionsStatisticsThumbnailCacheSize": {
+        "message": "썸네일 캐시 크기:"
+    }
+}
