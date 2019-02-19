@@ -69,15 +69,23 @@ function changeMenu(message) {
 }
 
 async function menuClicked(info, tab) {
+    let windowId = (await browser.windows.getCurrent()).id;
     switch (info.menuItemId) {
-        case "send-tab":
-            break;
         case "refresh-groups":
-            let windowId = (await browser.windows.getCurrent()).id;
             let groups = (await browser.sessions.getWindowValue(windowId, 'groups'));
             browser.menus.removeAll();
             createMenuList();
             break;
+        default:
+            let groupId = info.menuItemId;
+            let tabId = tab.id;
+            await browser.sessions.setTabValue(tab.id, 'groupId', groupId);
+
+            let toIndex = -1;
+            await browser.tabs.move(tabId, {index: toIndex});
+            
+            let activeGroup = (await browser.sessions.getWindowValue(windowId, 'activeGroup'));
+            await toggleVisibleTabs(activeGroup);
     }
 }
 

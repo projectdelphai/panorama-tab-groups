@@ -161,6 +161,7 @@ export async function closeGroup(content, group) {
     var tabCount = childNodes.length-1;
 
     if(tabCount > 0) {
+        console.log(tabCount);
         const confirmationText = getPluralForm(tabCount, browser.i18n.getMessage("closeGroupWarning", [tabCount]));
         if(window.confirm(confirmationText)) {
             groups.remove(group.id);

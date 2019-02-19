@@ -25,7 +25,7 @@ export function new_element(name, attributes, children) {
 export function getPluralForm(pluralCount = 1, translatedString = '') {
   const count = parseInt(pluralCount);
   const pluralRule = parseInt(browser.i18n.getMessage('pluralRule'));
-  const pluralForms = string.split('|');
+  const pluralForms = translatedString.split('|');
 
   if (pluralForms.length === 1) {
     return translatedString;
