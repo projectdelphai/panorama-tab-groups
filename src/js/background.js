@@ -12,6 +12,23 @@ function mod(x, n) {
 	return (x % n + n) % n;
 }
 
+function addRefreshMenuItem() {
+    browser.menus.remove("refresh-groups");
+    browser.menus.remove("refresh-spacer");
+    browser.menus.create({
+        id: "refresh-spacer",
+        type: "separator",
+        parentId: "send-tab",
+        contexts: ["tab"]
+    });
+    browser.menus.create({
+        id: "refresh-groups",
+        title: "Refresh Groups",
+        parentId: "send-tab",
+        contexts: ["tab"]
+    });
+}
+
 async function createMenuList() {
     let windowId = (await browser.windows.getCurrent()).id;
     let groups = (await browser.sessions.getWindowValue(windowId, 'groups'));
@@ -31,12 +48,7 @@ async function createMenuList() {
             contexts: ["tab"]
         });
     }
-    browser.menus.create({
-        id: "refresh-groups",
-        title: "Refresh Groups",
-        parentId: "send-tab",
-        contexts: ["tab"]
-    });
+    addRefreshMenuItem();
 }
 
 createMenuList();
@@ -46,20 +58,14 @@ browser.runtime.onMessage.addListener(changeMenu);
 function changeMenu(message) {
     switch (message.action) {
         case "createMenuItem":
-            browser.menus.remove("refresh-groups");
             browser.menus.create({
                 id: message.groupId,
                 title: message.groupId + ": " + message.groupName,
                 parentId: "send-tab",
                 contexts: ["tab"]
             });
-            browser.menus.create({
-                id: "refresh-groups",
-                title: "Refresh Groups",
-                parentId: "send-tab",
-                contexts: ["tab"]
-            });
-            break;
+            addRefreshMenuItem(); // move refresh menu to end
+           break;
         case "removeMenuItem":
             browser.menus.remove(message.groupId);
             break;
