@@ -3,102 +3,102 @@
         "message": "1"
     },
     "newGroupButton": {
-        "message": "Add new group"
+        "message": "Adicionar novo grupo"
     },
     "settingsButton": {
-        "message": "Settings"
+        "message": "Configurações"
     },
     "defaultGroupName": {
-        "message": "Unnamed group"
+        "message": "Grupo sem nome"
     },
     "dragGroup": {
-        "message": "Drag group"
+        "message": "Mover grupo"
     },
     "closeGroup": {
-        "message": "Close group"
+        "message": "Fechar grupo"
     },
     "closeGroupWarning": {
-        "message": "Closing this group will close the $1 tab within it. Are you sure you want to do this?|Closing this group will close the $1 tabs within it. Are you sure you want to do this?"
+        "message": "Fechar este grupo também fechará a aba $1. Tem certeza que deseja fechá-lo?|Fechar este grupo também fechará as abas $1. Tem certeza que deseja fechá-lo?"
     },
     "optionKeyboardShortcuts": {
-        "message": "Keyboard Shortcuts"
+        "message": "Atalhos de teclado"
     },
     "optionKeyboardShortcutsHelpLink": {
         "message": "https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/commands#Key_combinations"
     },
     "optionKeyboardShortcutsHelpLinkText": {
-        "message": "The format for the shortcut option is detailed here."
+        "message": "A formatação dos atalhos de teclado estão detalhadas aqui."
     },
     "optionKeyboardShortcutsButtonsUpdate": {
-        "message": "Update"
+        "message": "Atualizar"
     },
     "optionKeyboardShortcutsButtonsReset": {
-        "message": "Reset"
+        "message": "Redefinir"
     },
     "optionKeyboardShortcutsToggle": {
-        "message": "Toggle Panorama View"
+        "message": "Alternar visão de panorama"
     },
     "optionKeyboardShortcutsNextGroup": {
-        "message": "Activate the next Tab Group"
+        "message": "Ativar o próximo Grupo de Abas"
     },
     "optionKeyboardShortcutsPreviousGroup": {
-        "message": "Activate the previous Tab Group"
+        "message": "Ativar o Grupo de Abas anterior"
     },
     "optionsTheme": {
-        "message": "Theme"
+        "message": "Tema"
     },
     "optionsThemeLight": {
-        "message": "light"
+        "message": "claro"
     },
     "optionsThemeDark": {
-        "message": "dark"
+        "message": "escuro"
     },
     "optionsToolbar": {
-        "message": "Toolbar"
+        "message": "Barra de tarefas"
     },
     "optionsToolbarPosition": {
-        "message": "Position"
+        "message": "Posição"
     },
     "optionsToolbarPositionTop": {
-        "message": "top"
+        "message": "topo"
     },
     "optionsToolbarPositionRight": {
-        "message": "right"
+        "message": "direita"
     },
     "optionsToolbarPositionBottom": {
-        "message": "bottom"
+        "message": "baixo"
     },
     "optionsToolbarPositionLeft": {
-        "message": "left"
+        "message": "esquerda"
     },
     "optionsBackup": {
-        "message": "Backup"
+        "message": "Cópia de segurança"
     },
     "optionsBackupImport": {
-        "message": "Import"
+        "message": "Importar"
     },
     "optionsBackupImportText": {
-        "message": "Imported backups will open in new windows and not overwrite anything.<br />You can also import backups from the old \"Tab Groups\" add-on."
+        "message": "Cópias de segurança importadas abrirão em novas janelas e não substituirão nada.<br />Você também pode importar cópias de segurança da antiga extensão \"Grupos de Abas\"."
     },
     "optionsBackupExport": {
-        "message": "Export"
+        "message": "Exportar"
     },
     "optionsBackupExportText": {
-        "message": "This section might be made obsolete once proper session management is possible in Firefox."
+        "message": "Esta seção pode se tornar obsoleta, assim que um adequado gerenciamento de sessões esteja disponível no Firefox."
     },
     "optionsBackupExportButton": {
-        "message": "Save backup"
+        "message": "Fazer cópia de segurança"
     },
     "optionsStatistics": {
-        "message": "Statistics"
+        "message": "Estatísticas"
     },
     "optionsStatisticsNumberOfTabs": {
-        "message": "Number of Tabs:"
+        "message": "Número de abas:"
     },
     "optionsStatisticsNumberOfTabsActive": {
-        "message": "Active:"
+        "message": "Ativas:"
     },
     "optionsStatisticsThumbnailCacheSize": {
-        "message": "Thumbnail Cache Size:"
+        "message": "Espaço em disco das minuaturas:"
     }
 }
