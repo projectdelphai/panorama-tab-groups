@@ -81,7 +81,7 @@
 	display: none;
 }
 
-.group .header .tab_count {
+.group .header .tab_count, .group .header .group_id {
 	margin-top: -5px;
 	margin-right: 5px;
 	padding: 3px 5px 3px 5px;

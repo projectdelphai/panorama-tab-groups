@@ -205,11 +205,12 @@ export function makeGroupNode(group) {
     var spacer = new_element('span', {class: 'spacer'});
     var input = new_element('input', {type: 'text', value: group.name});
 
+    var groupId = new_element('spawn', {class: 'group_id', content: group.id});
     var tabCount = new_element('span', {class: 'tab_count'});
 
     var close = new_element('div', {class: 'close', title: browser.i18n.getMessage("closeGroup")});
 
-    var header = new_element('div', {class: 'header', title: browser.i18n.getMessage("dragGroup")}, [name, input, spacer, tabCount, close]);
+    var header = new_element('div', {class: 'header', title: browser.i18n.getMessage("dragGroup")}, [name, input, spacer, groupId, tabCount, close]);
 
     // newtab
     var newtab = new_element('div', {class: 'newtab'}, [new_element('div', {class: 'inner'})]);
@@ -333,6 +334,7 @@ export function makeGroupNode(group) {
         group: node,
         content: content,
         newtab: newtab,
+        groupId: groupId,
         tabCount: tabCount,
         name: name,
         input: input

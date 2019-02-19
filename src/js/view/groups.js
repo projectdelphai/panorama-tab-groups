@@ -36,15 +36,18 @@ export async function init() {
 };
 
 export async function create() {
+    let newId = await newUid();
+    let newName = browser.i18n.getMessage("defaultGroupName");
 	var group = {
-		id: await newUid(),
-		name: browser.i18n.getMessage("defaultGroupName"),
+		id: newId,
+        name: newName,
 		windowId: windowId,
 		containerId: 'firefox-default',
 		rect: {x: 0, y: 0, w: 0.2, h: 0.2},
 		lastMoved: (new Date).getTime(),
 	};
 	groups.push(group);
+    browser.runtime.sendMessage({"action" : "createMenuItem", "groupId" : newId.toString(), "groupName" : newName});
 
 	await save();
 
@@ -57,6 +60,7 @@ export async function remove(id) {
 		return;
 	}
 	groups.splice(index, 1);
+    browser.runtime.sendMessage({"action" : "removeMenuItem", "groupId" : id.toString()}); 
 
 	await save();
 };
@@ -67,6 +71,7 @@ export async function rename(id, newName) {
 		return;
 	}
 	groups[index].name = newName;
+    browser.runtime.sendMessage({"action" : "updateMenuItem", "groupId" : id.toString(), "groupName" : newName});
 
 	await save();
 };

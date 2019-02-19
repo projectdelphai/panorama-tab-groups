@@ -47,7 +47,7 @@ body.theme-dark {
 	color: #f9f9fa;
 }
 
-.theme-dark .group .header .tab_count {
+.theme-dark .group .header .tab_count, .theme-dark .group .header .group_id {
 	background-color: rgba(249, 249, 250, 0.2);
 
 	color: #b1b1b3;
