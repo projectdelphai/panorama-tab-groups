@@ -141,6 +141,8 @@ async function initView() {
     document.addEventListener('visibilitychange', async function() {
         if(document.hidden) {
             browser.tabs.remove(await browser.tabs.getCurrent());
+        } else {
+            window.location.reload();
         }
     }, false);
 
