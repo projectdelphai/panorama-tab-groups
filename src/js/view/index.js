@@ -138,15 +138,9 @@ async function initView() {
         createGroup(e.clientX, e.clientY);
     }, false);
 
-    document.addEventListener('visibilitychange', function() {
+    document.addEventListener('visibilitychange', async function() {
         if(document.hidden) {
-            browser.tabs.onUpdated.removeListener(captureThumbnail);
-            //clearInterval(view.intervalId);
-        }else{
-            browser.tabs.onUpdated.addListener(captureThumbnail);
-            //view.intervalId = setInterval(captureThumbnails, 2000);
-            captureThumbnails();
-            window.location.reload();
+            browser.tabs.remove(await browser.tabs.getCurrent());
         }
     }, false);
 
