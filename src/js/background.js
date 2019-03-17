@@ -137,9 +137,10 @@ async function toggleView() {
                 await browser.tabs.update(tabs[1].id, {active: true});
             }
 
-            // switch to Panorama View tab
+            // Open a new Panorama View tab anyway because it's probably in the process of closing
         } else {
-            await browser.tabs.update(extTabs[0].id, {active: true});
+            openingView = true;
+            await browser.tabs.create({url: "/view.html", active: true});
         }
     } else { // if there is no Panorama View tab, make one
         openingView = true;
