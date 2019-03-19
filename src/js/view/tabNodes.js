@@ -156,6 +156,10 @@ export async function updateThumbnail(tabId, thumbnail) {
 	if(node) {
 		if(!thumbnail) {
 			thumbnail = await browser.sessions.getTabValue(tabId, 'thumbnail');
+			// If there's extra data there we just want the thumbnail
+			if(thumbnail && thumbnail.thumbnail){
+				thumbnail = thumbnail.thumbnail
+			}
 		}
 
 		if(thumbnail) {
