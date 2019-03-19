@@ -150,10 +150,10 @@ async function initView() {
 
     document.addEventListener('visibilitychange', function() {
         if(document.hidden) {
-            browser.tabs.onUpdated.removeListener(captureThumbnail);
+            //browser.tabs.onUpdated.removeListener(captureThumbnail);
             //clearInterval(view.intervalId);
         }else{
-            browser.tabs.onUpdated.addListener(captureThumbnail);
+            //browser.tabs.onUpdated.addListener(captureThumbnail);
             //view.intervalId = setInterval(captureThumbnails, 2000);
             captureThumbnails();
         }
@@ -340,11 +340,5 @@ function tabDetached(tabId, detachInfo) {
 }
 
 async function tabActivated(activeInfo) {
-    if ( activeInfo.tabId === view.tabId ) {
-        await tabs.forEach( async function( tab ) {
-            updateThumbnail( tab.id );
-        } );
-    }
-
     setActiveTabNode(view.tabId);
 }
