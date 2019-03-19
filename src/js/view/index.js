@@ -83,7 +83,7 @@ async function captureThumbnails() {
     const tabs = browser.tabs.query({currentWindow: true, discarded: false});
 
     for(const tab of await tabs) {
-        captureThumbnail(tab); //await to lessen strain on browser
+        await captureThumbnail(tab); //await to lessen strain on browser
     }
 }
 
