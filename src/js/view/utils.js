@@ -50,7 +50,7 @@ export function getPluralForm(pluralCount = 1, translatedString = '') {
       break;
       break;
     /*
-     * Rule #2 [1-2]|[everything else]
+     * Rule #2 [0 or 1]|[everything else]
      */
     case 2:
       if (count < 2) {
