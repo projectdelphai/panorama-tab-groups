@@ -219,13 +219,17 @@ async function toggleVisibleTabs(activeGroup, noTabSelected) {
     let showTabs = [];
 
     await Promise.all(tabs.map(async(tab) => {
-        let groupId = await browser.sessions.getTabValue(tab.id, 'groupId');
+        try{
+            let groupId = await browser.sessions.getTabValue(tab.id, 'groupId');
 
-        if(groupId != activeGroup) {
-            hideTabIds.push(tab.id)
-        }else{
-            showTabIds.push(tab.id)
-            showTabs.push(tab)
+            if(groupId != activeGroup) {
+                hideTabIds.push(tab.id)
+            }else{
+                showTabIds.push(tab.id)
+                showTabs.push(tab)
+            }
+        } catch {
+            //The tab has probably been closed, this should be safe to ignore
         }
     }));
 
