@@ -165,7 +165,20 @@ async function initView() {
     // Listen for tabs being added/removed/switched/etc. and update appropriately
     browser.tabs.onCreated.addListener(tabCreated);
     browser.tabs.onRemoved.addListener(tabRemoved);
-    browser.tabs.onUpdated.addListener(tabUpdated);
+    browser.tabs.onUpdated.addListener(tabUpdated, {
+        // This page doesn't care about tabs in other windows
+        windowId: view.windowId,
+        // We don't want to listen for every property because that includes
+        // the hidden state changing which generates a ton of events
+        // every time the active group changes
+        properties:[ 
+            "discarded",
+            "favIconUrl",
+            "pinned",
+            "title",
+            "status"
+        ]
+    });
     browser.tabs.onMoved.addListener(tabMoved);
     browser.tabs.onAttached.addListener(tabAttached);
     browser.tabs.onDetached.addListener(tabDetached);
