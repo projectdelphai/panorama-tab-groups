@@ -146,7 +146,6 @@ async function initView() {
             browser.tabs.onUpdated.addListener(captureThumbnail);
             //view.intervalId = setInterval(captureThumbnails, 2000);
             captureThumbnails();
-            window.location.reload();
         }
     }, false);
 
