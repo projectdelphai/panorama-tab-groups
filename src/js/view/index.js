@@ -306,10 +306,8 @@ function tabRemoved(tabId, removeInfo) {
 }
 
 async function tabUpdated( tabId, changeInfo, tab ) {
-    if ( view.windowId === tab.windowId ){
-        updateTabNode( tab );
-        updateFavicon( tab );
-    }
+    updateTabNode( tab );
+    updateFavicon( tab );
 
     if ( 'pinned' in changeInfo ) {
         fillGroupNodes();
