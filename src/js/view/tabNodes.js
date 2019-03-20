@@ -129,7 +129,7 @@ export async function setActiveTabNode(tabId) {
 }
 
 // Remove selected from all other thumbnails, add to tab with id given
-export async function setActiveTabNodeById(tabId) {
+export function setActiveTabNodeById(tabId) {
 	for(var nodeId in tabNodes){
 		tabNodes[nodeId].tab.classList.remove('selected')
 	}
