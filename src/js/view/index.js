@@ -149,14 +149,8 @@ async function initView() {
     }, false);
 
     document.addEventListener('visibilitychange', function() {
-        if(document.hidden) {
-            //browser.tabs.onUpdated.removeListener(captureThumbnail);
-            //clearInterval(view.intervalId);
-        }else{
+        if(!document.hidden) {
             setActiveTabNode(view.tabId);
-
-            //browser.tabs.onUpdated.addListener(captureThumbnail);
-            //view.intervalId = setInterval(captureThumbnails, 2000);
             captureThumbnails();
         }
     }, false);
