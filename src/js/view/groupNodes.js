@@ -376,35 +376,31 @@ export async function fillGroupNodes() {
     groupNodes.pinned.content.appendChild( fragment.pinned );
 }
 
-// there is a bug in here! moving a tab to the right in the tab bar does nothing..
 export async function insertTab(tab) {
 
     var groupId = await getGroupId(tab.id);
 
-    if(groupId != -1) {
+    var tabNode = tabNodes[tab.id];
 
-        var index = 0;
+    if(groupId != -1) {
 
         var childNodes = groupNodes[groupId].content.childNodes;
 
         for(var i = 0; i < childNodes.length-1; i++) {
 
             var _tabId = Number(childNodes[i].getAttribute('tabId'));
+            if(_tabId == tab.id){
+                continue;
+            }
             var _tab = await browser.tabs.get(_tabId);
 
             if(_tab.index >= tab.index) {
-                break;
+                childNodes[i].insertAdjacentElement('beforebegin', tabNode.tab);
+                return;
             }
-            index++;
         }
 
-        var tabNode = tabNodes[tab.id];
-
-        if(index < childNodes.length-1) {
-            childNodes[index].insertAdjacentElement('beforebegin', tabNode.tab);
-        }else{
-            groupNodes[groupId].newtab.insertAdjacentElement('beforebegin', tabNode.tab);
-        }
+        groupNodes[groupId].newtab.insertAdjacentElement('beforebegin', tabNode.tab);
     }
 }
 
