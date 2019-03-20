@@ -74,7 +74,7 @@ export function makeTabNode(tab) {
 	};
 }
 
-export async function updateTabNode(tab) {
+export function updateTabNode(tab) {
 
 	var node = tabNodes[tab.id];
 
@@ -130,11 +130,9 @@ export async function setActiveTabNode(tabId) {
 
 // Remove selected from all other thumbnails, add to tab with id given
 export async function setActiveTabNodeById(tabId) {
-    await forEachTab(async function(tab) {
-        if (tabNodes[tab.id]) {
-            tabNodes[tab.id].tab.classList.remove('selected');
-        }
-    });
+	for(var tabNode in tabNodes){
+		tabNode.tab.classList.remove('selected')
+	}
     tabNodes[tabId].tab.classList.add('selected');
     activeTabId = tabId;
 }
