@@ -153,6 +153,8 @@ async function initView() {
             //browser.tabs.onUpdated.removeListener(captureThumbnail);
             //clearInterval(view.intervalId);
         }else{
+            setActiveTabNode(view.tabId);
+
             //browser.tabs.onUpdated.addListener(captureThumbnail);
             //view.intervalId = setInterval(captureThumbnails, 2000);
             captureThumbnails();
@@ -182,7 +184,6 @@ async function initView() {
     browser.tabs.onMoved.addListener(tabMoved);
     browser.tabs.onAttached.addListener(tabAttached);
     browser.tabs.onDetached.addListener(tabDetached);
-    browser.tabs.onActivated.addListener(tabActivated);
 
     view.groupsNode.addEventListener('dragover', groupDragOver, false);
     view.groupsNode.addEventListener('drop', outsideDrop, false);
@@ -337,8 +338,4 @@ function tabDetached(tabId, detachInfo) {
             updateGroupFit(group);
         });
     }
-}
-
-async function tabActivated(activeInfo) {
-    setActiveTabNode(view.tabId);
 }
