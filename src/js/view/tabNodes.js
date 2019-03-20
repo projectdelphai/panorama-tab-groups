@@ -1,4 +1,4 @@
-import { forEachTab } from './tabs.js';
+import { forEachTab, forEachTabSync } from './tabs.js';
 import { tabDragStart, tabDragEnter, tabDragOver, tabDragLeave, tabDrop, tabDragEnd } from './drag.js';
 import { new_element } from './utils.js';
 
@@ -14,8 +14,8 @@ export async function initTabNodes(tabId) {
 	await forEachTab(async function(tab) {
 		makeTabNode(tab);
 		updateTabNode(tab);
-		updateFavicon(tab);
-		updateThumbnail(tab.id);
+		await updateFavicon(tab);
+		await updateThumbnail(tab.id);
 	});
 	setActiveTabNode(tabId);
 }
@@ -109,7 +109,7 @@ export async function setActiveTabNode(tabId) {
 	var lastActive = -1;
 	var lastAccessed = 0;
 
-	await forEachTab(async function(tab) {
+	await forEachTabSync(function(tab) {
 
 		// Can race if deleteTabNode is called at the same time (e.g. every time
 		// the active tab is closed, since a new tab becomes active), so confirm
@@ -168,6 +168,8 @@ export async function updateThumbnail(tabId, thumbnail) {
 	}
 }
 
+// This function is a pretty big hot spot on initialization.  Testing the image
+// like this appears to be very expensive
 async function testImage(url) {
 	return new Promise(function (resolve, reject) {
 
@@ -193,15 +195,14 @@ export async function updateFavicon(tab) {
 		if(tab.favIconUrl &&
 			tab.favIconUrl.substr(0, 22) != 'chrome://mozapps/skin/' &&
 			tab.favIconUrl != tab.url) {
-			testImage(tab.favIconUrl).then(
-				_ => {
-					node.favicon.style.backgroundImage = 'url(' + tab.favIconUrl + ')';
-					node.favicon.classList.add('visible');
-				}, _ => {
-					node.favicon.style.backgroundImage = '';
-					node.favicon.classList.remove('visible');
-				}
-			);
+			try{
+				await testImage(tab.favIconUrl);
+				node.favicon.style.backgroundImage = 'url(' + tab.favIconUrl + ')';
+				node.favicon.classList.add('visible');
+			} catch {
+				node.favicon.style.backgroundImage = '';
+				node.favicon.classList.remove('visible');
+			}
 		}else{
 			node.favicon.classList.remove('visible');
 		}

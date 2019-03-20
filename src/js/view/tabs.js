@@ -9,6 +9,15 @@ export async function getGroupId(tabId) {
 
 export async function forEachTab(callback) {
 	const tabs = await browser.tabs.query({currentWindow: true});
+	for(const tab of tabs){
+		await callback(tab);
+	}
+};
 
-	await Promise.all(tabs.map(callback));
+
+export async function forEachTabSync(callback) {
+	const tabs = await browser.tabs.query({currentWindow: true});
+	for(const tab of tabs){
+		callback(tab);
+	}
 };
