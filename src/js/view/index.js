@@ -162,7 +162,7 @@ async function initView() {
     }, false);
 
     window.addEventListener("resize", resizeGroups);
-    document.addEventListener("keypress", keyInput);
+    document.addEventListener("keydown", keyInput);
 
     // Listen for tabs being added/removed/switched/etc. and update appropriately
     browser.tabs.onCreated.addListener(tabCreated);
