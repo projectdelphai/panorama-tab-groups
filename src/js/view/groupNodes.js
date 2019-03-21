@@ -369,12 +369,6 @@ export async function fillGroupNodes() {
     });
 
     groups.forEach(function(group) {
-        // When dealing with large tab groups, Firefox can sometimes become unresponsive
-        // for a bit after this call. It seems to happen when:
-        // 1.) It's during initialization of the Panorama View tab (not when fillGroupNodes()
-        //     is called afterwards).
-        // 2.) There are images in the tab. Both favicons and thumbnails cause it, but
-        //     thumbnails have a somewhat larger effect.
         groupNodes[group.id].content.insertBefore(fragment[group.id], groupNodes[group.id].newtab);
         updateGroupFit(group);
     });

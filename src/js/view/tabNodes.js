@@ -168,8 +168,10 @@ export async function updateThumbnail(tabId, thumbnail) {
 	}
 }
 
-// This function is a pretty big hot spot on initialization.  Testing the image
-// like this appears to be very expensive
+// This testing mechanism can seemingly hit a slow path in Firefox related 
+// to webRequest listeners.  If we're spending a lot of time in here, it's
+// probably because another extension registered one ot those listeners
+// on the Panorama tab
 async function testImage(url) {
 	return new Promise(function (resolve, reject) {
 
