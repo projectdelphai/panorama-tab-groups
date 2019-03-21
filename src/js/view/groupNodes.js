@@ -390,41 +390,66 @@ export async function fillGroupNodes() {
     
 }
 
+// Attempt to insert the tab on a best effort basis, but fall back to fillGroupNodes if something goes wrong
 export async function insertTab(tab) {
     if (modifyingGroupContent) {
         setTimeout(() => insertTab(tab), 100);
     }
     try {
         modifyingGroupContent = true;
+        // refresh the tab data
+        var tab = await browser.tabs.get(tab.id);
         var groupId = await getGroupId(tab.id);
 
         var tabNode = tabNodes[tab.id];
 
         if (groupId != -1) {
 
-            var childNodes = groupNodes[groupId].content.childNodes;
-
-            var childNodeTabs = {}
+            var childNodeTabsByIndex = {};
+            var tabIndexes = [];
             //Get tabs all at once to make sure the data doesn't change out from under us
-            await forEachTabSync(tab =>{
-                childNodeTabs[tab.id] = tab
+            await forEachTab(async otherTab =>{
+                if(groupId == await getGroupId(otherTab.id)){
+                    childNodeTabsByIndex[otherTab.index] = otherTab;
+                    tabIndexes.push(otherTab.index);
+                }
             });
 
-            for (var i = 0; i < childNodes.length - 1; i++) {
+            var higherIndexes = tabIndexes.filter(idx => idx > tab.index);
+            var lowerIndexes = tabIndexes.filter(idx => idx < tab.index);
 
-                var _tabId = Number(childNodes[i].getAttribute('tabId'));
-                if (_tabId == tab.id) {
-                    continue;
+            if(higherIndexes.length == 0){
+                groupNodes[groupId].newtab.insertAdjacentElement('beforebegin', tabNode.tab);
+            } else {
+                var childNodes = Array.from(groupNodes[groupId].content.childNodes);
+                var sortedIndexes = higherIndexes.sort((a, b) =>  a - b);
+                for(const idx of sortedIndexes){
+                    let candidateNodeIdx = childNodes.findIndex(node => Number(node.getAttribute('tabId')) === childNodeTabsByIndex[idx].id);
+                    if(candidateNodeIdx != -1){
+                        if(lowerIndexes.length > 0){
+                            try{
+                                let nextLowestIdx = Math.max(...lowerIndexes);
+                                let precedingNodeID = Number(childNodes[candidateNodeIdx - 1].getAttribute('tabId'));
+                                if(precedingNodeID == tab.id){
+                                    precedingNodeID = Number(childNodes[candidateNodeIdx - 2].getAttribute('tabId'));
+                                }
+                                if(precedingNodeID != childNodeTabsByIndex[nextLowestIdx].id){
+                                    // Seems like more than one tab is being moved at once.
+                                    // Rebuild the full UI to maintain consistency.
+                                    setTimeout(() => fillGroupNodes(), 100);
+                                }
+                            }catch{
+                                // We probably went past the edge of the array, rebuild everything instead.
+                                setTimeout(() => fillGroupNodes(), 100);
+                            }
+                        }
+                        childNodes[candidateNodeIdx].insertAdjacentElement('beforebegin', tabNode.tab);
+                        return;
+                    }
                 }
-                var _tab = childNodeTabs[_tabId];
-
-                if (_tab.index >= tab.index) {
-                    childNodes[i].insertAdjacentElement('beforebegin', tabNode.tab);
-                    return;
-                }
+                // Couldn't find any nodes with the next highest index. Rebuilding everything just to be safe
+                setTimeout(() => fillGroupNodes(), 100);
             }
-
-            groupNodes[groupId].newtab.insertAdjacentElement('beforebegin', tabNode.tab);
         }
     } finally {
         modifyingGroupContent = false;
