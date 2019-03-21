@@ -1,4 +1,4 @@
-import { getGroupId, forEachTab } from './tabs.js';
+import { getGroupId, forEachTab, forEachTabSync } from './tabs.js';
 import { groupDragOver, groupDrop } from './drag.js';
 import * as groups from './groups.js';
 import { new_element, getPluralForm } from './utils.js';
@@ -348,59 +348,86 @@ function removeGroupNode(groupId) {
     delete groupNodes[groupId];
 }
 
+// primitive mutex to make sure the functions that deal with groups aren't stepping on each other's toes
+var modifyingGroupContent = false;
+
 export async function fillGroupNodes() {
-    var fragment = {
-        pinned: document.createDocumentFragment(),
-    };
 
-    groups.forEach(function(group) {
-        fragment[group.id] = document.createDocumentFragment();
-    });
+    if(modifyingGroupContent){
+        setTimeout(() => fillGroupNodes(), 100);
+    }
+    try{
+        modifyingGroupContent = true;
 
-    await forEachTab( async function( tab ) {
-        if ( ! tab.pinned ) {
-            const groupId = await getGroupId( tab.id );
-            if ( groupId != -1 && fragment[ groupId ] ) {
-                fragment[ groupId ].appendChild( getTabNode(tab.id) );
+        var fragment = {
+            pinned: document.createDocumentFragment(),
+        };
+    
+        groups.forEach(function(group) {
+            fragment[group.id] = document.createDocumentFragment();
+        });
+    
+        await forEachTab( async function( tab ) {
+            if ( ! tab.pinned ) {
+                const groupId = await getGroupId( tab.id );
+                if ( groupId != -1 && fragment[ groupId ] ) {
+                    fragment[ groupId ].appendChild( getTabNode(tab.id) );
+                }
+            } else {
+                fragment.pinned.appendChild( getTabNode(tab.id) );
             }
-        } else {
-            fragment.pinned.appendChild( getTabNode(tab.id) );
-        }
-    });
-
-    groups.forEach(function(group) {
-        groupNodes[group.id].content.insertBefore(fragment[group.id], groupNodes[group.id].newtab);
-        updateGroupFit(group);
-    });
-
-    groupNodes.pinned.content.appendChild( fragment.pinned );
+        });
+    
+        groups.forEach(function(group) {
+            groupNodes[group.id].content.insertBefore(fragment[group.id], groupNodes[group.id].newtab);
+            updateGroupFit(group);
+        });
+    
+        groupNodes.pinned.content.appendChild( fragment.pinned );
+    } finally {
+        modifyingGroupContent = false;
+    }
+    
 }
 
 export async function insertTab(tab) {
+    if (modifyingGroupContent) {
+        setTimeout(() => fillGroupNodes(), 100);
+    }
+    try {
+        modifyingGroupContent = true;
+        var groupId = await getGroupId(tab.id);
 
-    var groupId = await getGroupId(tab.id);
+        var tabNode = tabNodes[tab.id];
 
-    var tabNode = tabNodes[tab.id];
+        if (groupId != -1) {
 
-    if(groupId != -1) {
+            var childNodes = groupNodes[groupId].content.childNodes;
 
-        var childNodes = groupNodes[groupId].content.childNodes;
+            var childNodeTabs = {}
+            //Get tabs all at once to make sure the data doesn't change out from under us
+            await forEachTabSync(tab =>{
+                childNodeTabs[tab.id] = tab
+            });
 
-        for(var i = 0; i < childNodes.length-1; i++) {
+            for (var i = 0; i < childNodes.length - 1; i++) {
 
-            var _tabId = Number(childNodes[i].getAttribute('tabId'));
-            if(_tabId == tab.id){
-                continue;
+                var _tabId = Number(childNodes[i].getAttribute('tabId'));
+                if (_tabId == tab.id) {
+                    continue;
+                }
+                var _tab = childNodeTabs[_tabId];
+
+                if (_tab.index >= tab.index) {
+                    childNodes[i].insertAdjacentElement('beforebegin', tabNode.tab);
+                    return;
+                }
             }
-            var _tab = await browser.tabs.get(_tabId);
 
-            if(_tab.index >= tab.index) {
-                childNodes[i].insertAdjacentElement('beforebegin', tabNode.tab);
-                return;
-            }
+            groupNodes[groupId].newtab.insertAdjacentElement('beforebegin', tabNode.tab);
         }
-
-        groupNodes[groupId].newtab.insertAdjacentElement('beforebegin', tabNode.tab);
+    } finally {
+        modifyingGroupContent = false;
     }
 }
 
