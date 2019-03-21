@@ -392,7 +392,7 @@ export async function fillGroupNodes() {
 
 export async function insertTab(tab) {
     if (modifyingGroupContent) {
-        setTimeout(() => fillGroupNodes(), 100);
+        setTimeout(() => insertTab(tab), 100);
     }
     try {
         modifyingGroupContent = true;
