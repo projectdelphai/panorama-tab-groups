@@ -37,7 +37,11 @@ async function getStatistics() {
 		var thumbnail = await browser.sessions.getTabValue(tab.id, 'thumbnail');
 
 		if(thumbnail) {
-			totalSize += thumbnail.length;
+			if (thumbnail.thumbnail){
+				totalSize += thumbnail.thumbnail.length;
+			} else {
+				totalSize += thumbnail.length;
+			}
 		}
 		if(!tab.discarded) {
 			numActiveTabs++;

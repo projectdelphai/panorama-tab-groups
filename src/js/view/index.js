@@ -44,36 +44,46 @@ function setToolbarPosition(position) {
     document.getElementsByTagName("body")[0].classList.add(`toolbar-${position}`);
 }
 
-async function captureThumbnail(tabId) {
+async function captureThumbnail(tab) {
+    var tabId = tab.id
 
-    var data = await browser.tabs.captureTab(tabId, {format: 'jpeg', quality: 25});
-    var img = new Image;
+    var cachedThumbnail = await browser.sessions.getTabValue(tabId, 'thumbnail')
 
-    img.onload = async function() {
-        var canvas = document.createElement('canvas');
-        var ctx = canvas.getContext('2d');
-
-        canvas.width = 500;
-        canvas.height = canvas.width * (this.height / this.width);
-
-        //ctx.imageSmoothingEnabled = true;
-        //ctx.imageSmoothingQuality = 'high';
-        ctx.drawImage(this, 0, 0, canvas.width, canvas.height);
-
-        var thumbnail = canvas.toDataURL('image/jpeg', 0.7);
-
-        updateThumbnail(tabId, thumbnail);
-        browser.sessions.setTabValue(tabId, 'thumbnail', thumbnail);
-    };
-
-    img.src = data;
+    // Only capture a new thumbnail if there's no cached one, the cached one doesn't have a capturedTime,
+    // or the tab was accessed since the cache was made 
+    if(!cachedThumbnail || !cachedThumbnail.capturedTime || cachedThumbnail.capturedTime < tab.lastAccessed){
+        var data = await browser.tabs.captureTab(tabId, {format: 'jpeg', quality: 25});
+        var img = new Image;
+    
+        img.onload = async function() {
+            var canvas = document.createElement('canvas');
+            var ctx = canvas.getContext('2d');
+    
+            canvas.width = 500;
+            canvas.height = canvas.width * (this.height / this.width);
+    
+            //ctx.imageSmoothingEnabled = true;
+            //ctx.imageSmoothingQuality = 'high';
+            ctx.drawImage(this, 0, 0, canvas.width, canvas.height);
+    
+            var thumbnail = canvas.toDataURL('image/jpeg', 0.7);
+    
+            updateThumbnail(tabId, thumbnail);
+            browser.sessions.setTabValue(tabId, 'thumbnail', {
+                thumbnail: thumbnail, 
+                capturedTime: Date.now()
+            });
+        };
+    
+        img.src = data;
+    }
 }
 
 async function captureThumbnails() {
     const tabs = browser.tabs.query({currentWindow: true, discarded: false});
 
     for(const tab of await tabs) {
-        await captureThumbnail(tab.id); //await to lessen strain on browser
+        await captureThumbnail(tab); //await to lessen strain on browser
     }
 }
 
@@ -139,28 +149,35 @@ async function initView() {
     }, false);
 
     document.addEventListener('visibilitychange', function() {
-        if(document.hidden) {
-            browser.tabs.onUpdated.removeListener(captureThumbnail);
-            //clearInterval(view.intervalId);
-        }else{
-            browser.tabs.onUpdated.addListener(captureThumbnail);
-            //view.intervalId = setInterval(captureThumbnails, 2000);
+        if(!document.hidden) {
+            setActiveTabNode(view.tabId);
             captureThumbnails();
-            window.location.reload();
         }
     }, false);
 
     window.addEventListener("resize", resizeGroups);
-    document.addEventListener("keypress", keyInput);
+    document.addEventListener("keydown", keyInput);
 
     // Listen for tabs being added/removed/switched/etc. and update appropriately
     browser.tabs.onCreated.addListener(tabCreated);
     browser.tabs.onRemoved.addListener(tabRemoved);
-    browser.tabs.onUpdated.addListener(tabUpdated);
+    browser.tabs.onUpdated.addListener(tabUpdated, {
+        // This page doesn't care about tabs in other windows
+        windowId: view.windowId,
+        // We don't want to listen for every property because that includes
+        // the hidden state changing which generates a ton of events
+        // every time the active group changes
+        properties:[ 
+            "discarded",
+            "favIconUrl",
+            "pinned",
+            "title",
+            "status"
+        ]
+    });
     browser.tabs.onMoved.addListener(tabMoved);
     browser.tabs.onAttached.addListener(tabAttached);
     browser.tabs.onDetached.addListener(tabDetached);
-    browser.tabs.onActivated.addListener(tabActivated);
 
     view.groupsNode.addEventListener('dragover', groupDragOver, false);
     view.groupsNode.addEventListener('drop', outsideDrop, false);
@@ -289,10 +306,8 @@ function tabRemoved(tabId, removeInfo) {
 }
 
 async function tabUpdated( tabId, changeInfo, tab ) {
-    if ( view.windowId === tab.windowId ){
-        updateTabNode( tab );
-        updateFavicon( tab );
-    }
+    updateTabNode( tab );
+    updateFavicon( tab );
 
     if ( 'pinned' in changeInfo ) {
         fillGroupNodes();
@@ -315,14 +330,4 @@ function tabDetached(tabId, detachInfo) {
             updateGroupFit(group);
         });
     }
-}
-
-async function tabActivated(activeInfo) {
-    if ( activeInfo.tabId === view.tabId ) {
-        await tabs.forEach( async function( tab ) {
-            updateThumbnail( tab.id );
-        } );
-    }
-
-    setActiveTabNode(view.tabId);
 }
