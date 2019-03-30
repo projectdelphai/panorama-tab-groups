@@ -13,6 +13,16 @@ var view = {
     tabs: {},
 };
 
+var pendingReload = false;
+
+function queueReload(){
+    if(document.hidden){
+        pendingReload = true;
+    } else {
+        location.reload();
+    }
+}
+
 // Load settings
 browser.storage.sync.get({
     useDarkTheme: false,
@@ -171,6 +181,9 @@ async function initView() {
 
     document.addEventListener('visibilitychange', function() {
         if(!document.hidden) {
+            if(pendingReload){
+                location.reload();
+            }
             setActiveTabNode(view.tabId);
             captureThumbnails();
         }
@@ -331,6 +344,10 @@ async function tabUpdated( tabId, changeInfo, tab ) {
     updateFavicon( tab );
 
     if ( 'pinned' in changeInfo ) {
+        //FIXME for some reason the pinned tabs aren't updating reliably.
+        //putting a temporary reload trigger in until someone can figure out why that's happening
+        queueReload();
+        
         fillGroupNodes();
         updateTabNode( tab );
     }
