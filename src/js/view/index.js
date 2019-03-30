@@ -67,9 +67,9 @@ function setToolbarPosition(position) {
 
 function replaceClass(prefix, value) {
     let classList = document.getElementsByTagName("body")[0].classList;
-    for(let class of classList){
-        if(class.startsWith(`${prefix}-`)){
-            classList.remove(class);
+    for(let classObject of classList){
+        if(classObject.startsWith(`${prefix}-`)){
+            classList.remove(classObject);
         }
     }
     classList.add(`${prefix}-${value}`);
