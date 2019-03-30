@@ -33,15 +33,36 @@ browser.storage.sync.get({
     setTheme(options.theme);
     setToolbarPosition(options.toolbarPosition);
 
+    browser.storage.onChanged.addListener((changes, area)=>{
+        if("sync" == area){
+            if(changes.theme){
+                setTheme(changes.theme.newValue);
+            }
+            if(changes.toolbarPosition){
+                setToolbarPosition(changes.toolbarPosition.newValue);
+            }
+        }
+    });
+
     initView();
 });
 
 function setTheme(theme) {
-    document.getElementsByTagName("body")[0].classList.add(`theme-${theme}`);
+    replaceClass("theme", theme);
 }
 
 function setToolbarPosition(position) {
-    document.getElementsByTagName("body")[0].classList.add(`toolbar-${position}`);
+    replaceClass("toolbar", position);
+}
+
+function replaceClass(prefix, value) {
+    let classList = document.getElementsByTagName("body")[0].classList;
+    for(let klazz of classList){
+        if(klazz.startsWith(`${prefix}-`)){
+            classList.remove(klazz);
+        }
+    }
+    classList.add(`${prefix}-${value}`);
 }
 
 async function captureThumbnail(tab) {
