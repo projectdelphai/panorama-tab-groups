@@ -1,4 +1,4 @@
-import { getGroupId, forEachTab } from './tabs.js';
+import { getGroupId, forEachTab, forEachTabSync } from './tabs.js';
 import { groupDragOver, groupDrop } from './drag.js';
 import * as groups from './groups.js';
 import { new_element, getPluralForm } from './utils.js';
@@ -11,11 +11,11 @@ export async function initGroupNodes(groupsNode) {
     groups.forEach(function(group) {
         groupsNode.appendChild(makeGroupNode(group));
     });
-    fillGroupNodes();
 
     groupNodes.pinned = {
         content: document.getElementById( 'pinnedTabs' ),
     };
+    fillGroupNodes();
 }
 
 function snapValue(a, b, dst) {
@@ -348,63 +348,111 @@ function removeGroupNode(groupId) {
     delete groupNodes[groupId];
 }
 
+// primitive mutex to make sure the functions that deal with groups aren't stepping on each other's toes
+var modifyingGroupContent = false;
+
 export async function fillGroupNodes() {
-    var fragment = {
-        pinned: document.createDocumentFragment(),
-    };
 
-    groups.forEach(function(group) {
-        fragment[group.id] = document.createDocumentFragment();
-    });
+    if(modifyingGroupContent){
+        setTimeout(() => fillGroupNodes(), 100);
+    }
+    try{
+        modifyingGroupContent = true;
 
-    await forEachTab( async function( tab ) {
-        if ( ! tab.pinned ) {
-            const groupId = await getGroupId( tab.id );
-            if ( groupId != -1 && fragment[ groupId ] ) {
-                fragment[ groupId ].appendChild( getTabNode(tab.id) );
+        var fragment = {
+            pinned: document.createDocumentFragment(),
+        };
+    
+        groups.forEach(function(group) {
+            fragment[group.id] = document.createDocumentFragment();
+        });
+    
+        await forEachTab( async function( tab ) {
+            if ( ! tab.pinned ) {
+                const groupId = await getGroupId( tab.id );
+                if ( groupId != -1 && fragment[ groupId ] ) {
+                    fragment[ groupId ].appendChild( getTabNode(tab.id) );
+                }
+            } else {
+                fragment.pinned.appendChild( getTabNode(tab.id) );
             }
-        } else {
-            fragment.pinned.appendChild( getTabNode(tab.id) );
-        }
-    });
-
-    groups.forEach(function(group) {
-        groupNodes[group.id].content.insertBefore(fragment[group.id], groupNodes[group.id].newtab);
-        updateGroupFit(group);
-    });
-
-    groupNodes.pinned.content.appendChild( fragment.pinned );
+        });
+    
+        groups.forEach(function(group) {
+            groupNodes[group.id].content.insertBefore(fragment[group.id], groupNodes[group.id].newtab);
+            updateGroupFit(group);
+        });
+    
+        groupNodes.pinned.content.appendChild( fragment.pinned );
+    } finally {
+        modifyingGroupContent = false;
+    }
+    
 }
 
-// there is a bug in here! moving a tab to the right in the tab bar does nothing..
+// Attempt to insert the tab on a best effort basis, but fall back to fillGroupNodes if something goes wrong
 export async function insertTab(tab) {
-
-    var groupId = await getGroupId(tab.id);
-
-    if(groupId != -1) {
-
-        var index = 0;
-
-        var childNodes = groupNodes[groupId].content.childNodes;
-
-        for(var i = 0; i < childNodes.length-1; i++) {
-
-            var _tabId = Number(childNodes[i].getAttribute('tabId'));
-            var _tab = await browser.tabs.get(_tabId);
-
-            if(_tab.index >= tab.index) {
-                break;
-            }
-            index++;
-        }
+    if (modifyingGroupContent) {
+        setTimeout(() => insertTab(tab), 100);
+    }
+    try {
+        modifyingGroupContent = true;
+        // refresh the tab data
+        var tab = await browser.tabs.get(tab.id);
+        var groupId = await getGroupId(tab.id);
 
         var tabNode = tabNodes[tab.id];
 
-        if(index < childNodes.length-1) {
-            childNodes[index].insertAdjacentElement('beforebegin', tabNode.tab);
-        }else{
-            groupNodes[groupId].newtab.insertAdjacentElement('beforebegin', tabNode.tab);
+        if (groupId != -1) {
+
+            var childNodeTabsByIndex = {};
+            var tabIndexes = [];
+            //Get tabs all at once to make sure the data doesn't change out from under us
+            await forEachTab(async otherTab =>{
+                if(groupId == await getGroupId(otherTab.id)){
+                    childNodeTabsByIndex[otherTab.index] = otherTab;
+                    tabIndexes.push(otherTab.index);
+                }
+            });
+
+            var higherIndexes = tabIndexes.filter(idx => idx > tab.index);
+            var lowerIndexes = tabIndexes.filter(idx => idx < tab.index);
+
+            if(higherIndexes.length == 0){
+                groupNodes[groupId].newtab.insertAdjacentElement('beforebegin', tabNode.tab);
+            } else {
+                var childNodes = Array.from(groupNodes[groupId].content.childNodes);
+                var sortedIndexes = higherIndexes.sort((a, b) =>  a - b);
+                for(const idx of sortedIndexes){
+                    let candidateNodeIdx = childNodes.findIndex(node => Number(node.getAttribute('tabId')) === childNodeTabsByIndex[idx].id);
+                    if(candidateNodeIdx != -1){
+                        if(lowerIndexes.length > 0){
+                            try{
+                                let nextLowestIdx = Math.max(...lowerIndexes);
+                                let precedingNodeID = Number(childNodes[candidateNodeIdx - 1].getAttribute('tabId'));
+                                if(precedingNodeID == tab.id){
+                                    precedingNodeID = Number(childNodes[candidateNodeIdx - 2].getAttribute('tabId'));
+                                }
+                                if(precedingNodeID != childNodeTabsByIndex[nextLowestIdx].id){
+                                    // Seems like more than one tab is being moved at once.
+                                    // Rebuild the full UI to maintain consistency.
+                                    setTimeout(() => fillGroupNodes(), 100);
+                                }
+                            }catch{
+                                // We probably went past the edge of the array, rebuild everything instead.
+                                setTimeout(() => fillGroupNodes(), 100);
+                            }
+                        }
+                        childNodes[candidateNodeIdx].insertAdjacentElement('beforebegin', tabNode.tab);
+                        return;
+                    }
+                }
+                // Couldn't find any nodes with the next highest index. Rebuilding everything just to be safe
+                setTimeout(() => fillGroupNodes(), 100);
+            }
         }
+    } finally {
+        modifyingGroupContent = false;
     }
 }
 

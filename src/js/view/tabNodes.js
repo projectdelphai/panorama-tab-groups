@@ -1,4 +1,4 @@
-import { forEachTab } from './tabs.js';
+import { forEachTab, forEachTabSync } from './tabs.js';
 import { tabDragStart, tabDragEnter, tabDragOver, tabDragLeave, tabDrop, tabDragEnd } from './drag.js';
 import { new_element } from './utils.js';
 
@@ -14,8 +14,8 @@ export async function initTabNodes(tabId) {
 	await forEachTab(async function(tab) {
 		makeTabNode(tab);
 		updateTabNode(tab);
-		updateFavicon(tab);
-		updateThumbnail(tab.id);
+		await updateFavicon(tab);
+		await updateThumbnail(tab.id);
 	});
 	setActiveTabNode(tabId);
 }
@@ -74,7 +74,7 @@ export function makeTabNode(tab) {
 	};
 }
 
-export async function updateTabNode(tab) {
+export function updateTabNode(tab) {
 
 	var node = tabNodes[tab.id];
 
@@ -109,7 +109,7 @@ export async function setActiveTabNode(tabId) {
 	var lastActive = -1;
 	var lastAccessed = 0;
 
-	await forEachTab(async function(tab) {
+	await forEachTabSync(function(tab) {
 
 		// Can race if deleteTabNode is called at the same time (e.g. every time
 		// the active tab is closed, since a new tab becomes active), so confirm
@@ -129,12 +129,10 @@ export async function setActiveTabNode(tabId) {
 }
 
 // Remove selected from all other thumbnails, add to tab with id given
-export async function setActiveTabNodeById(tabId) {
-    await forEachTab(async function(tab) {
-        if (tabNodes[tab.id]) {
-            tabNodes[tab.id].tab.classList.remove('selected');
-        }
-    });
+export function setActiveTabNodeById(tabId) {
+	for(var nodeId in tabNodes){
+		tabNodes[nodeId].tab.classList.remove('selected')
+	}
     tabNodes[tabId].tab.classList.add('selected');
     activeTabId = tabId;
 }
@@ -156,6 +154,10 @@ export async function updateThumbnail(tabId, thumbnail) {
 	if(node) {
 		if(!thumbnail) {
 			thumbnail = await browser.sessions.getTabValue(tabId, 'thumbnail');
+			// If there's extra data there we just want the thumbnail
+			if(thumbnail && thumbnail.thumbnail){
+				thumbnail = thumbnail.thumbnail
+			}
 		}
 
 		if(thumbnail) {
@@ -166,6 +168,10 @@ export async function updateThumbnail(tabId, thumbnail) {
 	}
 }
 
+// This testing mechanism can seemingly hit a slow path in Firefox related 
+// to webRequest listeners.  If we're spending a lot of time in here, it's
+// probably because another extension registered one ot those listeners
+// on the Panorama tab
 async function testImage(url) {
 	return new Promise(function (resolve, reject) {
 
@@ -191,15 +197,14 @@ export async function updateFavicon(tab) {
 		if(tab.favIconUrl &&
 			tab.favIconUrl.substr(0, 22) != 'chrome://mozapps/skin/' &&
 			tab.favIconUrl != tab.url) {
-			testImage(tab.favIconUrl).then(
-				_ => {
-					node.favicon.style.backgroundImage = 'url(' + tab.favIconUrl + ')';
-					node.favicon.classList.add('visible');
-				}, _ => {
-					node.favicon.style.backgroundImage = '';
-					node.favicon.classList.remove('visible');
-				}
-			);
+			try{
+				await testImage(tab.favIconUrl);
+				node.favicon.style.backgroundImage = 'url(' + tab.favIconUrl + ')';
+				node.favicon.classList.add('visible');
+			} catch {
+				node.favicon.style.backgroundImage = '';
+				node.favicon.classList.remove('visible');
+			}
 		}else{
 			node.favicon.classList.remove('visible');
 		}
