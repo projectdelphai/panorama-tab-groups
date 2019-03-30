@@ -74,6 +74,18 @@ function changeMenu(message) {
     }
 }
 
+async function moveTab(tabId, groupId) {
+    let windowId = (await browser.windows.getCurrent()).id;
+    await browser.sessions.setTabValue(tabId, 'groupId', groupId);
+
+    let toIndex = -1;
+    await browser.tabs.move(tabId, {index: toIndex});
+
+    let activeGroup = (await browser.sessions.getWindowValue(windowId, 'activeGroup'));
+    await toggleVisibleTabs(activeGroup);
+
+}
+
 async function menuClicked(info, tab) {
     let windowId = (await browser.windows.getCurrent()).id;
     switch (info.menuItemId) {
@@ -83,15 +95,23 @@ async function menuClicked(info, tab) {
             createMenuList();
             break;
         default:
-            let groupId = info.menuItemId;
-            let tabId = tab.id;
-            await browser.sessions.setTabValue(tab.id, 'groupId', groupId);
-
-            let toIndex = -1;
-            await browser.tabs.move(tabId, {index: toIndex});
-            
-            let activeGroup = (await browser.sessions.getWindowValue(windowId, 'activeGroup'));
-            await toggleVisibleTabs(activeGroup);
+            // see if we're sending multiple tabs
+            let tabs = await browser.tabs.query({highlighted: true });
+            // if you select multiple tabs, your active tab is selected as well and needs to be filtered out
+            if (tabs.length > 1) {
+                let activeTabId = (await browser.tabs.query({active: true}))[0].id;
+                for (let i in tabs) {
+                    let tabId = tabs[i].id;
+                    if (tabId != activeTabId) {
+                        moveTab(tabId, info.menuItemId);
+                    }
+                }
+            } 
+            // otherwise just use the tab where the menu was clicked from
+            // if you don't do multiselect, but just right click, the tab isn't actually highlighted
+            else {
+                moveTab(tab.id, info.menuItemId);
+            }
     }
 }
 
