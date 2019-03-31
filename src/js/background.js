@@ -110,6 +110,29 @@ async function menuClicked(info, tab) {
             // otherwise just use the tab where the menu was clicked from
             // if you don't do multiselect, but just right click, the tab isn't actually highlighted
             else {
+                let activeTabId = (await browser.tabs.query({active: true}))[0].id;
+                if (activeTabId === tab.id) {
+                    let visibleTabs = (await browser.tabs.query({hidden: false}));
+
+                    // find position of active tab among visible tabs
+                    let tabIndex = 0;
+                    for (let i in visibleTabs) {
+                        if (visibleTabs[i].id === tab.id) {
+                            tabIndex = parseInt(i);
+                            break;
+                        }
+                    }
+
+                    // find neighboring tab and make it the active tab
+                    let newActiveTab = tab;
+                    if (visibleTabs[tabIndex-1] !== undefined) {
+                        newActiveTab = visibleTabs[tabIndex-1];
+                    } else if (visibleTabs[tabIndex+1] !== undefined) {
+                        newActiveTab = visibleTabs[tabIndex+1]
+                    }
+                    await browser.tabs.update(newActiveTab.id, {active: true});
+                }
+
                 moveTab(tab.id, info.menuItemId);
             }
     }
