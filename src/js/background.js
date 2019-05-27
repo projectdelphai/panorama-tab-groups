@@ -141,13 +141,30 @@ async function menuClicked(info, tab) {
 browser.menus.onClicked.addListener(menuClicked);
 
 async function triggerCommand(command) {
-    if (command === "activate-next-group") {
-        await changeActiveGroupBy(1);
-    } else if (command === "activate-previous-group") {
-        await changeActiveGroupBy(-1);
-    }else if (command === "toggle-panorama-view") {
-        await toggleView();
+  const options = await browser.storage.sync.get({
+    shortcut: {
+      'toggle-panorama-view': {
+        disabled: false,
+      },
+      'activate-next-group': {
+        disabled: false,
+      },
+      'activate-previous-group': {
+        disabled: false,
+      },
     }
+  });
+  if (options['shortcut'][command].disabled) {
+    // Doesn't execute disabled command
+    return;
+  }
+  if (command === "activate-next-group") {
+      await changeActiveGroupBy(1);
+  } else if (command === "activate-previous-group") {
+      await changeActiveGroupBy(-1);
+  } else if (command === "toggle-panorama-view") {
+      await toggleView();
+  }
 }
 
 /** Shift current active group by offset */
