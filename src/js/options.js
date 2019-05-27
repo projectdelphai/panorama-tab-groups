@@ -75,6 +75,7 @@ async function init() {
 		document.querySelector(`#${command.name} .updateShortcut`).addEventListener('click', updateShortcut);
 		document.querySelector(`#${command.name} .resetShortcut`).addEventListener('click', resetShortcut);
 		document.querySelector(`#${command.name} .disableShortcut`).addEventListener('click', disableShortcut);
+		document.querySelector(`#${command.name} .enableShortcut`).addEventListener('click', enableShortcut);
 	}
 
 	getStatistics();
@@ -91,6 +92,11 @@ async function addTranslations() {
 	optionKeyboardShortcutsButtonsUpdate.forEach((button) => { button.innerHTML = browser.i18n.getMessage('optionKeyboardShortcutsButtonsUpdate') });
 	const optionKeyboardShortcutsButtonsReset = document.querySelectorAll('#optionKeyboardShortcuts .resetShortcut');
 	optionKeyboardShortcutsButtonsReset.forEach((button) => { button.innerHTML = browser.i18n.getMessage('optionKeyboardShortcutsButtonsReset') });
+	optionKeyboardShortcutsButtonsUpdate.forEach((button) => { button.innerHTML = browser.i18n.getMessage('optionKeyboardShortcutsButtonsUpdate') });
+	const optionKeyboardShortcutsButtonsDisable = document.querySelectorAll('#optionKeyboardShortcuts .disableShortcut');
+	optionKeyboardShortcutsButtonsDisable.forEach((button) => { button.innerHTML = browser.i18n.getMessage('optionKeyboardShortcutsButtonsDisable') });
+	const optionKeyboardShortcutsButtonsEnable = document.querySelectorAll('#optionKeyboardShortcuts .enableShortcut');
+	optionKeyboardShortcutsButtonsEnable.forEach((button) => { button.innerHTML = browser.i18n.getMessage('optionKeyboardShortcutsButtonsEnable') });
 	document.querySelector('label[for="toggle-panorama-view"]').innerHTML = browser.i18n.getMessage('optionKeyboardShortcutsToggle');
 	document.querySelector('label[for="activate-next-group"]').innerHTML = browser.i18n.getMessage('optionKeyboardShortcutsNextGroup');
 	document.querySelector('label[for="activate-previous-group"]').innerHTML = browser.i18n.getMessage('optionKeyboardShortcutsPreviousGroup');
@@ -129,6 +135,28 @@ async function resetShortcut() {
   document.querySelector(`#${shortcut} input`).value = commands[shortcut];
 }
 
+async function disableShortcut() {
+	const shortcut = this.parentElement.getAttribute('id');
+	let options = await browser.storage.sync.get();
+	options['shortcut'] = Object.assign(options['shortcut'], {
+		[shortcut]: {
+			disabled: true,
+		}
+	});
+	await browser.storage.sync.set(options);
+}
+
+async function enableShortcut() {
+	const shortcut = this.parentElement.getAttribute('id');
+	let options = await browser.storage.sync.get();
+	options['shortcut'] = Object.assign(options['shortcut'], {
+		[shortcut]: {
+			disabled: false,
+		}
+	});
+	await browser.storage.sync.set(options);
+}
+
 function saveOptionTheme() {
   browser.storage.sync.set({
     theme: document.querySelector('input[name="theme"]:checked').value
@@ -145,12 +173,23 @@ function restoreOptions() {
   browser.storage.sync.get({
 		theme: 'light',
 		toolbarPosition: 'top',
+		shortcut: {},
 	}).then((options) => {
 		// Theme
     document.querySelector(`input[name="theme"][value="${options.theme}"]`).checked = true;
 
 		// Toolbar
     document.querySelector(`input[name="toolbarPosition"][value="${options.toolbarPosition}"]`).checked = true;
+
+		for (shortcut in options.shortcut) {
+			if (options.shortcut[shortcut].disabled) {
+				document.querySelector(`#${shortcut} input`).disabled = true;
+				document.querySelector(`#${shortcut} .updateShortcut`).setAttribute('hidden', true);
+				document.querySelector(`#${shortcut} .resetShortcut`).setAttribute('hidden', true);
+				document.querySelector(`#${shortcut} .disableShortcut`).setAttribute('hidden', true);
+				document.querySelector(`#${shortcut} .enableShortcut`).removeAttribute('hidden');
+			}
+		}
   });
 }
 

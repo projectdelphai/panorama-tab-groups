@@ -35,6 +35,12 @@
     "optionKeyboardShortcutsButtonsReset": {
         "message": "Reset"
     },
+    "optionKeyboardShortcutsButtonsDisable": {
+        "message": "Disable"
+    },
+    "optionKeyboardShortcutsButtonsEnable": {
+        "message": "Enable"
+    },
     "optionKeyboardShortcutsToggle": {
         "message": "Toggle Panorama View"
     },

@@ -35,6 +35,12 @@
     "optionKeyboardShortcutsButtonsReset": {
         "message": "Zurücksetzen"
     },
+    "optionKeyboardShortcutsButtonsDisable": {
+        "message": "Deaktivieren"
+    },
+    "optionKeyboardShortcutsButtonsEnable": {
+        "message": "Aktivieren"
+    },
     "optionKeyboardShortcutsToggle": {
         "message": "Panorama View umschalten"
     },
