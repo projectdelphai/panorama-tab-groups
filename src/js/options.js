@@ -65,23 +65,21 @@ async function getStatistics() {
 	};
 }*/
 
-const toggle = 'toggle-panorama-view';
-const nextView = 'activate-next-group';
-const previousView = 'activate-previous-group';
-
 async function init() {
 	addTranslations();
 	restoreOptions();
 
-    let commands = await browser.commands.getAll();
-    for (command of commands) {
-        document.querySelector("#" + command.name).value = command.shortcut;
-
-    }
+	const commands = await browser.commands.getAll();
+	for (command of commands) {
+		document.querySelector(`#${command.name} input`).value = command.shortcut;
+		document.querySelector(`#${command.name} .updateShortcut`).addEventListener('click', updateShortcut);
+		document.querySelector(`#${command.name} .resetShortcut`).addEventListener('click', resetShortcut);
+		document.querySelector(`#${command.name} .disableShortcut`).addEventListener('click', disableShortcut);
+	}
 
 	getStatistics();
-    document.getElementById('backupFileInput').addEventListener('change', loadBackup);
-    document.getElementById('saveBackupButton').addEventListener('click', saveBackup);
+	document.getElementById('backupFileInput').addEventListener('change', loadBackup);
+	document.getElementById('saveBackupButton').addEventListener('click', saveBackup);
 }
 
 async function addTranslations() {
@@ -89,9 +87,9 @@ async function addTranslations() {
 	const optionKeyboardShortcutsLink = document.querySelector('#optionKeyboardShortcuts a');
 	optionKeyboardShortcutsLink.href = browser.i18n.getMessage('optionKeyboardShortcutsHelpLink');
 	optionKeyboardShortcutsLink.innerHTML = browser.i18n.getMessage('optionKeyboardShortcutsHelpLinkText');
-	const optionKeyboardShortcutsButtonsUpdate = document.querySelectorAll('#optionKeyboardShortcuts button[id^="update"]');
+	const optionKeyboardShortcutsButtonsUpdate = document.querySelectorAll('#optionKeyboardShortcuts .updateShortcut');
 	optionKeyboardShortcutsButtonsUpdate.forEach((button) => { button.innerHTML = browser.i18n.getMessage('optionKeyboardShortcutsButtonsUpdate') });
-	const optionKeyboardShortcutsButtonsReset = document.querySelectorAll('#optionKeyboardShortcuts button[id^="reset"]');
+	const optionKeyboardShortcutsButtonsReset = document.querySelectorAll('#optionKeyboardShortcuts .resetShortcut');
 	optionKeyboardShortcutsButtonsReset.forEach((button) => { button.innerHTML = browser.i18n.getMessage('optionKeyboardShortcutsButtonsReset') });
 	document.querySelector('label[for="toggle-panorama-view"]').innerHTML = browser.i18n.getMessage('optionKeyboardShortcutsToggle');
 	document.querySelector('label[for="activate-next-group"]').innerHTML = browser.i18n.getMessage('optionKeyboardShortcutsNextGroup');
@@ -116,40 +114,19 @@ async function addTranslations() {
 	document.querySelector('#saveBackupButton').innerHTML = browser.i18n.getMessage('optionsBackupExportButton')
 }
 
-async function updateToggle() {
-    await browser.commands.update({
-        name: toggle,
-        shortcut: document.querySelector('#' + toggle).value
-    });
+async function updateShortcut() {
+	const shortcut = this.parentElement.getAttribute('id');
+  await browser.commands.update({
+    name: shortcut,
+    shortcut: document.querySelector(`#${shortcut} input`).value
+  });
 }
 
-async function updateNextView() {
-    await browser.commands.update({
-        name: nextView,
-        shortcut: document.querySelector('#' + nextView).value
-    });
-}
-
-async function updatePreviousView() {
-    await browser.commands.update({
-        name: previousView,
-        shortcut: document.querySelector('#' + previousView).value
-    });
-}
-
-async function resetToggle() {
-    await browser.commands.reset(toggle);
-    init();
-}
-
-async function resetNextView() {
-    await browser.commands.reset(nextView);
-    init();
-}
-
-async function resetPreviousView() {
-    await browser.commands.reset(previousView);
-    init();
+async function resetShortcut() {
+	const shortcut = this.parentElement.getAttribute('id');
+  await browser.commands.reset(shortcut);
+	const commands = await browser.commands.getAll();
+  document.querySelector(`#${shortcut} input`).value = commands[shortcut];
 }
 
 function saveOptionTheme() {
@@ -178,11 +155,5 @@ function restoreOptions() {
 }
 
 document.addEventListener('DOMContentLoaded', init);
-document.querySelector('#updateToggle').addEventListener('click', updateToggle);
-document.querySelector('#updateNextView').addEventListener('click', updateNextView);
-document.querySelector('#updatePreviousView').addEventListener('click', updatePreviousView);
-document.querySelector('#resetToggle').addEventListener('click', resetToggle);
-document.querySelector('#resetNextView').addEventListener('click', resetNextView);
-document.querySelector('#resetPreviousView').addEventListener('click', resetPreviousView);
 document.querySelector('form[name="formTheme"]').addEventListener('change', saveOptionTheme);
 document.querySelector('form[name="formToolbarPosition"]').addEventListener('change', saveOptionToolbarPosition);
