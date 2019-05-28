@@ -100,5 +100,11 @@
     },
     "optionsStatisticsThumbnailCacheSize": {
         "message": "Thumbnail Cache Size:"
+    },
+    "refreshGroups": {
+        "message": "Refresh Groups"
+    },
+    "sendTab": {
+        "message": "Send To Group"
     }
 }

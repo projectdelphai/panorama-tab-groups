@@ -100,5 +100,11 @@
     },
     "optionsStatisticsThumbnailCacheSize": {
         "message": "Размер кэша миниатюр:"
+    },
+    "refreshGroups": {
+        "message": "Переместить в группу"
+    },
+    "sendTab": {
+        "message": "Обновить список групп"
     }
 }
