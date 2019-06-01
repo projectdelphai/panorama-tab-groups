@@ -1,25 +1,27 @@
+export const defaultOptions = {
+  theme: 'light',
+  toolbarPosition: 'top',
+  shortcut: {
+    'toggle-panorama-view': {
+      disabled: false,
+    },
+    'activate-next-group': {
+      disabled: false,
+    },
+    'activate-previous-group': {
+      disabled: false,
+    },
+  },
+};
+
 /**
- * Defines the default options and return the current state.
+ * Return the current state of the options
  * @return {object} options
  */
-async function loadOptions() {
-  const options = await browser.storage.sync.get({
-		theme: 'light',
-		toolbarPosition: 'top',
-    shortcut: {
-      'toggle-panorama-view': {
-        disabled: false,
-      },
-      'activate-next-group': {
-        disabled: false,
-      },
-      'activate-previous-group': {
-        disabled: false,
-      },
-    },
-	});
+export async function loadOptions() {
+  const options = await browser.storage.sync.get(defaultOptions);
   
   return options;
 }
 
-export let options = loadOptions();
+export let currentOptions = loadOptions();

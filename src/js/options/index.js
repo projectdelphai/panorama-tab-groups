@@ -1,4 +1,4 @@
-import { options as currentOptions } from "../_share/options.js";
+import { currentOptions } from "../_share/options.js";
 import { addTranslations } from "./translations.js";
 import {
   shortcuts,

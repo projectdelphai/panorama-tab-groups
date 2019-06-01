@@ -39,7 +39,7 @@
     },
 
     "background": {
-        "scripts": ["js/background.js"]
+        "page": "background.html"
     },
 
     "browser_action": {
