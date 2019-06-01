@@ -1,6 +1,6 @@
 export const shortcuts = browser.commands.getAll();
 
-export async function updateShortcut() {
+export async function updateShortcut(event) {
   event.preventDefault();
   const button = event.target;
   const shortcut = button.parentElement.getAttribute("id");
@@ -11,7 +11,7 @@ export async function updateShortcut() {
   });
 }
 
-export async function resetShortcut() {
+export async function resetShortcut(event) {
   event.preventDefault();
   const button = event.target;
   const shortcut = button.parentElement.getAttribute("id");

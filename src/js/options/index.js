@@ -48,33 +48,33 @@ function attachEventHandler(options, shortcuts) {
     document.querySelector(`#${shortcut.name} input`).value = shortcut.shortcut;
     document
       .querySelector(`#${shortcut.name} .updateShortcut`)
-      .addEventListener('click', updateShortcut.bind(this, options));
+      .addEventListener("click", updateShortcut);
     document
       .querySelector(`#${shortcut.name} .resetShortcut`)
-      .addEventListener('click', resetShortcut.bind(this, options));
+      .addEventListener("click", resetShortcut);
     document
       .querySelector(`#${shortcut.name} .disableShortcut`)
-      .addEventListener('click', disableShortcut.bind(this, options));
+      .addEventListener("click", disableShortcut.bind(this, options));
     document
       .querySelector(`#${shortcut.name} .enableShortcut`)
-      .addEventListener('click', enableShortcut.bind(this, options));
+      .addEventListener("click", enableShortcut.bind(this, options));
   }
 
   // Theme
   document
     .querySelector('form[name="formTheme"]')
-    .addEventListener('change', saveOptionTheme);
+    .addEventListener("change", saveOptionTheme);
 
   // Toolbar
   document
     .querySelector('form[name="formToolbarPosition"]')
-    .addEventListener('change', saveOptionToolbarPosition);
+    .addEventListener("change", saveOptionToolbarPosition);
 
   // Backup
   document
     .getElementById("backupFileInput")
-    .addEventListener('change', loadBackup);
+    .addEventListener("change", loadBackup);
   document
     .getElementById("saveBackupButton")
-    .addEventListener('click', saveBackup);
+    .addEventListener("click", saveBackup);
 }
