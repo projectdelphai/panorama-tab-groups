@@ -24,7 +24,7 @@ export function makeTabNode(tab) {
 
 	var thumbnail = new_element('div', {class: 'thumbnail'});
 	var favicon = new_element('div', {class: 'favicon'});
-	var close = new_element('div', {class: 'close', title: 'Close Tab'});
+	var close = new_element('div', {class: 'close', title: browser.i18n.getMessage("closeTab")});
 	var name = new_element('div', {class: 'name'});
 
 	var inner = new_element('div', {class: 'inner'}, [

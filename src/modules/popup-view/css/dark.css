@@ -1,0 +1,56 @@
+body.theme-dark {
+	background-color: #2a2a2e;
+	color: #d7d7db;
+}
+
+.theme-dark #toolbar {
+	border-color: rgba(249, 249, 250, 0.2);
+}
+
+.theme-dark #toolbar .button:hover {
+	background-color: rgba(249, 249, 250, 0.2);
+}
+
+.theme-dark #toolbar .button:active {
+	background-color: rgba(249, 249, 250, 0.25);
+}
+
+.theme-dark #settings {
+	background-image: url(/icons/preferences_light.svg);
+}
+
+.theme-dark .list__item:hover {
+	background-color: rgba(249, 249, 250, 0.2);
+}
+
+.theme-dark .list__item--selected {
+	background-color: rgba(249, 249, 250, 0.2);
+}
+
+.theme-dark .list__link-extend {
+    border-left-color: rgba(249, 249, 250, 0.2)
+}
+
+.theme-dark .list__link-extend:hover {
+	background-color: rgba(249, 249, 250, 0.3);
+}
+
+.theme-dark .list__link-extend::before {
+    border-left-color: white;
+}
+
+.theme-dark .back {
+    border-bottom-color: rgba(249, 249, 250, 0.2);
+}
+
+.theme-dark .back .list__link::before {
+    border-right-color: white;
+}
+
+.theme-dark .tab-add {
+    border-top-color: rgba(249, 249, 250, 0.2);
+}
+
+.theme-dark .tab-add .list__link::before {
+    background-image: url(/icons/plus_light.svg);
+}

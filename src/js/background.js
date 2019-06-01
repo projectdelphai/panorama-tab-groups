@@ -412,6 +412,7 @@ async function salvageGrouplessTabs() {
 }
 
 async function init() {
+    const options = await loadOptions();
 
     console.log('Initializing Panorama Tab View');
 
@@ -421,9 +422,19 @@ async function init() {
     console.log('Finished setup');
 
     await migrate(); //keep until everyone are on 0.8.0
+    
+    // TODO: Reinitialize this after option has changed
+    const disablePopupView = options.viewPopup === false;
+    if (disablePopupView) {
+        // Disable popup
+        browser.browserAction.setPopup({
+            popup: ""
+        });
+
+        browser.browserAction.onClicked.addListener(toggleView);
+    }
 
     browser.commands.onCommand.addListener(triggerCommand);
-    browser.browserAction.onClicked.addListener(toggleView);
     browser.windows.onCreated.addListener(createGroupInWindowIfMissing);
     browser.tabs.onCreated.addListener(tabCreated);
     browser.tabs.onAttached.addListener(tabAttached);

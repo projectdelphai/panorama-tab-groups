@@ -1,0 +1,14 @@
+:root {
+  --input-color: var(--grey-90);
+  --input-placeholder-color: var(--grey-50);
+  --input-placeholder-icon-color: var(--grey-90-a40);
+  --input-background-color: var(--white-100);
+  --input-border-color: var(--grey-90-a20);
+  --input-hover-border-color: var(--grey-90-a30);
+  --input-focus-border-color: var(--blue-50);
+  --input-focus-box-shadow: 0 0 0 1px var(--blue-50), 0 0 0 4px var(--blue-50-a30);
+}
+
+.theme-dark {
+  
+}

@@ -20,6 +20,21 @@
     "closeGroupWarning": {
         "message": "Sie sind dabei, mit dieser Gruppe $1 Tab zu schließen. Soll dieser Vorgang wirklich fortgesetzt werden?|Sie sind dabei, mit dieser Gruppe $1 Tabs zu schließen. Soll dieser Vorgang wirklich fortgesetzt werden?"
     },
+    "closeTab": {
+        "message": "Tab schließen"
+    },
+    "openNewTab": {
+        "message": "Neues Tab öffnen"
+    },
+    "tabCount": {
+        "message": "$1 Tab|$1 Tabs"
+    },
+    "searchForTab.placeholder": {
+        "message": "Suche nach einem Tab..."
+    },
+    "goBackToGroups": {
+        "message": "Zurück zu den Gruppen"
+    },
     "optionKeyboardShortcuts": {
         "message": "Tastenkombinationen"
     },
@@ -49,6 +64,9 @@
     },
     "optionKeyboardShortcutsPreviousGroup": {
         "message": "Die vorherige Tab Gruppe aktivieren"
+    },
+    "optionsViewPopup": {
+        "message": "Popup aktivieren"
     },
     "optionsTheme": {
         "message": "Farbschema"

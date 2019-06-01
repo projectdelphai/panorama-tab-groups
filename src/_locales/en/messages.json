@@ -20,6 +20,21 @@
     "closeGroupWarning": {
         "message": "Closing this group will close the $1 tab within it. Are you sure you want to do this?|Closing this group will close the $1 tabs within it. Are you sure you want to do this?"
     },
+    "closeTab": {
+        "message": "Close tab"
+    },
+    "openNewTab": {
+        "message": "Open new tab"
+    },
+    "tabCount": {
+        "message": "$1 tab|$1 tabs"
+    },
+    "searchForTab.placeholder": {
+        "message": "Search for a tab..."
+    },
+    "goBackToGroups": {
+        "message": "Go back to groups"
+    },
     "optionKeyboardShortcuts": {
         "message": "Keyboard Shortcuts"
     },
@@ -49,6 +64,9 @@
     },
     "optionKeyboardShortcutsPreviousGroup": {
         "message": "Activate the previous Tab Group"
+    },
+    "optionsViewPopup": {
+        "message": "Enable Popup"
     },
     "optionsTheme": {
         "message": "Theme"

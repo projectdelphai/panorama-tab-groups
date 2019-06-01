@@ -1,5 +1,6 @@
 export const defaultOptions = {
   theme: "light",
+  viewPopup: false,
   toolbarPosition: "top",
   shortcut: {
     "toggle-panorama-view": {

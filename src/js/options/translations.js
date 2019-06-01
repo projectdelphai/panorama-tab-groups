@@ -58,6 +58,9 @@ export function addTranslations() {
     'label[for="activate-previous-group"]'
   ).innerHTML = browser.i18n.getMessage("optionKeyboardShortcutsPreviousGroup");
   document.querySelector(
+    'label[for="viewPopup"]'
+  ).innerHTML = browser.i18n.getMessage("optionsViewPopup");
+  document.querySelector(
     "#optionsTheme h2"
   ).innerHTML = browser.i18n.getMessage("optionsTheme");
   document.querySelector(
