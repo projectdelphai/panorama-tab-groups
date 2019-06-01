@@ -135,7 +135,7 @@ async function openBackup(data) {
 	background.openingBackup = false;
 }
 
-function loadBackup(input) {
+export function loadBackup(input) {
 
 	const file = input.target.files[0];
 
@@ -190,7 +190,7 @@ function makeDateString() {
 	return string;
 }
 
-async function saveBackup() {
+export async function saveBackup() {
 
 	var data = {
 		file: {

@@ -1,6 +1,6 @@
 import { forEachTab, forEachTabSync } from './tabs.js';
 import { tabDragStart, tabDragEnter, tabDragOver, tabDragLeave, tabDrop, tabDragEnd } from './drag.js';
-import { new_element } from './utils.js';
+import { new_element } from '../_share/utils.js';
 
 export var tabNodes = {};
 var activeTabId = -1; // tabid of active tab in view
