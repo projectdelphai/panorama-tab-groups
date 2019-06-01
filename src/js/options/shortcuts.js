@@ -56,7 +56,7 @@ export function disableShortcutForm(shortcut) {
     .removeAttribute("hidden");
 }
 
-export async function enableShortcut(options) {
+export async function enableShortcut(options, event) {
   event.preventDefault();
   const button = event.target;
   const shortcut = button.parentElement.getAttribute("id");
