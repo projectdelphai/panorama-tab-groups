@@ -82,7 +82,7 @@ export function updateTabNode(tab) {
 		node.name.innerHTML = '';
 		node.name.appendChild(document.createTextNode(tab.title));
 
-		node.inner.title = tab.title + ((tab.url.substr(0, 5) !== 'data:') ? ' - ' + decodeURI(tab.url) : '');
+		node.inner.title = tab.title;
 
 		if ( tab.discarded ) {
 			node.tab.classList.add('inactive');

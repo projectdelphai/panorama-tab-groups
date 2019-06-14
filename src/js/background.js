@@ -27,7 +27,7 @@ function addRefreshMenuItem() {
     });
     browser.menus.create({
         id: "refresh-groups",
-        title: "Refresh Groups",
+        title: browser.i18n.getMessage('refreshGroups'),
         parentId: "send-tab",
         contexts: ["tab"]
     });
@@ -40,7 +40,7 @@ async function createMenuList() {
 
     browser.menus.create({
         id: "send-tab",
-        title: "Send To Group",
+        title: browser.i18n.getMessage('sendTab'),
         contexts: ["tab"]
     });
 

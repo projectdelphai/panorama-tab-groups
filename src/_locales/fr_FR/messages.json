@@ -100,5 +100,11 @@
     },
     "optionsStatisticsThumbnailCacheSize": {
         "message": "Taille du cache des miniatures:"
+    },
+    "refreshGroups": {
+        "message": "Actualiser les groupes"
+    },
+    "sendTab": {
+        "message": "Envoyer au groupe"
     }
 }
