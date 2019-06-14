@@ -2,8 +2,8 @@
 
 const manifest = browser.runtime.getManifest();
 
-let openingView = false;
-let openingBackup = false;
+var openingView = false;
+var openingBackup = false;
 
 /** Modulo in javascript does not behave like modulo in mathematics when x is negative.
  * Following code is based from this:
