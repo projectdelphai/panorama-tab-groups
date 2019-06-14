@@ -46,21 +46,20 @@ function convertBackup(tgData) {
 	return data;
 }
 
-var background = browser.extension.getBackgroundPage()
-
 function getGroupIdsFromTabs(window) {
 	var allGroupIds = [];
 	for(var ti in window.tabs) {
 		allGroupIds.push(window.tabs[ti].groupId);
 	}
-	
+
 	let uniqueGroupIds = [...new Set(allGroupIds)];
 	return uniqueGroupIds;
 }
 
 async function openBackup(data) {
+	let background = browser.extension.getBackgroundPage();
 
-	background.openingBackup = true;
+	background.backgroundState.openingBackup = true;
 
 	for(var wi in data.windows) {
 
@@ -114,7 +113,7 @@ async function openBackup(data) {
 			} else {
 				var bdiscarded = true;
 			}
-			
+
 			var tab = await browser.tabs.create({
 				url: data.windows[wi].tabs[ti].url,
 				active: false,
@@ -132,7 +131,7 @@ async function openBackup(data) {
 		var pwTab = await browser.tabs.create({url: "/view.html", active: true, windowId: window.id});
 		await browser.sessions.setTabValue(pwTab.id, 'groupId', -1);
 	}
-	background.openingBackup = false;
+	background.backgroundState.openingBackup = false;
 }
 
 export function loadBackup(input) {
