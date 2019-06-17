@@ -26,7 +26,14 @@ function snapValue(a, b, dst) {
     }
 }
 
-function groupTransform(group, node, top, right, bottom, left, elem) {
+async function groupTransform(group, node, top, right, bottom, left, elem) {
+    // don't allow resizing if in tiling mode
+    let windowId = (await browser.windows.getCurrent()).id;
+    let layoutMode = await browser.sessions.getWindowValue(windowId, 'layoutMode');
+
+    if (layoutMode != "freeform") {
+        return;
+    }
 
     document.getElementsByTagName("body")[0].setAttribute('style', 'cursor: ' + window.getComputedStyle(elem).cursor);
 
@@ -457,7 +464,7 @@ export async function insertTab(tab) {
 }
 
 export function resizeGroups(groupId, groupRect) {
-
+    console.log(groupRect);
     var rect = {};
 
     groups.forEach(function(group) {

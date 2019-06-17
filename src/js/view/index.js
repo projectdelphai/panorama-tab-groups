@@ -57,6 +57,164 @@ browser.storage.sync.get({
     initView();
 });
 
+/**
+ * Initialize the Panorama View tab
+ *
+ * This displays all the groups and the tabs in them, and sets up listeners
+ * to respond to user actions and react to changes
+ */
+async function initView() {
+    // set tiling off initially
+    let windowId = (await browser.windows.getCurrent()).id;
+    let tilingStatus = await browser.sessions.setWindowValue(windowId, 'tilingStatus', "true");
+
+    // set locale specific titles
+    document.getElementById('newGroup').title = browser.i18n.getMessage("newGroupButton");
+    document.getElementById('settings').title = browser.i18n.getMessage("settingsButton");
+
+
+    view.windowId = (await browser.windows.getCurrent()).id;
+    view.tabId = (await browser.tabs.getCurrent()).id;
+    view.groupsNode = document.getElementById('groups');
+
+
+    view.groupsNode.appendChild(createDragIndicator());
+
+    await groups.init();
+
+    // init Nodes
+    await initTabNodes(view.tabId);
+    await initGroupNodes(view.groupsNode);
+
+    resizeGroups();
+
+    captureThumbnails();
+    //view.intervalId = setInterval(captureThumbnails, 2000);
+
+    // set all listeners
+
+    // Listen for clicks on new group button
+    document.getElementById('newGroup').addEventListener('click', e => createGroup(), false);
+
+    // Listen for clicks on settings button
+    document.getElementById('settings').addEventListener('click', function() {
+        browser.runtime.openOptionsPage();
+    }, false);
+
+    document.getElementById('freeform').addEventListener('click', function() {
+        setLayoutMode("freeform");
+    }, false);
+
+
+    // Listen for tiling toggle
+    document.getElementById('tiling').addEventListener('click', function() {
+        setLayoutMode("tiling");
+    }, false);
+
+    // Listen for middle clicks in background to open new group
+    document.getElementById('groups').addEventListener('auxclick', async function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        if ( event.target != document.getElementById('groups') ) return; // ignore middle clicks in foreground
+        if ( event.button != 1 ) return; // middle mouse
+
+        createGroup(e.clientX, e.clientY);
+    }, false);
+
+    document.addEventListener('visibilitychange', function() {
+        if(!document.hidden) {
+            if(pendingReload){
+                location.reload();
+            }
+            setActiveTabNode(view.tabId);
+            captureThumbnails();
+        }
+    }, false);
+
+    window.addEventListener("resize", resizeGroups);
+    document.addEventListener("keydown", keyInput);
+
+    // Listen for tabs being added/removed/switched/etc. and update appropriately
+    browser.tabs.onCreated.addListener(tabCreated);
+    browser.tabs.onRemoved.addListener(tabRemoved);
+    browser.tabs.onUpdated.addListener(tabUpdated, {
+        // This page doesn't care about tabs in other windows
+        windowId: view.windowId,
+        // We don't want to listen for every property because that includes
+        // the hidden state changing which generates a ton of events
+        // every time the active group changes
+        properties:[ 
+            "discarded",
+            "favIconUrl",
+            "pinned",
+            "title",
+            "status"
+        ]
+    });
+    browser.tabs.onMoved.addListener(tabMoved);
+    browser.tabs.onAttached.addListener(tabAttached);
+    browser.tabs.onDetached.addListener(tabDetached);
+
+    view.groupsNode.addEventListener('dragover', groupDragOver, false);
+    view.groupsNode.addEventListener('drop', outsideDrop, false);
+    view.groupsNode.addEventListener('dblclick', doubleClick, false);
+}
+
+// Tiling functionality
+// Toggle tiling on or off
+async function setLayoutMode(mode) {
+    let windowId = (await browser.windows.getCurrent()).id;
+
+    if (mode == "tiling") {
+        await browser.sessions.setWindowValue(windowId, 'layoutMode', "tiling");
+        activateTiling();
+    } else {
+        await browser.sessions.setWindowValue(windowId, 'layoutMode', "freeform");
+    }
+}
+
+async function activateTiling() {
+    let windowId = (await browser.windows.getCurrent()).id;
+    await browser.sessions.getWindowValue(windowId, 'layoutMode');
+
+    let numGroups = groups.getLength();
+
+    // get number of groups per row
+    let maxGroups = Math.ceil(Math.sqrt(numGroups))
+    let quotient = Math.floor(numGroups / maxGroups);
+    let remainder = numGroups % maxGroups;
+    
+    let gridLayout = Array(quotient).fill(maxGroups);
+    if (remainder != 0) {
+        gridLayout.push(remainder);
+    }
+
+    let groupIds = groups.getIds();
+    let currentIndex = 0;
+    console.log(gridLayout);
+    // gridLayout[i] = number of cells per row
+    for (let i in gridLayout) {
+        // j = specific cell in each row
+        for (let j=0; j < gridLayout[i]; j++) {
+            console.log("i: " + i + ", j: " + j);
+            let rect = {};
+            rect.x = j / gridLayout[i];
+            rect.y = i / gridLayout.length;
+            rect.w = 1.0 / gridLayout[i];
+            rect.h = 1.0 / gridLayout.length;
+            rect.i = rect.x + rect.w;
+            rect.j = rect.y + rect.h;
+            console.log(groupIds[currentIndex]);
+            console.log(rect);
+            groups.transform(groupIds[currentIndex], rect);
+            resizeGroups(groupIds[currentIndex], rect);
+            currentIndex++;
+        }
+    }
+    
+}
+
 function setTheme(theme) {
     replaceClass("theme", theme);
 }
@@ -130,93 +288,7 @@ async function doubleClick(e) {
     }
 }
 
-/**
- * Initialize the Panorama View tab
- *
- * This displays all the groups and the tabs in them, and sets up listeners
- * to respond to user actions and react to changes
- */
-async function initView() {
-    // set locale specific titles
-    document.getElementById('newGroup').title = browser.i18n.getMessage("newGroupButton");
-    document.getElementById('settings').title = browser.i18n.getMessage("settingsButton");
 
-    view.windowId = (await browser.windows.getCurrent()).id;
-    view.tabId = (await browser.tabs.getCurrent()).id;
-    view.groupsNode = document.getElementById('groups');
-
-    view.groupsNode.appendChild(createDragIndicator());
-
-    await groups.init();
-
-    // init Nodes
-    await initTabNodes(view.tabId);
-    await initGroupNodes(view.groupsNode);
-
-    resizeGroups();
-
-    captureThumbnails();
-    //view.intervalId = setInterval(captureThumbnails, 2000);
-
-    // set all listeners
-
-    // Listen for clicks on new group button
-    document.getElementById('newGroup').addEventListener('click', e => createGroup(), false);
-
-    // Listen for clicks on settings button
-    document.getElementById('settings').addEventListener('click', function() {
-        browser.runtime.openOptionsPage();
-    }, false);
-
-    // Listen for middle clicks in background to open new group
-    document.getElementById('groups').addEventListener('auxclick', async function(event) {
-        event.preventDefault();
-        event.stopPropagation();
-
-        if ( event.target != document.getElementById('groups') ) return; // ignore middle clicks in foreground
-        if ( event.button != 1 ) return; // middle mouse
-
-        createGroup(e.clientX, e.clientY);
-    }, false);
-
-    document.addEventListener('visibilitychange', function() {
-        if(!document.hidden) {
-            if(pendingReload){
-                location.reload();
-            }
-            setActiveTabNode(view.tabId);
-            captureThumbnails();
-        }
-    }, false);
-
-    window.addEventListener("resize", resizeGroups);
-    document.addEventListener("keydown", keyInput);
-
-    // Listen for tabs being added/removed/switched/etc. and update appropriately
-    browser.tabs.onCreated.addListener(tabCreated);
-    browser.tabs.onRemoved.addListener(tabRemoved);
-    browser.tabs.onUpdated.addListener(tabUpdated, {
-        // This page doesn't care about tabs in other windows
-        windowId: view.windowId,
-        // We don't want to listen for every property because that includes
-        // the hidden state changing which generates a ton of events
-        // every time the active group changes
-        properties:[ 
-            "discarded",
-            "favIconUrl",
-            "pinned",
-            "title",
-            "status"
-        ]
-    });
-    browser.tabs.onMoved.addListener(tabMoved);
-    browser.tabs.onAttached.addListener(tabAttached);
-    browser.tabs.onDetached.addListener(tabDetached);
-
-    view.groupsNode.addEventListener('dragover', groupDragOver, false);
-    view.groupsNode.addEventListener('drop', outsideDrop, false);
-    view.groupsNode.addEventListener('dblclick', doubleClick, false);
-}
 
 async function keyInput(e) {
     if (e.key === "ArrowRight") {
