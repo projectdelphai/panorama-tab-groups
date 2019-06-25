@@ -16,12 +16,20 @@ function convertBackup(tgData) {
 
 		data.windows[wi] = {groups: [], tabs: [], activeGroup: tabviewGroups.activeGroupId, groupIndex: tabviewGroups.nextID};
 
+		var nGroups = Object.keys(tabviewGroup).length;
+		var gwidth = 0.25;
+		var curX = 0.0;
+		var deltaX = 1 / (nGroups < 4 ? 4 : nGroups + 1);
+		var curY = 0.0;
+		var deltaY = 1 / 32;
 		for(const gkey in tabviewGroup) {
 			data.windows[wi].groups.push({
 				id: tabviewGroup[gkey].id,
 				name: tabviewGroup[gkey].title,
-				rect: {x: 0, y: 0, w: 0.25, h: 0.5},
+				rect: {x: curX, y: curY, w: gwidth, h: 0.5},
 			});
+			curX += deltaX;
+			curY += deltaY;
 		}
 
 		for(const ti in tgData.windows[wi].tabs) {
