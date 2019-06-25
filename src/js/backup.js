@@ -14,7 +14,13 @@ function convertBackup(tgData) {
 		const tabviewGroup = JSON.parse(tgData.windows[wi].extData['tabview-group']);
 		const tabviewGroups = JSON.parse(tgData.windows[wi].extData['tabview-groups']);
 
-		data.windows[wi] = {groups: [], tabs: [], activeGroup: tabviewGroups.activeGroupId, groupIndex: tabviewGroups.nextID};
+		data.windows[wi] = {groups: [], tabs: [], activeGroup: tabviewGroups.activeGroupId, groupIndex: tabviewGroups.nextID, position: {}};
+		data.windows[wi].position = {
+			left: tgData.windows[wi].screenX,
+			top: tgData.windows[wi].screenY,
+			height: tgData.windows[wi].height,
+			width: tgData.windows[wi].width
+		};
 
 		for(const gkey in tabviewGroup) {
 			data.windows[wi].groups.push({
@@ -101,7 +107,12 @@ async function openBackup(data) {
 			});
 		}
 
+		let windata = {};
+		if (data.windows[wi].position) {
+			windata = data.windows[wi].position;
+		}
 		const window = await browser.windows.create({});
+		await browser.windows.update(window.id, windata);
 
 		await browser.sessions.setWindowValue(window.id, 'groups', groups);
 		await browser.sessions.setWindowValue(window.id, 'activeGroup', data.windows[wi].activeGroup);
