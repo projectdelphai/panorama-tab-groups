@@ -229,10 +229,6 @@ export function makeGroupNode(group) {
         closeGroup(content, group);
     }, false);
 
-    content.addEventListener('click', function(event) {
-        event.stopPropagation();
-    }, false);
-
     newtab.addEventListener('click', async function(event) {
         event.stopPropagation();
         await groups.setActive(group.id);
@@ -501,6 +497,12 @@ export function resizeGroups(groupId, groupRect) {
 
         updateGroupFit(group);
     });
+}
+
+export function raiseGroup(groupId) {
+    let lastMoved = (new Date).getTime();
+    groups.get(groupId).lastMoved = lastMoved;
+    groupNodes[groupId].group.style.zIndex = lastMoved.toString().substr(-9);
 }
 
 function getFit(param) {
