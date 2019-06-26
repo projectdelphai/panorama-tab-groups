@@ -283,6 +283,28 @@ async function toggleVisibleTabs(activeGroup, noTabSelected) {
 
     await browser.tabs.hide(hideTabIds);
     await browser.tabs.show(showTabIds);
+
+    if (activeGroup >= 0) {
+        let window = await browser.windows.getLastFocused();
+        await setActionTitle(window.id, activeGroup);
+    }
+}
+
+/** Set extension icon tooltip to active group **/
+async function setActionTitle(windowId, activeGroup = null) {
+    let name;
+    let groups = await browser.sessions.getWindowValue(windowId, 'groups');
+
+    if(activeGroup === null) {
+        activeGroup = await browser.sessions.getWindowValue(windowId, 'activeGroup');
+    }
+
+    for(var i in groups) {
+        if(groups[i].id == activeGroup) {
+            name = groups[i].name;
+        }
+    }
+    browser.browserAction.setTitle({title: `Active Group: ${name}`, 'windowId': windowId});
 }
 
 /** Make sure each window has a group */
@@ -320,6 +342,7 @@ async function createGroupInWindowIfMissing(window) {
     }
     if (groups) {
         browser.browserAction.setBadgeText({text: String(groups.length), windowId: window.id});
+        await setActionTitle(window.id);
     }
 }
 

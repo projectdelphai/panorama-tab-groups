@@ -107,6 +107,7 @@ async function openBackup(data) {
 		await browser.sessions.setWindowValue(window.id, 'activeGroup', data.windows[wi].activeGroup);
 		await browser.sessions.setWindowValue(window.id, 'groupIndex', data.windows[wi].groupIndex);
 		browser.browserAction.setBadgeText({text: String(groups.length), windowId: window.id});
+		browser.browserAction.setTitle({title: `Active Group: ${groups[data.windows[wi].activeGroup].name}`, 'windowId': window.id});
 
 		for(var ti in data.windows[wi].tabs) {
 			// pinned tabs are not allowed to be discarded
