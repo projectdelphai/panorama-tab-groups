@@ -316,7 +316,10 @@ async function createGroupInWindowIfMissing(window) {
 
     if (!groups || !groups.length) {
         console.log(`No groups found for window ${window.id}!`);
-        await createGroupInWindow(window);
+        groups = await createGroupInWindow(window);
+    }
+    if (groups) {
+        browser.browserAction.setBadgeText({text: String(groups.length), windowId: window.id});
     }
 }
 
@@ -341,6 +344,7 @@ async function createGroupInWindow(window) {
 
     await browser.sessions.setWindowValue(window.id, 'groups', groups);
     await browser.sessions.setWindowValue(window.id, 'activeGroup', groupId);
+    return groups;
 }
 
 /** Put any tabs that do not have a group into the active group */
