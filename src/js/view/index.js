@@ -121,8 +121,18 @@ async function captureThumbnails() {
 async function doubleClick(e) {
     if (e.target.className === "content transition") {
         var groupID = e.target.getAttribute("groupid");
-        var group = groups.get(groupID);
-        closeGroup(e.target, group);
+        
+        let tabs = await browser.tabs.query({currentWindow: true});
+        tabs.sort((tabA, tabB) => tabB.lastAccessed - tabA.lastAccessed);
+
+        // activate the most recently accessed tab of selected group
+        for(const tab of tabs){
+            const tGroupId = await getGroupId( tab.id );
+            if (tGroupId === Number(groupID)) {
+                await browser.tabs.update(tab.id, {active: true});
+                break;
+            }
+        };
     }
     else if (e.target.id === "groups")
     {
