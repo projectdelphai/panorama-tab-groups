@@ -1,6 +1,6 @@
 import { getGroupId } from './tabs.js';
 import { tabMoved, groupDragOver, outsideDrop, createDragIndicator } from './drag.js';
-import { groupNodes, initGroupNodes, closeGroup, makeGroupNode, fillGroupNodes, insertTab, resizeGroups, updateGroupFit } from './groupNodes.js';
+import { groupNodes, initGroupNodes, closeGroup, makeGroupNode, fillGroupNodes, insertTab, resizeGroups, raiseGroup, updateGroupFit } from './groupNodes.js';
 import { initTabNodes, makeTabNode, updateTabNode, setActiveTabNode, setActiveTabNodeById, getActiveTabId, deleteTabNode, updateThumbnail, updateFavicon } from './tabNodes.js';
 import * as groups from './groups.js';
 
@@ -130,6 +130,14 @@ async function doubleClick(e) {
     }
 }
 
+async function singleClick(e) {
+    if (e.target.className === "content transition") {
+        var groupID = e.target.getAttribute("groupid");
+        raiseGroup(groupID);
+    }
+    event.stopPropagation();
+}
+
 /**
  * Initialize the Panorama View tab
  *
@@ -216,6 +224,7 @@ async function initView() {
     view.groupsNode.addEventListener('dragover', groupDragOver, false);
     view.groupsNode.addEventListener('drop', outsideDrop, false);
     view.groupsNode.addEventListener('dblclick', doubleClick, false);
+    view.groupsNode.addEventListener('click', singleClick, false);
 }
 
 async function keyInput(e) {
