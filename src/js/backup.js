@@ -29,8 +29,12 @@ function convertBackup(tgData) {
 			var tab = tgData.windows[wi].tabs[ti];
 			if(tab.pinned == true) {
 				var groupId = 0;
-			}else{
+			}else if(tab.extData) {
 				var groupId = JSON.parse(tab.extData['tabview-tab']).groupID;
+			}else{
+				// No associated groupId, where should it go???
+				console.log("Skipping tab with missing groupId: "+tab.entries[0].url);
+				continue;
 			}
 			data.windows[wi].tabs.push({
 				url: tab.entries[0].url,
