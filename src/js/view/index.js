@@ -171,6 +171,7 @@ async function setLayoutMode(mode) {
         activateTiling();
     } else {
         await browser.sessions.setWindowValue(windowId, 'layoutMode', "freeform");
+        resizeGroups();
     }
 }
 
