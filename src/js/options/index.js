@@ -25,7 +25,7 @@ async function init() {
 
 function restoreOptions(options, shortcuts) {
   // Shortcuts
-  for (let shortcut of shortcuts) {
+  for (const shortcut of shortcuts) {
     if (options.shortcut[shortcut.name].disabled) {
       disableShortcutForm(shortcut.name);
     }
@@ -44,7 +44,7 @@ function restoreOptions(options, shortcuts) {
 
 function attachEventHandler(options, shortcuts) {
   // Shortcuts
-  for (let shortcut of shortcuts) {
+  for (const shortcut of shortcuts) {
     document.querySelector(`#${shortcut.name} input`).value = shortcut.shortcut;
     document
       .querySelector(`#${shortcut.name} .updateShortcut`)
