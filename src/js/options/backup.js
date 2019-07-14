@@ -14,14 +14,28 @@ function convertBackup(tgData) {
 		const tabviewGroup = JSON.parse(tgData.windows[wi].extData['tabview-group']);
 		const tabviewGroups = JSON.parse(tgData.windows[wi].extData['tabview-groups']);
 
-		data.windows[wi] = {groups: [], tabs: [], activeGroup: tabviewGroups.activeGroupId, groupIndex: tabviewGroups.nextID};
+		data.windows[wi] = {groups: [], tabs: [], activeGroup: tabviewGroups.activeGroupId, groupIndex: tabviewGroups.nextID, position: {}};
+		data.windows[wi].position = {
+			left: tgData.windows[wi].screenX,
+			top: tgData.windows[wi].screenY,
+			height: tgData.windows[wi].height,
+			width: tgData.windows[wi].width
+		};
 
+		var nGroups = Object.keys(tabviewGroup).length;
+		var gwidth = 0.25;
+		var curX = 0.0;
+		var deltaX = 1 / (nGroups < 4 ? 4 : nGroups + 1);
+		var curY = 0.0;
+		var deltaY = 1 / 32;
 		for(const gkey in tabviewGroup) {
 			data.windows[wi].groups.push({
 				id: tabviewGroup[gkey].id,
 				name: tabviewGroup[gkey].title,
-				rect: {x: 0, y: 0, w: 0.25, h: 0.5},
+				rect: {x: curX, y: curY, w: gwidth, h: 0.5},
 			});
+			curX += deltaX;
+			curY += deltaY;
 		}
 
 		for(const ti in tgData.windows[wi].tabs) {
@@ -29,8 +43,12 @@ function convertBackup(tgData) {
 			var tab = tgData.windows[wi].tabs[ti];
 			if(tab.pinned == true) {
 				var groupId = 0;
-			}else{
+			}else if(tab.extData) {
 				var groupId = JSON.parse(tab.extData['tabview-tab']).groupID;
+			}else{
+				// No associated groupId, where should it go???
+				console.log("Skipping tab with missing groupId: "+tab.entries[0].url);
+				continue;
 			}
 			data.windows[wi].tabs.push({
 				url: tab.entries[0].url,
@@ -100,7 +118,12 @@ async function openBackup(data) {
 			});
 		}
 
+		let windata = {};
+		if (data.windows[wi].position) {
+			windata = data.windows[wi].position;
+		}
 		const window = await browser.windows.create({});
+		await browser.windows.update(window.id, windata);
 
 		await browser.sessions.setWindowValue(window.id, 'groups', groups);
 		await browser.sessions.setWindowValue(window.id, 'activeGroup', data.windows[wi].activeGroup);
