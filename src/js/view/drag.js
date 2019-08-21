@@ -1,7 +1,7 @@
 import { setGroupId, getGroupId } from './tabs.js';
 import { groupNodes, makeGroupNode, resizeGroups, updateGroupFit, insertTab } from './groupNodes.js';
 import * as groups from './groups.js';
-import { new_element } from './utils.js';
+import { new_element } from '../_share/utils.js';
 
 var dragTab = null;
 var dragOverTab = null;

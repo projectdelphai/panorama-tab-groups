@@ -1,7 +1,7 @@
 import { getGroupId, forEachTab, forEachTabSync } from './tabs.js';
 import { groupDragOver, groupDrop } from './drag.js';
 import * as groups from './groups.js';
-import { new_element, getPluralForm } from './utils.js';
+import { new_element, getPluralForm } from '../_share/utils.js';
 import { tabNodes, getTabNode } from './tabNodes.js';
 
 export var groupNodes = {};

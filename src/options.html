@@ -3,6 +3,7 @@
 	<head>
 		<meta charset="utf-8">
 		<link rel="stylesheet" type="text/css" href="css/options.css">
+		<script type="module" src="js/options/index.js"></script>
 	</head>
 	<body>
 		<section id="optionKeyboardShortcuts">
@@ -11,27 +12,33 @@
 				<em><a href="https://developer.mozilla.org/en-US/Add-ons/WebExtensions/manifest.json/commands#Key_combinations" target="_blank">The format for the shortcut option is detailed here.</a></em>
 			</p>
 			<div class="keyboardShortcuts">
-				<form class="browser-style">
+				<form id="toggle-panorama-view" class="browser-style">
 					<label for="toggle-panorama-view">Toggle Panorama View</label>
-					<input type="text" id="toggle-panorama-view">
-					<button id="updateToggle" class="browser-style">Update</button>
-					<button id="resetToggle" class="browser-style">Reset</button>
+					<input type="text">
+					<button class="updateShortcut" class="browser-style">Update</button>
+					<button class="resetShortcut" class="browser-style">Reset</button>
+					<button class="disableShortcut" class="browser-style">Disable</button>
+					<button class="enableShortcut" class="browser-style" hidden>Enable</button>
 				</form>
 			</div>
 			<div class="keyboardShortcuts">
-				<form class="browser-style">
+				<form id="activate-next-group" class="browser-style">
 					<label for="activate-next-group">Activate the next Tab Group</label>
-					<input type="text" id="activate-next-group">
-					<button id="updateNextView" class="browser-style">Update</button>
-					<button id="resetNextView" class="browser-style">Reset</button>
+					<input type="text">
+					<button class="updateShortcut" class="browser-style">Update</button>
+					<button class="resetShortcut" class="browser-style">Reset</button>
+					<button class="disableShortcut" class="browser-style">Disable</button>
+					<button class="enableShortcut" class="browser-style" hidden>Enable</button>
 				</form>
 			</div>
 			<div class="keyboardShortcuts">
-				<form class="browser-style">
+				<form id="activate-previous-group" class="browser-style">
 					<label for="activate-previous-group">Activate the previous Tab Group</label>
-					<input type="text" id="activate-previous-group">
-					<button id="updatePreviousView" class="browser-style">Update</button>
-					<button id="resetPreviousView" class="browser-style">Reset</button>
+					<input type="text">
+					<button class="updateShortcut" class="browser-style">Update</button>
+					<button class="resetShortcut" class="browser-style">Reset</button>
+					<button class="disableShortcut" class="browser-style">Disable</button>
+					<button class="enableShortcut" class="browser-style" hidden>Enable</button>
 				</form>
 			</div>
 		</section>
@@ -119,7 +126,5 @@
 				<strong><span id="thumbnailCacheSize"></span></strong>
 			</div>
 		</section>
-		<script src="js/backup.js"></script>
-		<script src="js/options.js"></script>
 	</body>
 </html>
