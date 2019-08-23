@@ -350,8 +350,8 @@ async function createGroupInWindow(browserWindow) {
         lastMoved: (new Date).getTime(),
     }];
 
-    await browser.sessions.setWindowValue(window.id, 'groups', groups);
-    await browser.sessions.setWindowValue(window.id, 'activeGroup', groupId);
+    await browser.sessions.setWindowValue(browserWindow.id, 'groups', groups);
+    await browser.sessions.setWindowValue(browserWindow.id, 'activeGroup', groupId);
 }
 
 /** Put any tabs that do not have a group into the active group */

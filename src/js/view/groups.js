@@ -1,5 +1,5 @@
-var windowId;
-var groups;
+let windowId;
+let groups;
 
 async function save() {
 	await browser.sessions.setWindowValue(windowId, 'groups', groups);
@@ -28,7 +28,7 @@ function getIndex(id) {
 export async function init() {
 
 	windowId = (await browser.windows.getCurrent()).id;
-	groups = (await browser.sessions.getWindowValue(windowId, 'groups'));
+	groups = (await browser.sessions.getWindowValue(windowId, 'groups')) || [];
 
 	for(var i in groups) {
 		groups[i].tabCount = 0;
