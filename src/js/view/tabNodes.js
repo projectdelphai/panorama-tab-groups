@@ -1,6 +1,6 @@
 import { forEachTab, forEachTabSync } from './tabs.js';
 import { tabDragStart, tabDragEnter, tabDragOver, tabDragLeave, tabDrop, tabDragEnd } from './drag.js';
-import { new_element } from './utils.js';
+import { new_element } from '../_share/utils.js';
 
 export var tabNodes = {};
 var activeTabId = -1; // tabid of active tab in view
@@ -142,7 +142,7 @@ export function getActiveTabId() {
 }
 
 export function deleteTabNode(tabId) {
-	if(tabNodes[tabId]) {
+	if(tabNodes[tabId] && tabNodes[tabId].tab.parentNode !== null) {
 		tabNodes[tabId].tab.parentNode.removeChild(tabNodes[tabId].tab);
 		delete tabNodes[tabId];
 	}
@@ -168,7 +168,7 @@ export async function updateThumbnail(tabId, thumbnail) {
 	}
 }
 
-// This testing mechanism can seemingly hit a slow path in Firefox related 
+// This testing mechanism can seemingly hit a slow path in Firefox related
 // to webRequest listeners.  If we're spending a lot of time in here, it's
 // probably because another extension registered one ot those listeners
 // on the Panorama tab

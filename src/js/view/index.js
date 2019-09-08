@@ -1,6 +1,6 @@
 import { getGroupId } from './tabs.js';
 import { tabMoved, groupDragOver, outsideDrop, createDragIndicator } from './drag.js';
-import { groupNodes, initGroupNodes, closeGroup, makeGroupNode, fillGroupNodes, insertTab, resizeGroups, updateGroupFit } from './groupNodes.js';
+import { groupNodes, initGroupNodes, closeGroup, makeGroupNode, fillGroupNodes, insertTab, resizeGroups, raiseGroup, updateGroupFit } from './groupNodes.js';
 import { initTabNodes, makeTabNode, updateTabNode, setActiveTabNode, setActiveTabNodeById, getActiveTabId, deleteTabNode, updateThumbnail, updateFavicon } from './tabNodes.js';
 import * as groups from './groups.js';
 
@@ -57,6 +57,87 @@ browser.storage.sync.get({
     initView();
 });
 
+function setTheme(theme) {
+    replaceClass("theme", theme);
+}
+
+function setToolbarPosition(position) {
+    replaceClass("toolbar", position);
+}
+
+function replaceClass(prefix, value) {
+    let classList = document.getElementsByTagName("body")[0].classList;
+    for(let classObject of classList){
+        if(classObject.startsWith(`${prefix}-`)){
+            classList.remove(classObject);
+        }
+    }
+    classList.add(`${prefix}-${value}`);
+}
+
+async function captureThumbnail(tab) {
+    var tabId = tab.id
+
+    var cachedThumbnail = await browser.sessions.getTabValue(tabId, 'thumbnail')
+
+    // Only capture a new thumbnail if there's no cached one, the cached one doesn't have a capturedTime,
+    // or the tab was accessed since the cache was made 
+    if(!cachedThumbnail || !cachedThumbnail.capturedTime || cachedThumbnail.capturedTime < tab.lastAccessed){
+        var data = await browser.tabs.captureTab(tabId, {format: 'jpeg', quality: 25});
+        var img = new Image;
+    
+        img.onload = async function() {
+            var canvas = document.createElement('canvas');
+            var ctx = canvas.getContext('2d');
+    
+            canvas.width = 500;
+            canvas.height = canvas.width * (this.height / this.width);
+    
+            //ctx.imageSmoothingEnabled = true;
+            //ctx.imageSmoothingQuality = 'high';
+            ctx.drawImage(this, 0, 0, canvas.width, canvas.height);
+    
+            var thumbnail = canvas.toDataURL('image/jpeg', 0.7);
+    
+            updateThumbnail(tabId, thumbnail);
+            browser.sessions.setTabValue(tabId, 'thumbnail', {
+                thumbnail: thumbnail, 
+                capturedTime: Date.now()
+            });
+        };
+    
+        img.src = data;
+    }
+}
+
+async function captureThumbnails() {
+    const tabs = browser.tabs.query({currentWindow: true, discarded: false});
+
+    for(const tab of await tabs) {
+        await captureThumbnail(tab); //await to lessen strain on browser
+    }
+}
+
+async function doubleClick(e) {
+    if (e.target.className === "content transition") {
+        var groupID = e.target.getAttribute("groupid");
+        var group = groups.get(groupID);
+        closeGroup(e.target, group);
+    }
+    else if (e.target.id === "groups")
+    {
+        createGroup(e.clientX, e.clientY);
+    }
+}
+
+async function singleClick(e) {
+    if (e.target.className === "content transition") {
+        var groupID = e.target.getAttribute("groupid");
+        raiseGroup(groupID);
+    }
+    event.stopPropagation();
+}
+
 /**
  * Initialize the Panorama View tab
  *
@@ -67,6 +148,7 @@ async function initView() {
     // set tiling off initially
     let windowId = (await browser.windows.getCurrent()).id;
     let tilingStatus = await browser.sessions.setWindowValue(windowId, 'tilingStatus', "true");
+    setLayoutMode("freeform");
 
     // set locale specific titles
     document.getElementById('newGroup').title = browser.i18n.getMessage("newGroupButton");
@@ -159,6 +241,7 @@ async function initView() {
     view.groupsNode.addEventListener('dragover', groupDragOver, false);
     view.groupsNode.addEventListener('drop', outsideDrop, false);
     view.groupsNode.addEventListener('dblclick', doubleClick, false);
+    view.groupsNode.addEventListener('click', singleClick, false);
 }
 
 // Tiling functionality
@@ -215,81 +298,6 @@ async function activateTiling() {
     }
     
 }
-
-function setTheme(theme) {
-    replaceClass("theme", theme);
-}
-
-function setToolbarPosition(position) {
-    replaceClass("toolbar", position);
-}
-
-function replaceClass(prefix, value) {
-    let classList = document.getElementsByTagName("body")[0].classList;
-    for(let classObject of classList){
-        if(classObject.startsWith(`${prefix}-`)){
-            classList.remove(classObject);
-        }
-    }
-    classList.add(`${prefix}-${value}`);
-}
-
-async function captureThumbnail(tab) {
-    var tabId = tab.id
-
-    var cachedThumbnail = await browser.sessions.getTabValue(tabId, 'thumbnail')
-
-    // Only capture a new thumbnail if there's no cached one, the cached one doesn't have a capturedTime,
-    // or the tab was accessed since the cache was made 
-    if(!cachedThumbnail || !cachedThumbnail.capturedTime || cachedThumbnail.capturedTime < tab.lastAccessed){
-        var data = await browser.tabs.captureTab(tabId, {format: 'jpeg', quality: 25});
-        var img = new Image;
-    
-        img.onload = async function() {
-            var canvas = document.createElement('canvas');
-            var ctx = canvas.getContext('2d');
-    
-            canvas.width = 500;
-            canvas.height = canvas.width * (this.height / this.width);
-    
-            //ctx.imageSmoothingEnabled = true;
-            //ctx.imageSmoothingQuality = 'high';
-            ctx.drawImage(this, 0, 0, canvas.width, canvas.height);
-    
-            var thumbnail = canvas.toDataURL('image/jpeg', 0.7);
-    
-            updateThumbnail(tabId, thumbnail);
-            browser.sessions.setTabValue(tabId, 'thumbnail', {
-                thumbnail: thumbnail, 
-                capturedTime: Date.now()
-            });
-        };
-    
-        img.src = data;
-    }
-}
-
-async function captureThumbnails() {
-    const tabs = browser.tabs.query({currentWindow: true, discarded: false});
-
-    for(const tab of await tabs) {
-        await captureThumbnail(tab); //await to lessen strain on browser
-    }
-}
-
-async function doubleClick(e) {
-    if (e.target.className === "content transition") {
-        var groupID = e.target.getAttribute("groupid");
-        var group = groups.get(groupID);
-        closeGroup(e.target, group);
-    }
-    else if (e.target.id === "groups")
-    {
-        createGroup(e.clientX, e.clientY);
-    }
-}
-
-
 
 async function keyInput(e) {
     if (e.key === "ArrowRight") {

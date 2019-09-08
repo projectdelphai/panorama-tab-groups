@@ -1,9 +1,13 @@
 'use strict';
 
+import { loadOptions } from "./_share/options.js";
+
 const manifest = browser.runtime.getManifest();
 
-var openingView = false;
-var openingBackup = false;
+window.backgroundState = {
+  openingView: false,
+  openingBackup: false,
+};
 
 /** Modulo in javascript does not behave like modulo in mathematics when x is negative.
  * Following code is based from this:
@@ -141,14 +145,21 @@ async function menuClicked(info, tab) {
 browser.menus.onClicked.addListener(menuClicked);
 
 async function triggerCommand(command) {
-    if (command === "activate-next-group") {
-        await changeActiveGroupBy(1);
-    } else if (command === "activate-previous-group") {
-        await changeActiveGroupBy(-1);
-    }else if (command === "toggle-panorama-view") {
-        await toggleView();
-    }
+  const options = await loadOptions();
+
+  if (options["shortcut"][command].disabled) {
+    // Doesn't execute disabled command
+    return;
+  }
+  if (command === "activate-next-group") {
+    await changeActiveGroupBy(1);
+  } else if (command === "activate-previous-group") {
+    await changeActiveGroupBy(-1);
+  } else if (command === "toggle-panorama-view") {
+    await toggleView();
+  }
 }
+
 
 /** Shift current active group by offset */
 async function changeActiveGroupBy(offset) {
@@ -185,18 +196,18 @@ async function toggleView() {
             await browser.tabs.update(extTabs[0].id, {active: true});
         }
     } else { // if there is no Panorama View tab, make one
-        openingView = true;
+        window.backgroundState.openingView = true;
         await browser.tabs.create({url: "/view.html", active: true});
     }
 }
 
 /** Callback function which will be called whenever a tab is opened */
 async function tabCreated(tab) {
-    if(openingBackup) {
+    if(window.backgroundState.openingBackup) {
         return;
     }
 
-    if(!openingView) {
+    if(!window.backgroundState.openingView) {
         // Normal case: everything except the Panorama View tab
         // If the tab does not have a group, set its group to the current group
         let tabGroupId = await browser.sessions.getTabValue(tab.id, 'groupId');
@@ -211,7 +222,7 @@ async function tabCreated(tab) {
     }else{
         // Opening the Panorama View tab
         // Make sure it's in the special group
-        openingView = false;
+        window.backgroundState.openingView = false;
         await browser.sessions.setTabValue(tab.id, 'groupId', -1);
     }
 }
@@ -311,25 +322,25 @@ async function newGroupUid(windowId) {
  * For example, windows that are restored by user (e.g. Ctrl+Shift+N) will
  * trigger the onCreated event but still have the existing group data.
  */
-async function createGroupInWindowIfMissing(window) {
-    let groups = await browser.sessions.getWindowValue(window.id, 'groups');
+async function createGroupInWindowIfMissing(browserWindow) {
+    let groups = await browser.sessions.getWindowValue(browserWindow.id, 'groups');
 
     if (!groups || !groups.length) {
-        console.log(`No groups found for window ${window.id}!`);
-        await createGroupInWindow(window);
+        console.log(`No groups found for window ${browserWindow.id}!`);
+        await createGroupInWindow(browserWindow);
     }
 }
 
 /** Create the first group in a window
  * This handles new windows and, during installation, existing windows
  * that do not yet have a group */
-async function createGroupInWindow(window) {
-    if(openingBackup) {
+async function createGroupInWindow(browserWindow) {
+    if(window.backgroundState.openingBackup) {
         console.log('Skipping creation of groups since we are opening backup');
         return;
     }
 
-    let groupId = await newGroupUid(window.id);
+    let groupId = await newGroupUid(browserWindow.id);
 
     let groups = [{
         id: groupId,
@@ -339,8 +350,8 @@ async function createGroupInWindow(window) {
         lastMoved: (new Date).getTime(),
     }];
 
-    await browser.sessions.setWindowValue(window.id, 'groups', groups);
-    await browser.sessions.setWindowValue(window.id, 'activeGroup', groupId);
+    await browser.sessions.setWindowValue(browserWindow.id, 'groups', groups);
+    await browser.sessions.setWindowValue(browserWindow.id, 'activeGroup', groupId);
 }
 
 /** Put any tabs that do not have a group into the active group */

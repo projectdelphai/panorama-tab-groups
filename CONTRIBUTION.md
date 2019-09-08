@@ -24,4 +24,4 @@ For deeper insight it's recommended to read the [Internationalization guide for 
 1. Create a directory with the short language code. Allowed are identifiers like `de_DE` or `de`, where the latter is the fallback.
 1. Copy the `messages.json` file from the directory `en` in the new directory.
 1. Replace all `message`s.
-1. For `pluralRule` please see [this definition](https://developer.mozilla.org/en-US/docs/Mozilla/Localization/Localization_and_Plurals#List_of_Plural_Rules). Current implemented rules are 0, 1, 2, 7 and 9 within [the utility function `getPluralForm()`](src/js/view/utils.js);
+1. For `pluralRule` please see [this definition](https://developer.mozilla.org/en-US/docs/Mozilla/Localization/Localization_and_Plurals#List_of_Plural_Rules). Current implemented rules are 0, 1, 2, 7 and 9 within [the utility function `getPluralForm()`](src/js/_share/utils.js);

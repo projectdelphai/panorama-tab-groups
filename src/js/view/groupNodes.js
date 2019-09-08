@@ -1,7 +1,7 @@
 import { getGroupId, forEachTab, forEachTabSync } from './tabs.js';
 import { groupDragOver, groupDrop } from './drag.js';
 import * as groups from './groups.js';
-import { new_element, getPluralForm } from './utils.js';
+import { new_element, getPluralForm } from '../_share/utils.js';
 import { tabNodes, getTabNode } from './tabNodes.js';
 
 export var groupNodes = {};
@@ -234,10 +234,6 @@ export function makeGroupNode(group) {
     close.addEventListener('click', function(event) {
         event.stopPropagation();
         closeGroup(content, group);
-    }, false);
-
-    content.addEventListener('click', function(event) {
-        event.stopPropagation();
     }, false);
 
     newtab.addEventListener('click', async function(event) {
@@ -508,6 +504,12 @@ export function resizeGroups(groupId, groupRect) {
 
         updateGroupFit(group);
     });
+}
+
+export function raiseGroup(groupId) {
+    let lastMoved = (new Date).getTime();
+    groups.get(groupId).lastMoved = lastMoved;
+    groupNodes[groupId].group.style.zIndex = lastMoved.toString().substr(-9);
 }
 
 function getFit(param) {
