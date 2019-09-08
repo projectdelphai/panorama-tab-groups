@@ -25,6 +25,14 @@ function getIndex(id) {
 	return -1;
 }
 
+export function getLength() {
+    let length = 0;
+    for (var i in groups) {
+        length++;
+    }
+    return length;
+}
+
 export async function init() {
 
 	windowId = (await browser.windows.getCurrent()).id;
@@ -103,6 +111,14 @@ export function get(id) {
 	}
 	return groups[index];
 };
+
+export function getIds() {
+    var arr = []
+    for (var i in groups) {
+        arr.push(groups[i].id);
+    }
+    return arr;
+}
 
 export function forEach(callback) {
 	for(var i in groups) {

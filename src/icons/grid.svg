@@ -1,0 +1,9 @@
+<svg width="16" height="16" xmlns="http://www.w3.org/2000/svg">
+    <g fill="context-fill" fill-opacity="context-fill-opacity">
+        <rect height="5" width="5" y="2" x="2" />
+        <rect height="5" width="5" y="2" x="9" />
+        <rect height="5" width="5" y="9" x="2" />
+        <rect height="5" width="5" y="9" x="9" />
+       <path transform="rotate(-90, 18, 18)" d="m3.87079,31.999319l0,-28.125684l28.126548,28.125684l-28.126548,0z" fill="transparent" />
+    </g>
+</svg>

@@ -54,6 +54,14 @@ body {
 	background-image: url(/icons/preferences_dark.svg);
 }
 
+#freeform {
+    background-image: url(/icons/icon.svg);
+}
+
+#tiling {
+    background-image: url(/icons/grid.svg);
+}
+
 #pinnedTabs {
 	display: flex;
 	border-left: 1px solid #ccc;

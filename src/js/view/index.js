@@ -145,13 +145,20 @@ async function singleClick(e) {
  * to respond to user actions and react to changes
  */
 async function initView() {
+    // set tiling off initially
+    let windowId = (await browser.windows.getCurrent()).id;
+    let tilingStatus = await browser.sessions.setWindowValue(windowId, 'tilingStatus', "true");
+    setLayoutMode("freeform");
+
     // set locale specific titles
     document.getElementById('newGroup').title = browser.i18n.getMessage("newGroupButton");
     document.getElementById('settings').title = browser.i18n.getMessage("settingsButton");
 
+
     view.windowId = (await browser.windows.getCurrent()).id;
     view.tabId = (await browser.tabs.getCurrent()).id;
     view.groupsNode = document.getElementById('groups');
+
 
     view.groupsNode.appendChild(createDragIndicator());
 
@@ -174,6 +181,16 @@ async function initView() {
     // Listen for clicks on settings button
     document.getElementById('settings').addEventListener('click', function() {
         browser.runtime.openOptionsPage();
+    }, false);
+
+    document.getElementById('freeform').addEventListener('click', function() {
+        setLayoutMode("freeform");
+    }, false);
+
+
+    // Listen for tiling toggle
+    document.getElementById('tiling').addEventListener('click', function() {
+        setLayoutMode("tiling");
     }, false);
 
     // Listen for middle clicks in background to open new group
@@ -225,6 +242,61 @@ async function initView() {
     view.groupsNode.addEventListener('drop', outsideDrop, false);
     view.groupsNode.addEventListener('dblclick', doubleClick, false);
     view.groupsNode.addEventListener('click', singleClick, false);
+}
+
+// Tiling functionality
+// Toggle tiling on or off
+async function setLayoutMode(mode) {
+    let windowId = (await browser.windows.getCurrent()).id;
+
+    if (mode == "tiling") {
+        await browser.sessions.setWindowValue(windowId, 'layoutMode', "tiling");
+        activateTiling();
+    } else {
+        await browser.sessions.setWindowValue(windowId, 'layoutMode', "freeform");
+        resizeGroups();
+    }
+}
+
+async function activateTiling() {
+    let windowId = (await browser.windows.getCurrent()).id;
+    await browser.sessions.getWindowValue(windowId, 'layoutMode');
+
+    let numGroups = groups.getLength();
+
+    // get number of groups per row
+    let maxGroups = Math.ceil(Math.sqrt(numGroups))
+    let quotient = Math.floor(numGroups / maxGroups);
+    let remainder = numGroups % maxGroups;
+    
+    let gridLayout = Array(quotient).fill(maxGroups);
+    if (remainder != 0) {
+        gridLayout.push(remainder);
+    }
+
+    let groupIds = groups.getIds();
+    let currentIndex = 0;
+    console.log(gridLayout);
+    // gridLayout[i] = number of cells per row
+    for (let i in gridLayout) {
+        // j = specific cell in each row
+        for (let j=0; j < gridLayout[i]; j++) {
+            console.log("i: " + i + ", j: " + j);
+            let rect = {};
+            rect.x = j / gridLayout[i];
+            rect.y = i / gridLayout.length;
+            rect.w = 1.0 / gridLayout[i];
+            rect.h = 1.0 / gridLayout.length;
+            rect.i = rect.x + rect.w;
+            rect.j = rect.y + rect.h;
+            console.log(groupIds[currentIndex]);
+            console.log(rect);
+            groups.transform(groupIds[currentIndex], rect);
+            resizeGroups(groupIds[currentIndex], rect);
+            currentIndex++;
+        }
+    }
+    
 }
 
 async function keyInput(e) {
