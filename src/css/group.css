@@ -115,6 +115,7 @@
 	flex-grow: 1;
 	margin: 4px;
 	position: relative;
+    cursor: move;
 }
 
 .group .top {

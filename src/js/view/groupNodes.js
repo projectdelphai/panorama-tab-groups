@@ -56,6 +56,7 @@ async function groupTransform(group, node, top, right, bottom, left, elem) {
 
     var onmousemove = function(event) {
         event.preventDefault();
+        console.log("a");
         x = event.pageX / groupsRect.width;
         y = event.pageY / groupsRect.height;
 
@@ -248,7 +249,9 @@ export function makeGroupNode(group) {
         event.stopPropagation();
         groupTransform(group, node, 1, 1, 1, 1, header);
     };
+
     header.addEventListener('mousedown', moveFunc, false);
+    content.addEventListener('mousedown', moveFunc, false);
 
     // renaming groups
     var editing = false;
@@ -460,7 +463,6 @@ export async function insertTab(tab) {
 }
 
 export function resizeGroups(groupId, groupRect) {
-    console.log(groupRect);
     var rect = {};
 
     groups.forEach(function(group) {
