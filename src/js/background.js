@@ -295,7 +295,6 @@ async function toggleVisibleTabs(activeGroup, noTabSelected) {
     await browser.tabs.hide(hideTabIds);
     await browser.tabs.show(showTabIds);
     
-        console.log('a');
     if (activeGroup >= 0) {
         let window = await browser.windows.getLastFocused();
         await setActionTitle(window.id, activeGroup);
