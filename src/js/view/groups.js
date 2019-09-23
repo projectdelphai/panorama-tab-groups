@@ -33,6 +33,15 @@ export function getLength() {
     return length;
 }
 
+export function getName(id) {
+    for (var i in groups) {
+        if (groups[i].id == id) {
+            return groups[i].name;
+        }
+    }
+    return null;
+}
+
 export async function init() {
 
 	windowId = (await browser.windows.getCurrent()).id;
@@ -60,7 +69,7 @@ export async function create() {
 	await save();
 
 	return group;
-};
+}
 
 export async function remove(id) {
 	var index = getIndex(id);
@@ -71,7 +80,7 @@ export async function remove(id) {
     browser.runtime.sendMessage({"action" : "removeMenuItem", "groupId" : id.toString()}); 
 
 	await save();
-};
+}
 
 export async function rename(id, newName) {
 	var index = getIndex(id);
@@ -118,7 +127,7 @@ export function getIds() {
         arr.push(groups[i].id);
     }
     return arr;
-}
+};
 
 export function forEach(callback) {
 	for(var i in groups) {
