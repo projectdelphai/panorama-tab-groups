@@ -12,6 +12,7 @@ import { saveOptionTheme } from "./theme.js";
 import { saveOptionToolbarPosition } from "./toolbar.js";
 import { loadBackup, saveBackup } from "./backup.js";
 import { getStatistics } from "./statistics.js";
+import { resetPTG } from "./reset.js";
 
 document.addEventListener("DOMContentLoaded", init);
 
@@ -77,4 +78,7 @@ function attachEventHandler(options, shortcuts) {
   document
     .getElementById("saveBackupButton")
     .addEventListener("click", saveBackup);
+  document
+    .getElementById("resetAddon")
+    .addEventListener("click", resetPTG);
 }
