@@ -33,7 +33,7 @@ function addRefreshMenuItem() {
     });
 }
 
-async function createMenuList() {
+export async function createMenuList() {
     let windowId = (await browser.windows.getCurrent()).id;
     let groups = (await browser.sessions.getWindowValue(windowId, 'groups'));
     browser.menus.removeAll();

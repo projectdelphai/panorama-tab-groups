@@ -79,6 +79,13 @@ export async function remove(id) {
 	groups.splice(index, 1);
     browser.runtime.sendMessage({"action" : "removeMenuItem", "groupId" : id.toString()}); 
 
+    // readjust group ids to fill missing gap
+    var curIndex = 0;
+    for (var i in groups) {
+        groups[i].id = curIndex;
+        curIndex += 1;
+    }
+	await browser.sessions.setWindowValue(windowId, 'groupIndex', curIndex);
 	await save();
 }
 
