@@ -9,17 +9,18 @@
 		<link rel="stylesheet" href="css/dark.css" />
 		<script type="module" src="index.js"></script>
 	</head>
-	<body>
-		<header>
-			<div class="form-field form-field--search">
-				<input class="form-field__input" type="search" name="query" />
-			</div>
-		</header>
-		<main id="content">
-			
-		</main>
-		<footer id="toolbar">
-			<button id="settings" class="button" type="button"></button>
-		</footer>
+	<body class="content-loading">
+		<div id="frame-shell" class="frame-shell">
+			<main id="main-frame" class="frame">
+				<header class="frame-header"></header>
+				<section class="frame-content"></section>
+				<footer class="frame-footer"></footer>
+			</main>
+			<aside id="aside-frame" class="frame">
+				<header class="frame-header"></header>
+				<section class="frame-content"></section>
+				<footer class="frame-footer"></footer>
+			</aside>
+		</div>
 	</body>
 </html>

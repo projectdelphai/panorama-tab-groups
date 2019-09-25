@@ -7,18 +7,6 @@ body.theme-dark {
 	border-color: rgba(249, 249, 250, 0.2);
 }
 
-.theme-dark #toolbar .button:hover {
-	background-color: rgba(249, 249, 250, 0.2);
-}
-
-.theme-dark #toolbar .button:active {
-	background-color: rgba(249, 249, 250, 0.25);
-}
-
-.theme-dark #settings {
-	background-image: url(/icons/preferences_light.svg);
-}
-
 .theme-dark .list__item:hover {
 	background-color: rgba(249, 249, 250, 0.2);
 }

@@ -7,6 +7,11 @@
   --input-hover-border-color: var(--grey-90-a30);
   --input-focus-border-color: var(--blue-50);
   --input-focus-box-shadow: 0 0 0 1px var(--blue-50), 0 0 0 4px var(--blue-50-a30);
+  
+  --button-ghost-icon-color: var(--grey-90-a80);
+  --button-ghost-hover-background-color: var(--grey-90-a10);
+  --button-ghost-active-background-color: var(--grey-90-a20);
+  --button-ghost-focus-box-shadow: 0 0 0 1px var(--blue-50) inset, 0 0 0 1px var(--blue-50), 0 0 0 4px var(--blue-50-a30);
 }
 
 .theme-dark {

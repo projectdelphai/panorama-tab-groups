@@ -1,53 +1,108 @@
 body {
-    min-width: 400px;
+    width: 400px;
+    overflow: hidden;
+}
+
+body > * {
+    transform: opacity .15s linear;
+}
+
+.content-loading {
+    min-height: 40px;
+}
+
+.content-loading > * {
+    opacity: 0;
+}
+
+.content-loading::before {
+    content: '';
+    width: 32px;
+    height: 32px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    margin-top: -16px;
+    margin-left: -16px;
+    animation: rotate360deg 1.5s linear infinite;
+    background: var(--button-ghost-icon-color);
+    mask-image: url(../../_shared/icons/Preferences.svg);
+    mask-position: center center;
+    mask-repeat: no-repeat;
+    mask-size: 32px;
+}
+
+@keyframes rotate360deg {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.frame-shell {
+    display: flex;
+    width: 200vw;
+    transition: transform .15s linear;
+}
+
+.frame-shell--aside-active {
+    transform: translateX(-100vw);
+}
+
+.frame {
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+}
+
+.frame:not(.frame--active) > * {
+    display: none;
 }
 
 header {
-    padding: 5px 5px 0;
+    flex-shrink: 0;
+    display: flex;
+    justify-content: stretch;
+    align-items: center;
+    column-gap: 5px;
+    padding: 5px;
 }
 
-input[type="search"] {
+header .button-ghost {
+    flex-shrink: 0;
+}
+
+.form-field--search {
     width: 100%;
 }
 
-#toolbar {
-	display: flex;
-    justify-content: space-between;
-	padding: 4px;
-
-	border-top: 1px solid rgba(12, 12, 13, 0.1);
-
-	background-color: inherit;
+.frame-content {
+    max-height: 500px;
+    overflow-y: auto;
+    overflow-x: hidden;
+	border-top: 1px solid rgba(12, 12, 13, 0.1); /* TODO: color to CSS var*/
+	border-bottom: 1px solid rgba(12, 12, 13, 0.1); /* TODO: color to CSS var*/
 }
 
-#toolbar .button {
-	width: 28px;
-	height: 28px;
-	margin: 4px;
-
-    border-radius: 4px;
-    border: none;
-
-    background-color: transparent;
-	background-repeat: no-repeat;
-	background-position: center;
+footer {
+    flex-shrink: 0;
 }
 
-#toolbar .button:hover {
-	background-color: rgba(12, 12, 13, 0.1);
+footer .button-ghost {
+    width: 100%;
+    padding-left: 40px;
+    border-radius: 0;
 }
 
-#toolbar .button:active {
-	background-color: rgba(12, 12, 13, 0.15);
-}
-
-#settings {
-    background-image: url(/icons/preferences_dark.svg);
+footer .button-ghost::before {
+    mask-position: 13px 50%;
 }
 
 .list {
     list-style: none;
-    margin: 10px 0;
+    margin: 0;
     padding: 0;
 }
 
@@ -55,50 +110,110 @@ input[type="search"] {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    position: relative;
 }
 
 .list__item:hover {
 	background-color: rgba(12, 12, 13, 0.1);
 }
 
-.list__item--selected {
-	background-color: rgba(12, 12, 13, 0.1);
-}
-
+.list__close-wrapper,
 .list__link {
-    flex: 1 0 auto;
+    flex: 1;
     display: flex;
     align-items: center;
     padding: 4px 10px;
 
     color: inherit;
-    overflow: hidden;
     text-decoration: none;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.list__close-wrapper {
+    padding: 0;
+}
+
+.list__close-wrapper .list__link { /* group name */
+    padding-left: 0;
+}
+
+.list__link span {
+    overflow: hidden;
     text-overflow: ellipsis;
 }
 
-.list__link-extend {
-    flex: 0 0 30%;
-    display: flex;
-    align-items: center;
-    border-left: 1px solid rgba(12, 12, 13, 0.1);
+.list__item--drag .list__link {
+    padding-left: 0;
+}
+
+.list__drag,
+.list__close {
+    box-sizing: content-box;
+    display: block;
     padding: 4px 10px;
-
-    color: inherit;
-    text-decoration: none;
-
-    position: relative;
 }
 
-.list__link-extend::before {
+.list__drag::after,
+.list__close::after {
     content: '';
-    border-top: 5px solid transparent;
-    border-left: 5px solid black;
-    border-bottom: 5px solid transparent;
-    margin-right: 10px;
+    display: block;
+    height: 16px;
+    width: 16px;
+    background: var(--button-ghost-icon-color);
+    mask-position: center center;
+    mask-repeat: no-repeat;
+    mask-size: 16px;
 }
 
-.list__link-extend:hover {
+.list__drag {
+    padding-left: 13px;
+    cursor: move;
+    transition: opacity .1s linear;
+    opacity: 0;
+}
+
+.list__drag::after {
+    mask-image: url(../../_shared/icons/Menu.svg);
+}
+
+.list__close {
+    display: none;
+}
+
+.list__close::after {
+    mask-image: url(../../_shared/icons/Close.svg);
+}
+
+.list__item:hover .list__drag {
+    opacity: 1;
+}
+
+.list__item:hover .list__close {
+    display: block;
+}
+
+.list__drag:hover,
+.list__close:hover {
+	background-color: rgba(12, 12, 13, 0.05);
+}
+
+.list__link--extend {
+    flex: 0 0 30%;
+    justify-content: space-between;
+    border-left: 1px solid rgba(12, 12, 13, 0.1);
+}
+
+.list__link--extend::after {
+    content: '';
+    height: 16px;
+    width: 16px;
+    background: var(--button-ghost-icon-color);
+    mask: url(../../_shared/icons/Arrowhead\ Right.svg) center center no-repeat;
+    mask-size: 16px;
+}
+
+.list__link--extend:hover {
 	background-color: rgba(12, 12, 13, 0.05);
 }
 
@@ -106,53 +221,15 @@ input[type="search"] {
     margin-right: 10px;
 }
 
-.tab__close {
-	width: 16px;
-	height: 16px;
-    margin: 0 10px;
-
-	background-image: url(/icons/tab_close.svg);
-	background-repeat: no-repeat;
-	background-size: 10px;
-	background-position: center;
-}
-
 .group-name {
-    margin: 10px 0;
-    padding: 4px 10px;
+    margin: 0;
 
     font-size: 16px;
+    line-height: 1.2;
+    
+    /* Two line ellipsis */
     overflow: hidden;
-    text-decoration: none;
-    text-overflow: ellipsis;
-}
-
-.back {
-    margin-bottom: 10px;
-    border-bottom: 1px solid rgba(12, 12, 13, 0.1);
-}
-
-.back .list__link::before {
-    content: '';
-    border-top: 5px solid transparent;
-    border-right: 5px solid black;
-    border-bottom: 5px solid transparent;
-    margin-right: 10px;
-}
-
-.tab-add {
-    margin-top: 10px;
-    border-top: 1px solid rgba(12, 12, 13, 0.1);
-}
-
-.tab-add .list__link::before {
-    content: '';
-	width: 16px;
-	height: 16px;
-    margin-right: 10px;
-
-    background-image: url(/icons/plus_dark.svg);
-	background-repeat: no-repeat;
-	background-size: 10px;
-	background-position: center;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
 }
