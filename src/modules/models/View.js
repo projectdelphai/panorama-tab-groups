@@ -94,6 +94,31 @@ export class View {
         }));
     }
 
+    async createGroup() {
+        const groupIndex = await browser.sessions.getWindowValue(this.windowId, 'groupIndex');
+        let groups = await this.getGroups();
+
+        // Update group index
+        let uid = groupIndex || 0;
+        let newGroupUid = uid + 1;
+        await browser.sessions.setWindowValue(this.windowId, 'groupIndex', newGroupUid);
+
+        // Legacy: Add group
+        // TODO: Maybe save new Group()?
+        const groupData = {
+            status: 'new',
+            id: newGroupUid,
+            name: `${newGroupUid}: ${browser.i18n.getMessage('defaultGroupName')}`,
+            containerId: 'firefox-default',
+        };
+        groups.push(groupData);
+
+        await browser.sessions.setWindowValue(this.windowId, 'groups', groups);
+        await browser.sessions.setWindowValue(this.windowId, 'activeGroup', newGroupUid);
+
+        return new Group(this, groupData);
+    }
+
     setTheme(theme) {
         this.replaceClass('theme', theme);
     }

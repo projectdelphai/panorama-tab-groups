@@ -40,15 +40,15 @@ class GroupDetailFrame extends Frame {
     }
 
     renderFooter() {
-        const newTabNode = getElementNodeFromString(`
+        const addTabNode = getElementNodeFromString(`
             <button class="button-ghost button-ghost--new" type="button">${browser.i18n.getMessage('openNewTab')}</button>
         `);
-        newTabNode.addEventListener('click', async (event) => {
+        addTabNode.addEventListener('click', async (event) => {
             event.preventDefault();
             await this.group.addNewTab();
             this.closePopupView();
         });
-        this.setFooterContent(newTabNode);
+        this.setFooterContent(addTabNode);
     }    
 }
 

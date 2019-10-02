@@ -3,12 +3,14 @@ import GroupsFrame from './js/GroupsFrame.js';
 
 /*
  * TODO:
+ * - highlight active group/tab in list
  * - pinned groups into separate last group?
  * - add new group button
  * - edit groupname
  * - drag&drop of items?
  * - optimize focus styles
  * - add keyboard navigation with arrows
+ * - async more things
  */
 
 new class PopupView extends View {

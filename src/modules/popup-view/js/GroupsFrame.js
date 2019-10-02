@@ -61,10 +61,18 @@ class GroupsFrame extends Frame {
     async renderGroupList() {
         const groups = await window.View.getGroups();
 
-        const groupNodes = await Promise.all(groups.map(async(group) => {
-            await group.loadTabs();
-            const tabCount = group.tabs.length || 0;
-            const node = getElementNodeFromString(`
+        const groupNodes = await Promise.all(groups.map(this.renderGroupListItem));
+
+        let groupList = getElementNodeFromString(`<ul class="list"></ul>`);
+        groupList.append(...groupNodes);
+        
+        this.setContent(groupList);
+    }
+
+    async renderGroupListItem(group) {
+        await group.loadTabs();
+        const tabCount = group.tabs.length || 0;
+        const node = getElementNodeFromString(`
                 <li class="list__item">
                     <div class="list__drag"></div>
                     <div class="list__close-wrapper">
@@ -79,41 +87,55 @@ class GroupsFrame extends Frame {
                 </li>
             `);
 
-            // Open group
-            // TODO: open last used tab in group, instead of first
-            node.querySelector('.list__link:not(.list__link--extend)').addEventListener(
-                'click', 
-                async (event) => {
-                    event.preventDefault();
-                    await browser.tabs.update(group.tabs[0].id, { active: true });
-                    this.closePopupView();
-                }
-            );
-
-            // Show group details
-            node.querySelector('.list__link--extend').addEventListener('click', (event) => {
+        // Open group
+        node.querySelector('.list__link:not(.list__link--extend)').addEventListener(
+            'click',
+            async (event) => {
                 event.preventDefault();
-                GroupDetailFrame.render(group);
-            });
+                group.show();
+                window.close();
+            }
+        );
 
-            return node;
-        }));
+        // Remove group
+        node.querySelector('.list__close').addEventListener('click', async (event) => {
+            event.preventDefault();
+            // Ask for confirmation
+            const confirmation = getPluralForm(tabCount, browser.i18n.getMessage("closeGroupWarning", [tabCount]));
+            if (window.confirm(confirmation)) {
+                // Remove from List
+                node.remove();
+                
+                const leftGroups = await group.remove();
+                // TODO: what todo when last group?
+                if (leftGroups.length >= 1) {
+                    // TODO: Maybe show last group available group instead of first
+                    leftGroups[0].show();
+                }
+            }
+        });
 
-        let groupList = getElementNodeFromString(`<ul class="list"></ul>`);
-        groupList.append(...groupNodes);
-        
-        this.setContent(groupList);
+        // Show group details
+        node.querySelector('.list__link--extend').addEventListener('click', (event) => {
+            event.preventDefault();
+            GroupDetailFrame.render(group);
+        });
+
+        return node;
     }
 
     renderFooter() {
-        const newGroupNode = getElementNodeFromString(`
+        const addGroupNode = getElementNodeFromString(`
             <button class="button-ghost button-ghost--new" type="button">${browser.i18n.getMessage('newGroupButton')}</button>
         `);
-        newGroupNode.addEventListener('click', async (event) => {
+        addGroupNode.addEventListener('click', async (event) => {
             event.preventDefault();
-            // TODO: add new group
+            const group = await window.View.createGroup();
+            await group.addNewTab();
+            await group.loadTabs();
+            GroupDetailFrame.render(group);
         });
-        this.setFooterContent(newGroupNode);
+        this.setFooterContent(addGroupNode);
     }  
 }
 
