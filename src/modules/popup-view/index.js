@@ -3,7 +3,6 @@ import GroupsFrame from './js/GroupsFrame.js';
 
 /*
  * TODO:
- * - highlight active group/tab in list
  * - pinned groups into separate last group?
  * - add new group button
  * - edit groupname

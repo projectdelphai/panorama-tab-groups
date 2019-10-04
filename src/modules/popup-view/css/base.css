@@ -113,8 +113,12 @@ footer .button-ghost::before {
     position: relative;
 }
 
+.list__item--highlight {
+    box-shadow: inset 0px 0px 3px var(--grey-90-a30);
+}
+
 .list__item:hover {
-	background-color: rgba(12, 12, 13, 0.1);
+	background-color: var(--grey-90-a10);
 }
 
 .list__close-wrapper,

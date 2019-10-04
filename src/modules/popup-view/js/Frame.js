@@ -56,8 +56,9 @@ export class Frame {
 
     getRenderedTabList(tabs) {
         let tabNodes = tabs.map((tab) => {
+            const isActive = tab.id === window.View.lastActiveTab.id;
             const node = getElementNodeFromString(`
-                <li class="list__item" data-id="${tab.id}">
+                <li class="list__item ${isActive ? 'list__item--highlight' : ''}">
                     <a class="list__link" href="#" title="${tab.title}
 ${tab.url}">
                         <img class="tab__icon" src="${tab.favIconUrl}" width="16" height="16" alt="" />

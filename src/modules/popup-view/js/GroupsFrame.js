@@ -36,6 +36,7 @@ class GroupsFrame extends Frame {
                 });
 
                 if (resultTabs.length) {
+                    // TODO: Maybe list tabs by group
                     this.setContent(this.getRenderedTabList(resultTabs));
                     // TODO: attach key ENTER event for opening first tab?
                 } else {
@@ -61,7 +62,7 @@ class GroupsFrame extends Frame {
     async renderGroupList() {
         const groups = await window.View.getGroups();
 
-        const groupNodes = await Promise.all(groups.map(this.renderGroupListItem));
+        const groupNodes = await Promise.all(groups.map(this.renderGroupListItem.bind(this)));
 
         let groupList = getElementNodeFromString(`<ul class="list"></ul>`);
         groupList.append(...groupNodes);
@@ -72,8 +73,9 @@ class GroupsFrame extends Frame {
     async renderGroupListItem(group) {
         await group.loadTabs();
         const tabCount = group.tabs.length || 0;
+        const isActive = group.id === window.View.lastActiveTab.groupId;
         const node = getElementNodeFromString(`
-                <li class="list__item">
+                <li class="list__item ${isActive ? 'list__item--highlight': ''}">
                     <div class="list__drag"></div>
                     <div class="list__close-wrapper">
                         <a class="list__link" href="#">
@@ -93,7 +95,7 @@ class GroupsFrame extends Frame {
             async (event) => {
                 event.preventDefault();
                 group.show();
-                window.close();
+                this.closePopupView();
             }
         );
 
