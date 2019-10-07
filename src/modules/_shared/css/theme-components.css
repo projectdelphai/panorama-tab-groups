@@ -40,7 +40,6 @@
     left: 8px;
     bottom: 0;
     z-index: 0;
-    background: var(--input-placeholder-icon-color);
     mask-position: center center;
     mask-repeat: no-repeat;
     mask-size: 16px;
@@ -58,6 +57,7 @@
 }
 
 .form-field--search::before {
+    background: var(--input-placeholder-icon-color);
     mask-image: url(../icons/Search.svg);
 }
 

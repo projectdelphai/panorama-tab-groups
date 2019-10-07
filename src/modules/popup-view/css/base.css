@@ -226,7 +226,10 @@ footer .button-ghost::before {
 }
 
 .group-name {
+    width: 100%;
+    min-height: 24px;
     margin: 0;
+    position: relative;
 
     font-size: 16px;
     line-height: 1.2;
@@ -236,4 +239,35 @@ footer .button-ghost::before {
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
+}
+
+.group-edit {
+    display: none;
+    box-sizing: content-box;
+    padding: 4px 10px;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.group-name:hover .group-edit {
+    display: block;
+}
+
+.group-edit:hover {
+	background-color: rgba(12, 12, 13, 0.05);
+}
+
+.group-edit::after {
+    content: '';
+    display: block;
+    height: 16px;
+    width: 16px;
+    background: var(--button-ghost-icon-color);
+    mask: url(../../_shared/icons/Edit.svg) center center no-repeat;
+    mask-size: 16px;
+}
+
+.group-edit-input {
+    width: 100%;
 }

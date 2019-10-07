@@ -65,6 +65,23 @@ export class Group {
         return leftGroups;
     }
 
+    async rename(newName) {
+        const groups = await this.getAll();
+
+        const updatedGroups = groups.map((group) => {
+            if(group.id === this.id) {
+                this.name = newName;
+                group.name = newName;
+            }
+
+            return group;
+        });
+
+        await browser.sessions.setWindowValue(this.View.windowId, 'groups', updatedGroups);
+
+        return this;
+    }
+
     // TODO: How to resolve this duplicate?
     async getAll() {
         const groups = await browser.sessions.getWindowValue(

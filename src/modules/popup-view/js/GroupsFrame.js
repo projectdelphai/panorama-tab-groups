@@ -133,7 +133,8 @@ class GroupsFrame extends Frame {
         addGroupNode.addEventListener('click', async (event) => {
             event.preventDefault();
             const group = await window.View.createGroup();
-            await group.addNewTab();
+            await group.addNewTab(); 
+            // TODO: Bring focus back to Popup afterwards
             await group.loadTabs();
             GroupDetailFrame.render(group);
         });

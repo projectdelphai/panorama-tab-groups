@@ -105,18 +105,18 @@ export class View {
 
         // Legacy: Add group
         // TODO: Maybe save new Group()?
-        const groupData = {
-            status: 'new',
+        const newGroup = {
             id: newGroupUid,
             name: `${newGroupUid}: ${browser.i18n.getMessage('defaultGroupName')}`,
             containerId: 'firefox-default',
         };
-        groups.push(groupData);
-
+        groups.push(newGroup);
+        
         await browser.sessions.setWindowValue(this.windowId, 'groups', groups);
         await browser.sessions.setWindowValue(this.windowId, 'activeGroup', newGroupUid);
-
-        return new Group(this, groupData);
+        
+        newGroup.status = 'new';
+        return new Group(this, newGroup);
     }
 
     setTheme(theme) {
