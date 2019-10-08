@@ -50,7 +50,7 @@ class GroupsFrame extends Frame {
         }, false);
 
         const settingsNode = getElementNodeFromString(`
-            <button class="button-ghost button-ghost--settings" type="button" title="${browser.i18n.getMessage('settingsButton')}"></button>
+            <button class="button-ghost button-ghost--settings" title="${browser.i18n.getMessage('settingsButton')}"></button>
         `);
         settingsNode.addEventListener('click', function () {
             browser.runtime.openOptionsPage();
@@ -75,33 +75,31 @@ class GroupsFrame extends Frame {
         const tabCount = group.tabs.length || 0;
         const isActive = group.id === window.View.lastActiveTab.groupId;
         const node = getElementNodeFromString(`
-                <li class="list__item ${isActive ? 'list__item--highlight': ''}">
+                <li class="list__item ${isActive ? 'list__item--highlight' : ''}">
                     <div class="list__drag"></div>
                     <div class="list__close-wrapper">
-                        <a class="list__link" href="#">
+                        <button class="list__link">
                             <span>${group.name}</span>
-                        </a>
-                        <a class="list__close" href="#" title="${browser.i18n.getMessage('closeGroup')}"></a>
+                        </button>
+                        <button class="list__close" title="${browser.i18n.getMessage('closeGroup')}"></button>
                     </div>
-                    <a class="list__link list__link--extend" href="#">
+                    <button class="list__link list__link--extend">
                         <span>${getPluralForm(tabCount, browser.i18n.getMessage('tabCount', [tabCount]))}</span>
-                    </a>
+                    </button>
                 </li>
             `);
 
         // Open group
         node.querySelector('.list__link:not(.list__link--extend)').addEventListener(
             'click',
-            async (event) => {
-                event.preventDefault();
+            async () => {
                 group.show();
                 this.closePopupView();
             }
         );
 
         // Remove group
-        node.querySelector('.list__close').addEventListener('click', async (event) => {
-            event.preventDefault();
+        node.querySelector('.list__close').addEventListener('click', async () => {
             // Ask for confirmation
             const confirmation = getPluralForm(tabCount, browser.i18n.getMessage("closeGroupWarning", [tabCount]));
             if (window.confirm(confirmation)) {
@@ -118,8 +116,7 @@ class GroupsFrame extends Frame {
         });
 
         // Show group details
-        node.querySelector('.list__link--extend').addEventListener('click', (event) => {
-            event.preventDefault();
+        node.querySelector('.list__link--extend').addEventListener('click', () => {
             GroupDetailFrame.render(group);
         });
 
@@ -128,7 +125,7 @@ class GroupsFrame extends Frame {
 
     renderFooter() {
         const addGroupNode = getElementNodeFromString(`
-            <button class="button-ghost button-ghost--new" type="button">${browser.i18n.getMessage('newGroupButton')}</button>
+            <button class="button-ghost button-ghost--new">${browser.i18n.getMessage('newGroupButton')}</button>
         `);
         addGroupNode.addEventListener('click', async (event) => {
             event.preventDefault();

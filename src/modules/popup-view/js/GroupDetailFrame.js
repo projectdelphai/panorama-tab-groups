@@ -24,7 +24,7 @@ class GroupDetailFrame extends Frame {
 
     renderHeader() {
         const backNode = getElementNodeFromString(`
-            <button class="button-ghost button-ghost--back" type="button"></button>
+            <button class="button-ghost button-ghost--back"></button>
         `);
         backNode.addEventListener('click', () => {
             GroupsFrame.render();
@@ -41,7 +41,7 @@ class GroupDetailFrame extends Frame {
         const groupNameNode = getElementNodeFromString(`
             <h2 class="group-name">
                 ${this.group.name}
-                <a class="group-edit" href="#" title="Edit group"></a>
+                <button class="group-edit" title="Edit group"></button>
             </h2>
         `);
 
@@ -81,7 +81,7 @@ class GroupDetailFrame extends Frame {
 
     renderFooter() {
         const addTabNode = getElementNodeFromString(`
-            <button class="button-ghost button-ghost--new" type="button">${browser.i18n.getMessage('openNewTab')}</button>
+            <button class="button-ghost button-ghost--new">${browser.i18n.getMessage('openNewTab')}</button>
         `);
         addTabNode.addEventListener('click', async (event) => {
             event.preventDefault();

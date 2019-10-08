@@ -59,12 +59,12 @@ export class Frame {
             const isActive = tab.id === window.View.lastActiveTab.id;
             const node = getElementNodeFromString(`
                 <li class="list__item ${isActive ? 'list__item--highlight' : ''}">
-                    <a class="list__link" href="#" title="${tab.title}
+                    <button class="list__link" title="${tab.title}
 ${tab.url}">
                         <img class="tab__icon" src="${tab.favIconUrl}" width="16" height="16" alt="" />
                         <span>${tab.title}</span>
-                    </a>
-                    <a class="list__close" href="#" title="${browser.i18n.getMessage('closeTab')}"></a>
+                    </button>
+                    <button class="list__close" title="${browser.i18n.getMessage('closeTab')}"></button>
                 </li>
             `);
 
