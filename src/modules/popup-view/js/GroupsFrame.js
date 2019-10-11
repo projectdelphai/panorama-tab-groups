@@ -3,8 +3,6 @@ import GroupDetailFrame from "./GroupDetailFrame.js";
 import { getElementNodeFromString } from "../../models/Node.js";
 import { getPluralForm } from "../../../js/_share/utils.js";
 
-let frame;
-
 class GroupsFrame extends Frame {
     constructor(id) {
         super(id);
@@ -68,6 +66,7 @@ class GroupsFrame extends Frame {
         groupList.append(...groupNodes);
         
         this.setContent(groupList);
+        this.enableGroupDragAndDrop();
     }
 
     async renderGroupListItem(group) {
@@ -75,7 +74,7 @@ class GroupsFrame extends Frame {
         const tabCount = group.tabs.length || 0;
         const isActive = group.id === window.View.lastActiveTab.groupId;
         const node = getElementNodeFromString(`
-                <li class="list__item ${isActive ? 'list__item--highlight' : ''}">
+                <li data-group="${group.id}" class="list__item ${isActive ? 'list__item--highlight' : ''}">
                     <div class="list__drag"></div>
                     <div class="list__close-wrapper">
                         <button class="list__link">
@@ -105,13 +104,15 @@ class GroupsFrame extends Frame {
             if (window.confirm(confirmation)) {
                 // Remove from List
                 node.remove();
-                
+
                 const leftGroups = await group.remove();
                 // TODO: what todo when last group?
                 if (leftGroups.length >= 1) {
                     // TODO: Maybe show last group available group instead of first
                     leftGroups[0].show();
                 }
+
+                this.addOrUpdateDropZoneHandler();
             }
         });
 
@@ -123,6 +124,89 @@ class GroupsFrame extends Frame {
         return node;
     }
 
+    enableGroupDragAndDrop() {
+        this.list = this.content.querySelector('.list');
+        this.listItems = this.list.querySelectorAll('.list__item');
+
+        this.listItems.forEach((listItem) => {
+            listItem.setAttribute('draggable', 'true');
+            listItem.addEventListener('dragstart', this.handleGroupDragStart.bind(this), false);
+            listItem.addEventListener('dragend', this.handleGroupDragEnd.bind(this), false);
+        });
+        this.addOrUpdateDropZoneHandler();
+    }
+
+    handleGroupDragStart(event) {
+        event.target.previousSibling.style.display = 'none';
+        event.target.nextSibling.style.display = 'none';
+        this.list.classList.add('dragging');
+        event.target.classList.add('dragged');
+        event.target.setAttribute('aria-grabbed', true);
+        event.dataTransfer.setData('text', event.target.getAttribute('data-group'));
+        event.dataTransfer.dropEffect = 'move';
+    }
+
+    handleGroupDragEnd() {
+        this.list.classList.remove('dragging');
+        event.target.classList.remove('dragged');
+        event.target.setAttribute('aria-grabbed', false);
+
+        this.addOrUpdateDropZoneHandler();
+    }
+
+    addOrUpdateDropZoneHandler() {
+        this.list.querySelectorAll('.drop-zone').forEach((dropZone) => {
+            dropZone.remove();
+        });
+        // Fetch fresh list (f.e. after drop)
+        this.listItems = this.list.querySelectorAll('.list__item');
+        const dropZone = getElementNodeFromString(`<li class="drop-zone" aria-dropeffect="move"></li>`);
+
+        this.listItems.forEach((listItem, index) => {
+            let newDropZone = dropZone.cloneNode();
+            newDropZone.setAttribute('data-index', index);
+
+            listItem.before(newDropZone);
+            newDropZone.addEventListener('dragenter', this.handleGroupDragEnter.bind(this), false);
+            newDropZone.addEventListener('dragleave', this.handleGroupDragLeave.bind(this), false);
+            newDropZone.addEventListener('dragover', this.handleGroupDragOver, false);
+            newDropZone.addEventListener('drop', this.handleGroupDrop.bind(this), false);
+
+            if (index === this.listItems.length - 1) {
+                let newDropZone = dropZone.cloneNode();
+                newDropZone.setAttribute('data-index', index + 1);
+                listItem.after(newDropZone);
+                newDropZone.addEventListener('dragenter', this.handleGroupDragEnter.bind(this), false);
+                newDropZone.addEventListener('dragleave', this.handleGroupDragLeave.bind(this), false);
+                newDropZone.addEventListener('dragover', this.handleGroupDragOver, false);
+                newDropZone.addEventListener('drop', this.handleGroupDrop.bind(this), false);
+            }
+        });
+    }
+
+    handleGroupDragEnter(event) {
+        event.target.classList.add('drop-zone--entered');
+    }
+    
+    handleGroupDragLeave(event) {
+        event.target.classList.remove('drop-zone--entered');
+    }
+    
+    handleGroupDragOver(event) {
+        // Necessary to enable drop
+        event.preventDefault()
+    }
+
+    async handleGroupDrop(event) {
+        event.preventDefault();
+        const groupId = event.dataTransfer.getData('text');
+        const droppedListItem = document.querySelector(`[data-group="${groupId}"]`);
+        const targetIndex = event.target.getAttribute('data-index');
+        event.target.replaceWith(droppedListItem);
+        const group = await window.View.getGroupById(groupId);
+        group.moveToIndex(targetIndex);
+    }
+
     renderFooter() {
         const addGroupNode = getElementNodeFromString(`
             <button class="button-ghost button-ghost--new">${browser.i18n.getMessage('newGroupButton')}</button>
@@ -130,13 +214,13 @@ class GroupsFrame extends Frame {
         addGroupNode.addEventListener('click', async (event) => {
             event.preventDefault();
             const group = await window.View.createGroup();
-            await group.addNewTab(); 
+            await group.addNewTab();
             // TODO: Bring focus back to Popup afterwards
             await group.loadTabs();
             GroupDetailFrame.render(group);
         });
         this.setFooterContent(addGroupNode);
-    }  
+    }
 }
 
-export default frame = new GroupsFrame('main-frame');
+export default new GroupsFrame('main-frame');

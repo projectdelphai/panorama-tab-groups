@@ -2,8 +2,6 @@ import { Frame } from "./Frame.js";
 import GroupsFrame from "./GroupsFrame.js";
 import { getElementNodeFromString } from "../../models/Node.js";
 
-let frame;
-
 class GroupDetailFrame extends Frame {
     constructor(id) {
         super(id);
@@ -92,4 +90,4 @@ class GroupDetailFrame extends Frame {
     }    
 }
 
-export default frame = new GroupDetailFrame('aside-frame');
+export default new GroupDetailFrame('aside-frame');

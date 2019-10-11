@@ -94,6 +94,24 @@ export class View {
         }));
     }
 
+    async getGroupById(groupId) {
+        const groups = await browser.sessions.getWindowValue(
+            this.windowId,
+            'groups'
+        ) || [];
+        let groupData = {};
+
+        groups.forEach((group) => {
+            if (group.id === parseInt(groupId)) {
+                groupData = group;
+            }
+        });
+
+        if (groupData.hasOwnProperty('id')) {
+            return new Group(this, groupData);
+        }
+    }
+
     async createGroup() {
         const groupIndex = await browser.sessions.getWindowValue(this.windowId, 'groupIndex');
         let groups = await this.getGroups();

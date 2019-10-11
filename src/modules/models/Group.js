@@ -82,6 +82,32 @@ export class Group {
         return this;
     }
 
+    async moveToIndex(targetIndex) {
+        const groups = await this.getAll();
+        targetIndex = parseInt(targetIndex);
+        
+        // Get current index
+        const currentIndex = groups.findIndex((group) => {
+            return group.id === this.id;
+        });
+
+        if (currentIndex === -1) {
+            throw new Error(`Can't find current index for group ${group}`);
+        }
+
+        // Update target index if necessary
+        if (targetIndex >= groups.length) {
+            targetIndex = groups.length - 1;
+        } else if (targetIndex > currentIndex) {
+            targetIndex -= 1;
+        }
+
+        // Update position of group
+        const groupData = groups.splice(currentIndex, 1);
+        groups.splice(targetIndex, 0, groupData[0]);
+        await browser.sessions.setWindowValue(this.View.windowId, 'groups', groups);
+    }
+
     // TODO: How to resolve this duplicate?
     async getAll() {
         const groups = await browser.sessions.getWindowValue(

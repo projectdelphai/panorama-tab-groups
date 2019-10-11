@@ -4,7 +4,6 @@ import GroupsFrame from './js/GroupsFrame.js';
 /*
  * TODO:
  * - pinned groups into separate last group?
- * - drag&drop of items?
  * - optimize focus styles
  * - add keyboard navigation with arrows
  * - async more things

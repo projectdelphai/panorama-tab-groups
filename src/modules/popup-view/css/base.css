@@ -277,3 +277,33 @@ footer .button-ghost::before {
 .group-edit-input {
     width: 100%;
 }
+
+/* Drag and Drop */
+[draggable] {
+    user-select: none;
+    transition: transform, opacity .3s linear;
+}
+
+[draggable].dragged {
+    transform: scale(.98);
+    opacity: .6;
+}
+
+.drop-zone {
+    height: 0px;
+    background-color: var(--blue-80);
+    transition: height .3s linear;
+}
+
+.dragging .drop-zone {
+    height: 5px;
+}
+
+.dragging .drop-zone--entered {
+    height: 10px;
+    background-color: var(--blue-50);
+}
+
+.drop-zone * {
+    pointer-events: none;
+}
