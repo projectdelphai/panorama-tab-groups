@@ -10,6 +10,7 @@ class GroupDetailFrame extends Frame {
 
     async render(group) {
         this.group = group; // TODO: Do it smarter?
+        GroupsFrame.lastViewedGroupDetail = this.group.id;
         this.renderHeader();
         this.renderTabList();
         this.renderFooter();
@@ -18,6 +19,26 @@ class GroupDetailFrame extends Frame {
         if (this.group.status === 'new') {
             this.activateGroupNameEdit(this.header.querySelector('.group-name'));
         }
+
+        // Setup the focus
+        const firstTab = this.node.querySelector('.list__link');
+        if (firstTab !== null) {
+            firstTab.focus();
+        } else {
+            this.node.querySelector('button').focus();
+        }
+    }
+
+    handleEvent(event) {
+        if (
+            event.type === 'keyup' && 
+            event.key === 'ArrowLeft' && 
+            this.navigateHorizontalIndex === 0
+        ) {
+            GroupsFrame.render();
+            return;
+        }
+        super.handleEvent(event);
     }
 
     renderHeader() {
@@ -44,7 +65,7 @@ class GroupDetailFrame extends Frame {
         `);
 
         groupNameNode.querySelector('.group-edit').addEventListener('click', (event) => {
-            event.preventDefault();
+            event.stopPropagation();
             this.activateGroupNameEdit(groupNameNode);
         });
 
@@ -58,15 +79,31 @@ class GroupDetailFrame extends Frame {
                 </div>
             `);
         const inputNode = node.querySelector('input');
-        inputNode.addEventListener('keyup', async (event) => {
+        inputNode.addEventListener('keypress', async (event) => {
+            event.stopPropagation();
+
             if (event.key === 'Enter') {
                 const newGroupName = inputNode.value;
                 this.group = await this.group.rename(newGroupName);
                 const newGroupNameNode = this.getRenderedGroupName();
                 node.parentNode.replaceChild(newGroupNameNode, node);
+                newGroupNameNode.querySelector('.group-edit').focus();
             }
         });
-
+        inputNode.addEventListener('keyup', async (event) => {
+            // Allow arrow navigation inside the input
+            event.stopPropagation();
+        });
+        inputNode.addEventListener('keydown', async (event) => {
+            event.stopPropagation();
+            // TODO: Prevent popup from closing
+            if (event.key === 'Esc') {
+                event.preventDefault();
+                const newGroupNameNode = this.getRenderedGroupName();
+                node.parentNode.replaceChild(newGroupNameNode, node);
+                newGroupNameNode.querySelector('.group-edit').focus();
+            }
+        });
         groupNameNode.parentNode.replaceChild(node, groupNameNode);
         inputNode.focus();
         inputNode.select();

@@ -93,7 +93,8 @@
     mask-size: 16px;
 }
 
-.button-ghost:hover {
+.button-ghost:hover,
+.button-ghost:focus {
     background: var(--button-ghost-hover-background-color);
 }
 

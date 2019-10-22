@@ -8,10 +8,31 @@ export class Frame {
         this.content = this.node.querySelector('.frame-content');
         this.footer = this.node.querySelector('.frame-footer');
         this.isAside = false;
+        this.navigateHorizontalIndex = 0;
     }
 
     render() {
+        this.node.addEventListener('mousedown', this);
+        this.node.addEventListener('keyup', this);
         this.enable();
+    }
+
+    handleEvent(event) {
+        if (event.type === 'mousedown') {
+            document.body.classList.remove('keyboard-navigation');
+            return;
+        }
+        if (event.type === 'keyup') {
+            document.body.classList.add('keyboard-navigation');
+        } else {
+            return;
+        }
+        if (['ArrowUp', 'ArrowDown'].indexOf(event.key) >= 0) {
+            navigateVerticalByKeyboard.call(this, event);
+        }
+        if (['ArrowLeft', 'ArrowRight'].indexOf(event.key) >= 0) {
+            navigateHorizontalByKeyboard.call(this, event);
+        }
     }
 
     enable() {
@@ -58,7 +79,7 @@ export class Frame {
         let tabNodes = tabs.map((tab) => {
             const isActive = tab.id === window.View.lastActiveTab.id;
             const node = getElementNodeFromString(`
-                <li class="list__item ${isActive ? 'list__item--highlight' : ''}">
+                <li id="tab-${tab.id}" class="list__item ${isActive ? 'list__item--highlight' : ''}" data-nav-row>
                     <button class="list__link" title="${tab.title}
 ${tab.url}">
                         <img class="tab__icon" src="${tab.favIconUrl}" width="16" height="16" alt="" />
@@ -80,6 +101,7 @@ ${tab.url}">
                 await tab.remove();
                 // Remove from List
                 node.remove();
+                // TODO: Move focus to the next sibling
             });
 
             return node;
@@ -122,4 +144,75 @@ function updateContent(contentNode, content) {
     } else {
         contentNode.append(content);
     }
+}
+
+function navigateVerticalByKeyboard(event) {
+    const rows = this.node.querySelectorAll('[data-nav-row');
+    const currentRow = event.target.closest('[data-nav-row');
+    const currentIndex = getCurrentIndex(currentRow, rows);
+    let targetIndex = 0;
+
+
+    if (event.key === 'ArrowUp') {
+        targetIndex = currentIndex - 1;
+    }
+    if (event.key === 'ArrowDown') {
+        targetIndex = currentIndex + 1;
+    }
+
+    if (targetIndex >= rows.length) {
+        targetIndex = 0;
+    }
+    if (targetIndex < 0) {
+        targetIndex = rows.length - 1;
+    }
+
+    let horizontalTargetIndex = this.navigateHorizontalIndex;
+    let targetFound = false;
+
+    while (horizontalTargetIndex >= 0 && targetFound === false) {
+        const horizontalTarget = rows[targetIndex].querySelectorAll('button,input')[horizontalTargetIndex] || null;
+        
+        if (horizontalTarget) {
+            horizontalTarget.focus();
+            targetFound = true;
+        }
+        horizontalTargetIndex--;
+    }
+}
+
+function navigateHorizontalByKeyboard(event) {
+    const currentRow = event.target.closest('[data-nav-row');
+    const cols = currentRow.querySelectorAll('button,input');
+    const currentIndex = getCurrentIndex(event.target, cols);
+    let targetIndex = 0;
+
+    if (event.key === 'ArrowLeft') {
+        targetIndex = currentIndex - 1;
+    }
+    if (event.key === 'ArrowRight') {
+        targetIndex = currentIndex + 1;
+    }
+    
+    if (targetIndex >= cols.length) {
+        targetIndex = 0;
+    }
+    if (targetIndex < 0) {
+        targetIndex = cols.length - 1;
+    }
+    
+    this.navigateHorizontalIndex = targetIndex;
+    cols[targetIndex].focus();
+}
+
+function getCurrentIndex(element, siblings) {
+    const currentIndex = Array.from(siblings).findIndex((sibling) => {
+        return sibling === element;
+    });
+
+    if (currentIndex === -1) {
+        throw new Error(`Can't find current index for element ${element}`);
+    }
+
+    return currentIndex;
 }

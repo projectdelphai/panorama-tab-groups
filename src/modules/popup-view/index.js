@@ -3,9 +3,8 @@ import GroupsFrame from './js/GroupsFrame.js';
 
 /*
  * TODO:
+ * - extract private methods
  * - pinned groups into separate last group?
- * - optimize focus styles
- * - add keyboard navigation with arrows
  * - async more things
  */
 

@@ -9,10 +9,22 @@ class GroupsFrame extends Frame {
     }
 
     async render() {
-        this.renderHeader();
-        this.renderGroupList();
+        const headerRendered = this.renderHeader();
+        const groupListRenderd = this.renderGroupList();
         this.renderFooter();
         super.render();
+
+        // Setup the focus
+        if (this.lastViewedGroupDetail >= 0) {
+            groupListRenderd.then(() => {
+                this.node.querySelector(`#group-${this.lastViewedGroupDetail} .list__link--extend`).focus();
+                this.lastViewedGroupDetail = -1;
+            });
+        } else {
+            headerRendered.then(() => {
+                this.node.querySelector('input, button').focus();
+            });
+        }
     }
 
     async renderHeader() {
@@ -74,7 +86,7 @@ class GroupsFrame extends Frame {
         const tabCount = group.tabs.length || 0;
         const isActive = group.id === window.View.lastActiveTab.groupId;
         const node = getElementNodeFromString(`
-                <li data-group="${group.id}" class="list__item ${isActive ? 'list__item--highlight' : ''}">
+                <li id="group-${group.id}" data-group="${group.id}" class="list__item ${isActive ? 'list__item--highlight' : ''}" data-nav-row>
                     <div class="list__drag"></div>
                     <div class="list__close-wrapper">
                         <button class="list__link">
@@ -117,7 +129,15 @@ class GroupsFrame extends Frame {
         });
 
         // Show group details
-        node.querySelector('.list__link--extend').addEventListener('click', () => {
+        const showGroupNode = node.querySelector('.list__link--extend');
+        showGroupNode.addEventListener('click', () => {
+            GroupDetailFrame.render(group);
+        });
+        showGroupNode.addEventListener('keyup', (event) => {
+            if (event.key !== 'ArrowRight') {
+                return;
+            }
+            event.stopPropagation();
             GroupDetailFrame.render(group);
         });
 

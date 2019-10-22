@@ -96,6 +96,10 @@ footer .button-ghost {
     border-radius: 0;
 }
 
+footer .button-ghost:focus {
+    box-shadow: none;
+}
+
 footer .button-ghost::before {
     mask-position: 13px 50%;
 }
@@ -136,12 +140,16 @@ footer .button-ghost::before {
     overflow: hidden;
 }
 
+.list__link:focus {
+	background-color: var(--grey-90-a10);
+}
+
 .list__close-wrapper {
     padding: 0;
 }
 
 .list__close-wrapper .list__link { /* group name */
-    padding-left: 0;
+    padding-left: 5px;
 }
 
 .list__link span {
@@ -175,6 +183,7 @@ footer .button-ghost::before {
 }
 
 .list__drag {
+    padding-right: 5px;
     padding-left: 13px;
     cursor: move;
     transition: opacity .1s linear;
@@ -187,6 +196,10 @@ footer .button-ghost::before {
 
 .list__close {
     display: none;
+}
+
+.keyboard-navigation .list__close {
+    display: block;
 }
 
 .list__close::after {
@@ -202,7 +215,8 @@ footer .button-ghost::before {
 }
 
 .list__drag:hover,
-.list__close:hover {
+.list__close:hover,
+.list__close:focus {
 	background-color: rgba(12, 12, 13, 0.05);
 }
 
@@ -256,11 +270,13 @@ footer .button-ghost::before {
     right: 0;
 }
 
+.keyboard-navigation .group-edit,
 .group-name:hover .group-edit {
     display: block;
 }
 
-.group-edit:hover {
+.group-edit:hover,
+.group-edit:focus {
 	background-color: rgba(12, 12, 13, 0.05);
 }
 
