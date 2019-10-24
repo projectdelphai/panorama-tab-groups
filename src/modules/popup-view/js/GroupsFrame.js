@@ -48,7 +48,6 @@ class GroupsFrame extends Frame {
                 if (resultTabs.length) {
                     // TODO: Maybe list tabs by group
                     this.setContent(this.getRenderedTabList(resultTabs));
-                    // TODO: attach key ENTER event for opening first tab?
                 } else {
                     this.setContent('No results');
                     // TODO: add translation
@@ -58,6 +57,19 @@ class GroupsFrame extends Frame {
                 // TODO: restore or show all?
             }
         }, false);
+
+        // Open first tab from result
+        searchInput.addEventListener('keypress', (event) => {
+            if (event.key !== 'Enter') {
+                return;
+            }
+
+            const firstTabNode = this.node.querySelector('.list__item--tab');
+            if (firstTabNode) {
+                firstTabNode.Tab.open();
+                this.closePopupView();
+            }
+        });
 
         const settingsNode = getElementNodeFromString(`
             <button class="button-ghost button-ghost--settings" title="${browser.i18n.getMessage('settingsButton')}"></button>
