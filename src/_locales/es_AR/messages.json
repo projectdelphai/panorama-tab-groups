@@ -1,0 +1,105 @@
+{
+    "pluralRule": {
+        "message": "1"
+    },
+    "newGroupButton": {
+        "message": "Agregar un grupo nuevo"
+    },
+    "settingsButton": {
+        "message": "Configuración"
+    },
+    "defaultGroupName": {
+        "message": "Grupo sin nombre"
+    },
+    "dragGroup": {
+        "message": "Mover grupo"
+    },
+    "closeGroup": {
+        "message": "Cerrar grupo"
+    },
+    "closeGroupWarning": {
+        "message": "Al cerrar este grupo estas cerrando $1 pestaña que esta adentro. ¿Estás seguro que querés hacer esto?|Al cerrar este grupo estás cerrando $1 pestañas que están adentro. ¿Estás seguro que queres hacer esto?"
+    },
+    "optionKeyboardShortcuts": {
+        "message": "Atajos de Teclado"
+    },
+    "optionKeyboardShortcutsHelpLink": {
+        "message": "https://translate.google.com/translate?hl=es&sl=en&u=https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/commands&prev=search"
+    },
+    "optionKeyboardShortcutsHelpLinkText": {
+        "message": "El formato para esta opción de atajo esta detallada acá."
+    },
+    "optionKeyboardShortcutsButtonsUpdate": {
+        "message": "Actualizar"
+    },
+    "optionKeyboardShortcutsButtonsReset": {
+        "message": "Restaurar"
+    },
+    "optionKeyboardShortcutsToggle": {
+        "message": "Alternar Panorama View"
+    },
+    "optionKeyboardShortcutsNextGroup": {
+        "message": "Activar el Grupo de Pestañas siguiente"
+    },
+    "optionKeyboardShortcutsPreviousGroup": {
+        "message": "Activar el Grupo de Pestañas anterior"
+    },
+    "optionsTheme": {
+        "message": "Tema"
+    },
+    "optionsThemeLight": {
+        "message": "claro"
+    },
+    "optionsThemeDark": {
+        "message": "oscuro"
+    },
+    "optionsToolbar": {
+        "message": "Barra de Tareas"
+    },
+    "optionsToolbarPosition": {
+        "message": "Posición"
+    },
+    "optionsToolbarPositionTop": {
+        "message": "arriba"
+    },
+    "optionsToolbarPositionRight": {
+        "message": "derecha"
+    },
+    "optionsToolbarPositionBottom": {
+        "message": "abajo"
+    },
+    "optionsToolbarPositionLeft": {
+        "message": "izquierda"
+    },
+    "optionsBackup": {
+        "message": "Respaldo"
+    },
+    "optionsBackupImport": {
+        "message": "Importar"
+    },
+    "optionsBackupImportText": {
+        "message": "Los respaldos importados se abrirán en una nueva ventana y no sobreescriben nada.<br />También podes importar respaldos de la version vieja del complemento \"Tab Groups\""
+    },
+    "optionsBackupExport": {
+        "message": "Exportar"
+    },
+    "optionsBackupExportText": {
+        "message": "Esta sección podrá ser obsoleta una vez que FIrefox tenga un administrador de sesiones apropiado."
+    },
+    "optionsBackupExportButton": {
+        "message": "Guardar respaldo"
+    },
+    "optionsStatistics": {
+        "message": "Estadísticas"
+    },
+    "optionsStatisticsNumberOfTabs": {
+        "message": "Numero de Pestañas:"
+    },
+    "optionsStatisticsNumberOfTabsActive": {
+        "message": "Activas:"
+    },
+    "optionsStatisticsThumbnailCacheSize": {
+        "message": "Tamaño del Cache de Miniaturas:"
+    }
+}
+

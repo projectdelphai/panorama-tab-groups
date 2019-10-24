@@ -1,9 +1,13 @@
 'use strict';
 
+import { loadOptions } from "./_share/options.js";
+
 const manifest = browser.runtime.getManifest();
 
-let openingView = false;
-let openingBackup = false;
+window.backgroundState = {
+  openingView: false,
+  openingBackup: false,
+};
 
 /** Modulo in javascript does not behave like modulo in mathematics when x is negative.
  * Following code is based from this:
@@ -23,20 +27,20 @@ function addRefreshMenuItem() {
     });
     browser.menus.create({
         id: "refresh-groups",
-        title: "Refresh Groups",
+        title: browser.i18n.getMessage('refreshGroups'),
         parentId: "send-tab",
         contexts: ["tab"]
     });
 }
 
-async function createMenuList() {
+export async function createMenuList() {
     let windowId = (await browser.windows.getCurrent()).id;
     let groups = (await browser.sessions.getWindowValue(windowId, 'groups'));
     browser.menus.removeAll();
 
     browser.menus.create({
         id: "send-tab",
-        title: "Send To Group",
+        title: browser.i18n.getMessage('sendTab'),
         contexts: ["tab"]
     });
 
@@ -74,6 +78,18 @@ function changeMenu(message) {
     }
 }
 
+async function moveTab(tabId, groupId) {
+    let windowId = (await browser.windows.getCurrent()).id;
+    await browser.sessions.setTabValue(tabId, 'groupId', groupId);
+
+    let toIndex = -1;
+    await browser.tabs.move(tabId, {index: toIndex});
+
+    let activeGroup = (await browser.sessions.getWindowValue(windowId, 'activeGroup'));
+    await toggleVisibleTabs(activeGroup);
+
+}
+
 async function menuClicked(info, tab) {
     let windowId = (await browser.windows.getCurrent()).id;
     switch (info.menuItemId) {
@@ -83,29 +99,67 @@ async function menuClicked(info, tab) {
             createMenuList();
             break;
         default:
-            let groupId = info.menuItemId;
-            let tabId = tab.id;
-            await browser.sessions.setTabValue(tab.id, 'groupId', groupId);
+            // see if we're sending multiple tabs
+            let tabs = await browser.tabs.query({highlighted: true });
+            // if you select multiple tabs, your active tab is selected as well and needs to be filtered out
+            if (tabs.length > 1) {
+                let activeTabId = (await browser.tabs.query({active: true}))[0].id;
+                for (let i in tabs) {
+                    let tabId = tabs[i].id;
+                    if (tabId != activeTabId) {
+                        moveTab(tabId, info.menuItemId);
+                    }
+                }
+            } 
+            // otherwise just use the tab where the menu was clicked from
+            // if you don't do multiselect, but just right click, the tab isn't actually highlighted
+            else {
+                let activeTabId = (await browser.tabs.query({active: true}))[0].id;
+                if (activeTabId === tab.id) {
+                    let visibleTabs = (await browser.tabs.query({hidden: false}));
 
-            let toIndex = -1;
-            await browser.tabs.move(tabId, {index: toIndex});
-            
-            let activeGroup = (await browser.sessions.getWindowValue(windowId, 'activeGroup'));
-            await toggleVisibleTabs(activeGroup);
+                    // find position of active tab among visible tabs
+                    let tabIndex = 0;
+                    for (let i in visibleTabs) {
+                        if (visibleTabs[i].id === tab.id) {
+                            tabIndex = parseInt(i);
+                            break;
+                        }
+                    }
+
+                    // find neighboring tab and make it the active tab
+                    let newActiveTab = tab;
+                    if (visibleTabs[tabIndex-1] !== undefined) {
+                        newActiveTab = visibleTabs[tabIndex-1];
+                    } else if (visibleTabs[tabIndex+1] !== undefined) {
+                        newActiveTab = visibleTabs[tabIndex+1]
+                    }
+                    await browser.tabs.update(newActiveTab.id, {active: true});
+                }
+
+                moveTab(tab.id, info.menuItemId);
+            }
     }
 }
 
 browser.menus.onClicked.addListener(menuClicked);
 
 async function triggerCommand(command) {
-    if (command === "activate-next-group") {
-        await changeActiveGroupBy(1);
-    } else if (command === "activate-previous-group") {
-        await changeActiveGroupBy(-1);
-    }else if (command === "toggle-panorama-view") {
-        await toggleView();
-    }
+  const options = await loadOptions();
+
+  if (options["shortcut"][command].disabled) {
+    // Doesn't execute disabled command
+    return;
+  }
+  if (command === "activate-next-group") {
+    await changeActiveGroupBy(1);
+  } else if (command === "activate-previous-group") {
+    await changeActiveGroupBy(-1);
+  } else if (command === "toggle-panorama-view") {
+    await toggleView();
+  }
 }
+
 
 /** Shift current active group by offset */
 async function changeActiveGroupBy(offset) {
@@ -142,18 +196,18 @@ async function toggleView() {
             await browser.tabs.update(extTabs[0].id, {active: true});
         }
     } else { // if there is no Panorama View tab, make one
-        openingView = true;
+        window.backgroundState.openingView = true;
         await browser.tabs.create({url: "/view.html", active: true});
     }
 }
 
 /** Callback function which will be called whenever a tab is opened */
 async function tabCreated(tab) {
-    if(openingBackup) {
+    if(window.backgroundState.openingBackup) {
         return;
     }
 
-    if(!openingView) {
+    if(!window.backgroundState.openingView) {
         // Normal case: everything except the Panorama View tab
         // If the tab does not have a group, set its group to the current group
         let tabGroupId = await browser.sessions.getTabValue(tab.id, 'groupId');
@@ -168,7 +222,7 @@ async function tabCreated(tab) {
     }else{
         // Opening the Panorama View tab
         // Make sure it's in the special group
-        openingView = false;
+        window.backgroundState.openingView = false;
         await browser.sessions.setTabValue(tab.id, 'groupId', -1);
     }
 }
@@ -219,13 +273,17 @@ async function toggleVisibleTabs(activeGroup, noTabSelected) {
     let showTabs = [];
 
     await Promise.all(tabs.map(async(tab) => {
-        let groupId = await browser.sessions.getTabValue(tab.id, 'groupId');
+        try{
+            let groupId = await browser.sessions.getTabValue(tab.id, 'groupId');
 
-        if(groupId != activeGroup) {
-            hideTabIds.push(tab.id)
-        }else{
-            showTabIds.push(tab.id)
-            showTabs.push(tab)
+            if(groupId != activeGroup) {
+                hideTabIds.push(tab.id)
+            }else{
+                showTabIds.push(tab.id)
+                showTabs.push(tab)
+            }
+        } catch {
+            //The tab has probably been closed, this should be safe to ignore
         }
     }));
 
@@ -236,6 +294,29 @@ async function toggleVisibleTabs(activeGroup, noTabSelected) {
 
     await browser.tabs.hide(hideTabIds);
     await browser.tabs.show(showTabIds);
+    
+    if (activeGroup >= 0) {
+        let window = await browser.windows.getLastFocused();
+        await setActionTitle(window.id, activeGroup);
+    }
+}
+
+/** Set extension icon tooltip and numGroups to icon **/
+async function setActionTitle(windowId, activeGroup = null) {
+    let name;
+    let groups = await browser.sessions.getWindowValue(windowId, 'groups');
+        
+    if(activeGroup === null) {
+        activeGroup = await browser.sessions.getWindowValue(windowId, 'activeGroup');
+    }
+
+    for (var i in groups) {
+        if (groups[i].id == activeGroup) {
+            name = groups[i].name;
+        }
+    }
+    browser.browserAction.setTitle({title: `Active Group: ${name}`, 'windowId': windowId});
+    browser.browserAction.setBadgeText({text: String(groups.length), windowId: windowId});
 }
 
 /** Make sure each window has a group */
@@ -264,25 +345,27 @@ async function newGroupUid(windowId) {
  * For example, windows that are restored by user (e.g. Ctrl+Shift+N) will
  * trigger the onCreated event but still have the existing group data.
  */
-async function createGroupInWindowIfMissing(window) {
-    let groups = await browser.sessions.getWindowValue(window.id, 'groups');
+async function createGroupInWindowIfMissing(browserWindow) {
+    let groups = await browser.sessions.getWindowValue(browserWindow.id, 'groups');
 
     if (!groups || !groups.length) {
-        console.log(`No groups found for window ${window.id}!`);
-        await createGroupInWindow(window);
+        console.log(`No groups found for window ${browserWindow.id}!`);
+        await createGroupInWindow(browserWindow);
     }
+    browser.browserAction.setTitle({title: `Active Group: Unnamed group`, 'windowId': browserWindow.id});
+    browser.browserAction.setBadgeText({text: '1', windowId: browserWindow.id});
 }
 
 /** Create the first group in a window
  * This handles new windows and, during installation, existing windows
  * that do not yet have a group */
-async function createGroupInWindow(window) {
-    if(openingBackup) {
+async function createGroupInWindow(browserWindow) {
+    if(window.backgroundState.openingBackup) {
         console.log('Skipping creation of groups since we are opening backup');
         return;
     }
 
-    let groupId = await newGroupUid(window.id);
+    let groupId = await newGroupUid(browserWindow.id);
 
     let groups = [{
         id: groupId,
@@ -292,8 +375,8 @@ async function createGroupInWindow(window) {
         lastMoved: (new Date).getTime(),
     }];
 
-    await browser.sessions.setWindowValue(window.id, 'groups', groups);
-    await browser.sessions.setWindowValue(window.id, 'activeGroup', groupId);
+    await browser.sessions.setWindowValue(browserWindow.id, 'groups', groups);
+    await browser.sessions.setWindowValue(browserWindow.id, 'activeGroup', groupId);
 }
 
 /** Put any tabs that do not have a group into the active group */

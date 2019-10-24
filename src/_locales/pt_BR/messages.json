@@ -1,0 +1,104 @@
+{
+    "pluralRule": {
+        "message": "2"
+    },
+    "newGroupButton": {
+        "message": "Adicionar novo grupo"
+    },
+    "settingsButton": {
+        "message": "Configurações"
+    },
+    "defaultGroupName": {
+        "message": "Grupo sem nome"
+    },
+    "dragGroup": {
+        "message": "Mover grupo"
+    },
+    "closeGroup": {
+        "message": "Fechar grupo"
+    },
+    "closeGroupWarning": {
+        "message": "Fechar este grupo também fechará a aba $1. Tem certeza que deseja fechá-lo?|Fechar este grupo também fechará as abas $1. Tem certeza que deseja fechá-lo?"
+    },
+    "optionKeyboardShortcuts": {
+        "message": "Atalhos de teclado"
+    },
+    "optionKeyboardShortcutsHelpLink": {
+        "message": "https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/commands#Key_combinations"
+    },
+    "optionKeyboardShortcutsHelpLinkText": {
+        "message": "A formatação dos atalhos de teclado estão detalhadas aqui."
+    },
+    "optionKeyboardShortcutsButtonsUpdate": {
+        "message": "Atualizar"
+    },
+    "optionKeyboardShortcutsButtonsReset": {
+        "message": "Redefinir"
+    },
+    "optionKeyboardShortcutsToggle": {
+        "message": "Alternar visão de panorama"
+    },
+    "optionKeyboardShortcutsNextGroup": {
+        "message": "Ativar o próximo Grupo de Abas"
+    },
+    "optionKeyboardShortcutsPreviousGroup": {
+        "message": "Ativar o Grupo de Abas anterior"
+    },
+    "optionsTheme": {
+        "message": "Tema"
+    },
+    "optionsThemeLight": {
+        "message": "claro"
+    },
+    "optionsThemeDark": {
+        "message": "escuro"
+    },
+    "optionsToolbar": {
+        "message": "Barra de tarefas"
+    },
+    "optionsToolbarPosition": {
+        "message": "Posição"
+    },
+    "optionsToolbarPositionTop": {
+        "message": "topo"
+    },
+    "optionsToolbarPositionRight": {
+        "message": "direita"
+    },
+    "optionsToolbarPositionBottom": {
+        "message": "baixo"
+    },
+    "optionsToolbarPositionLeft": {
+        "message": "esquerda"
+    },
+    "optionsBackup": {
+        "message": "Cópia de segurança"
+    },
+    "optionsBackupImport": {
+        "message": "Importar"
+    },
+    "optionsBackupImportText": {
+        "message": "Cópias de segurança importadas abrirão em novas janelas e não substituirão nada.<br />Você também pode importar cópias de segurança da antiga extensão \"Grupos de Abas\"."
+    },
+    "optionsBackupExport": {
+        "message": "Exportar"
+    },
+    "optionsBackupExportText": {
+        "message": "Esta seção pode se tornar obsoleta, assim que um adequado gerenciamento de sessões esteja disponível no Firefox."
+    },
+    "optionsBackupExportButton": {
+        "message": "Fazer cópia de segurança"
+    },
+    "optionsStatistics": {
+        "message": "Estatísticas"
+    },
+    "optionsStatisticsNumberOfTabs": {
+        "message": "Número de abas:"
+    },
+    "optionsStatisticsNumberOfTabsActive": {
+        "message": "Ativas:"
+    },
+    "optionsStatisticsThumbnailCacheSize": {
+        "message": "Espaço em disco das minuaturas:"
+    }
+}

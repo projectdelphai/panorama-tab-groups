@@ -1,0 +1,104 @@
+{
+    "pluralRule": {
+        "message": "1"
+    },
+    "newGroupButton": {
+        "message": "Új csoport hozzáadása"
+    },
+    "settingsButton": {
+        "message": "Beállítások"
+    },
+    "defaultGroupName": {
+        "message": "Névtelen csoport"
+    },
+    "dragGroup": {
+        "message": "Csoport mozgatása"
+    },
+    "closeGroup": {
+        "message": "Csoport bezárása"
+    },
+    "closeGroupWarning": { 
+        "message": "A csoport bezárása a benne lévő $1 lapot is be fogja zárni. Biztos, hogy meg akarod ezt tenni?|A csoport bezárása a benne lévő $1 lapot is be fogja zárni. Biztos, hogy meg akarod ezt tenni?"
+    },
+    "optionKeyboardShortcuts": {
+        "message": "Billentyűparancsok"
+    },
+    "optionKeyboardShortcutsHelpLink": {
+        "message": "https://developer.mozilla.org/hu/docs/Mozilla/Add-ons/WebExtensions/manifest.json/commands#Key_combinations"
+    },
+    "optionKeyboardShortcutsHelpLinkText": {
+        "message": "Leírás a billentyűparancsok formátumáról itt található."
+    },
+    "optionKeyboardShortcutsButtonsUpdate": {
+        "message": "Frissítés"
+    },
+    "optionKeyboardShortcutsButtonsReset": {
+        "message": "Visszaállítás"
+    },
+    "optionKeyboardShortcutsToggle": {
+        "message": "Panorama View ki/be kapcsolása"
+    },
+    "optionKeyboardShortcutsNextGroup": {
+        "message": "Következő Lapcsoport aktiválása"
+    },
+    "optionKeyboardShortcutsPreviousGroup": {
+        "message": "Előző Lapcsoport aktiválása"
+    },
+    "optionsTheme": {
+        "message": "Téma"
+    },
+    "optionsThemeLight": {
+        "message": "világos"
+    },
+    "optionsThemeDark": {
+        "message": "sötét"
+    },
+    "optionsToolbar": {
+        "message": "Eszköztár"
+    },
+    "optionsToolbarPosition": {
+        "message": "Pozíció"
+    },
+    "optionsToolbarPositionTop": {
+        "message": "felső"
+    },
+    "optionsToolbarPositionRight": {
+        "message": "jobb"
+    },
+    "optionsToolbarPositionBottom": {
+        "message": "alső"
+    },
+    "optionsToolbarPositionLeft": {
+        "message": "bal"
+    },
+    "optionsBackup": {
+        "message": "Biztonsági mentés"
+    },
+    "optionsBackupImport": {
+        "message": "Importálás"
+    },
+    "optionsBackupImportText": {
+        "message": "Importált biztonsági mentések új ablakban nyílnak meg és nem írnak felül semmit.<br />A régi \"Tab Groups\" kiegészítőből is lehet biztonsági mentést importálni."
+    },
+    "optionsBackupExport": {
+        "message": "Exportálás"
+    },
+    "optionsBackupExportText": {
+        "message": "Elképzelhető, hogy ez a szekció elavult lesz, amikor rendes munkamenet-kezelés lehetséges lesz majd a Firefoxban."
+    },
+    "optionsBackupExportButton": {
+        "message": "Biztonsági mentés készítése"
+    },
+    "optionsStatistics": {
+        "message": "Statisztikák"
+    },
+    "optionsStatisticsNumberOfTabs": {
+        "message": "Lapok Száma:"
+    },
+    "optionsStatisticsNumberOfTabsActive": {
+        "message": "Aktív:"
+    },
+    "optionsStatisticsThumbnailCacheSize": {
+        "message": "Indexkép Gyorsítótár Mérete:"
+    }
+}

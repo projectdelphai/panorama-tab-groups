@@ -50,7 +50,7 @@ export function getPluralForm(pluralCount = 1, translatedString = '') {
       break;
       break;
     /*
-     * Rule #2 [1-2]|[everything else]
+     * Rule #2 [0 or 1]|[everything else]
      */
     case 2:
       if (count < 2) {
@@ -87,3 +87,10 @@ export function getPluralForm(pluralCount = 1, translatedString = '') {
       return translatedString;
   }
 }
+
+export function formatByteSize(bytes) {
+	if(bytes < 1024) return bytes + " bytes";
+	else if(bytes < 1048576) return(bytes / 1024).toFixed(3) + " KiB";
+	else if(bytes < 1073741824) return(bytes / 1048576).toFixed(3) + " MiB";
+	else return(bytes / 1073741824).toFixed(3) + " GiB";
+};

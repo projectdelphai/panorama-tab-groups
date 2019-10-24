@@ -35,6 +35,12 @@
     "optionKeyboardShortcutsButtonsReset": {
         "message": "Reset"
     },
+    "optionKeyboardShortcutsButtonsDisable": {
+        "message": "Disable"
+    },
+    "optionKeyboardShortcutsButtonsEnable": {
+        "message": "Enable"
+    },
     "optionKeyboardShortcutsToggle": {
         "message": "Toggle Panorama View"
     },
@@ -100,5 +106,11 @@
     },
     "optionsStatisticsThumbnailCacheSize": {
         "message": "Thumbnail Cache Size:"
+    },
+    "refreshGroups": {
+        "message": "Refresh Groups"
+    },
+    "sendTab": {
+        "message": "Send To Group"
     }
 }

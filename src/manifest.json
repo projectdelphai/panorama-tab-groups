@@ -2,7 +2,7 @@
     "manifest_version": 2,
     "name": "Panorama Tab Groups",
     "description": "Tab Groups with Panorama View",
-    "version": "0.8.8",
+    "version": "0.8.9",
     "default_locale": "en",
     "applications": {
         "gecko": {
@@ -39,7 +39,7 @@
     },
 
     "background": {
-        "scripts": ["js/background.js"]
+        "page": "background.html"
     },
 
     "browser_action": {

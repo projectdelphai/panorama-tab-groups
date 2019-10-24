@@ -1,5 +1,5 @@
-var windowId;
-var groups;
+let windowId;
+let groups;
 
 async function save() {
 	await browser.sessions.setWindowValue(windowId, 'groups', groups);
@@ -25,10 +25,27 @@ function getIndex(id) {
 	return -1;
 }
 
+export function getLength() {
+    let length = 0;
+    for (var i in groups) {
+        length++;
+    }
+    return length;
+}
+
+export function getName(id) {
+    for (var i in groups) {
+        if (groups[i].id == id) {
+            return groups[i].name;
+        }
+    }
+    return null;
+}
+
 export async function init() {
 
 	windowId = (await browser.windows.getCurrent()).id;
-	groups = (await browser.sessions.getWindowValue(windowId, 'groups'));
+	groups = (await browser.sessions.getWindowValue(windowId, 'groups')) || [];
 
 	for(var i in groups) {
 		groups[i].tabCount = 0;
@@ -52,7 +69,7 @@ export async function create() {
 	await save();
 
 	return group;
-};
+}
 
 export async function remove(id) {
 	var index = getIndex(id);
@@ -62,8 +79,15 @@ export async function remove(id) {
 	groups.splice(index, 1);
     browser.runtime.sendMessage({"action" : "removeMenuItem", "groupId" : id.toString()}); 
 
+    // readjust group ids to fill missing gap
+    var curIndex = 0;
+    for (var i in groups) {
+        groups[i].id = curIndex;
+        curIndex += 1;
+    }
+	await browser.sessions.setWindowValue(windowId, 'groupIndex', curIndex);
 	await save();
-};
+}
 
 export async function rename(id, newName) {
 	var index = getIndex(id);
@@ -102,6 +126,14 @@ export function get(id) {
 		return;
 	}
 	return groups[index];
+};
+
+export function getIds() {
+    var arr = []
+    for (var i in groups) {
+        arr.push(groups[i].id);
+    }
+    return arr;
 };
 
 export function forEach(callback) {

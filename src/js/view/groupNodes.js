@@ -1,21 +1,22 @@
-import { getGroupId, forEachTab } from './tabs.js';
+import { getGroupId, forEachTab, forEachTabSync } from './tabs.js';
 import { groupDragOver, groupDrop } from './drag.js';
 import * as groups from './groups.js';
-import { new_element, getPluralForm } from './utils.js';
+import { new_element, getPluralForm } from '../_share/utils.js';
 import { tabNodes, getTabNode } from './tabNodes.js';
+import { createMenuList } from '../background.js';
 
-export var groupNodes = {};
+export var groupNodes = [];
 
 export async function initGroupNodes(groupsNode) {
 
     groups.forEach(function(group) {
         groupsNode.appendChild(makeGroupNode(group));
     });
-    fillGroupNodes();
 
     groupNodes.pinned = {
         content: document.getElementById( 'pinnedTabs' ),
     };
+    fillGroupNodes();
 }
 
 function snapValue(a, b, dst) {
@@ -26,7 +27,14 @@ function snapValue(a, b, dst) {
     }
 }
 
-function groupTransform(group, node, top, right, bottom, left, elem) {
+async function groupTransform(group, node, top, right, bottom, left, elem) {
+    // don't allow resizing if in tiling mode
+    let windowId = (await browser.windows.getCurrent()).id;
+    let layoutMode = await browser.sessions.getWindowValue(windowId, 'layoutMode');
+
+    if (layoutMode != "freeform") {
+        return;
+    }
 
     document.getElementsByTagName("body")[0].setAttribute('style', 'cursor: ' + window.getComputedStyle(elem).cursor);
 
@@ -161,7 +169,6 @@ export async function closeGroup(content, group) {
     var tabCount = childNodes.length-1;
 
     if(tabCount > 0) {
-        console.log(tabCount);
         const confirmationText = getPluralForm(tabCount, browser.i18n.getMessage("closeGroupWarning", [tabCount]));
         if(window.confirm(confirmationText)) {
             groups.remove(group.id);
@@ -229,10 +236,6 @@ export function makeGroupNode(group) {
         closeGroup(content, group);
     }, false);
 
-    content.addEventListener('click', function(event) {
-        event.stopPropagation();
-    }, false);
-
     newtab.addEventListener('click', async function(event) {
         event.stopPropagation();
         await groups.setActive(group.id);
@@ -245,7 +248,9 @@ export function makeGroupNode(group) {
         event.stopPropagation();
         groupTransform(group, node, 1, 1, 1, 1, header);
     };
+
     header.addEventListener('mousedown', moveFunc, false);
+    content.addEventListener('mousedown', moveFunc, false);
 
     // renaming groups
     var editing = false;
@@ -331,7 +336,7 @@ export function makeGroupNode(group) {
         groupTransform(group, node, 1, 0, 0, 1, this);
     }, false);
 
-    groupNodes[group.id] = {
+    groupNodes.push({
         group: node,
         content: content,
         newtab: newtab,
@@ -339,77 +344,133 @@ export function makeGroupNode(group) {
         tabCount: tabCount,
         name: name,
         input: input
-    };
+    });
     return node;
 }
 
 function removeGroupNode(groupId) {
     groupNodes[groupId].group.parentNode.removeChild(groupNodes[groupId].group);
-    delete groupNodes[groupId];
-}
+    groupNodes.splice(groupId, 1);
 
-export async function fillGroupNodes() {
-    var fragment = {
-        pinned: document.createDocumentFragment(),
-    };
-
+    // refresh send to menu items since all ids need to be adjusted
+    browser.menus.removeAll();
+    createMenuList();
+        
     groups.forEach(function(group) {
-        fragment[group.id] = document.createDocumentFragment();
-    });
-
-    await forEachTab( async function( tab ) {
-        if ( ! tab.pinned ) {
-            const groupId = await getGroupId( tab.id );
-            if ( groupId != -1 && fragment[ groupId ] ) {
-                fragment[ groupId ].appendChild( getTabNode(tab.id) );
-            }
-        } else {
-            fragment.pinned.appendChild( getTabNode(tab.id) );
-        }
-    });
-
-    groups.forEach(function(group) {
-        groupNodes[group.id].content.insertBefore(fragment[group.id], groupNodes[group.id].newtab);
         updateGroupFit(group);
     });
-
-    groupNodes.pinned.content.appendChild( fragment.pinned );
+    
 }
 
-// there is a bug in here! moving a tab to the right in the tab bar does nothing..
-export async function insertTab(tab) {
+// primitive mutex to make sure the functions that deal with groups aren't stepping on each other's toes
+var modifyingGroupContent = false;
 
-    var groupId = await getGroupId(tab.id);
+export async function fillGroupNodes() {
 
-    if(groupId != -1) {
+    if(modifyingGroupContent){
+        setTimeout(() => fillGroupNodes(), 100);
+    }
+    try{
+        modifyingGroupContent = true;
 
-        var index = 0;
-
-        var childNodes = groupNodes[groupId].content.childNodes;
-
-        for(var i = 0; i < childNodes.length-1; i++) {
-
-            var _tabId = Number(childNodes[i].getAttribute('tabId'));
-            var _tab = await browser.tabs.get(_tabId);
-
-            if(_tab.index >= tab.index) {
-                break;
+        var fragment = {
+            pinned: document.createDocumentFragment(),
+        };
+    
+        groups.forEach(function(group) {
+            fragment[group.id] = document.createDocumentFragment();
+        });
+    
+        await forEachTab( async function( tab ) {
+            if ( ! tab.pinned ) {
+                const groupId = await getGroupId( tab.id );
+                if ( groupId != -1 && fragment[ groupId ] ) {
+                    fragment[ groupId ].appendChild( getTabNode(tab.id) );
+                }
+            } else {
+                fragment.pinned.appendChild( getTabNode(tab.id) );
             }
-            index++;
-        }
+        });
+    
+        groups.forEach(function(group) {
+            groupNodes[group.id].content.insertBefore(fragment[group.id], groupNodes[group.id].newtab);
+            updateGroupFit(group);
+        });
+    
+        groupNodes.pinned.content.appendChild( fragment.pinned );
+    } finally {
+        modifyingGroupContent = false;
+    }
+    
+}
+
+// Attempt to insert the tab on a best effort basis, but fall back to fillGroupNodes if something goes wrong
+export async function insertTab(tab) {
+    if (modifyingGroupContent) {
+        setTimeout(() => insertTab(tab), 100);
+    }
+    try {
+        modifyingGroupContent = true;
+        // refresh the tab data
+        var tab = await browser.tabs.get(tab.id);
+        var groupId = await getGroupId(tab.id);
 
         var tabNode = tabNodes[tab.id];
 
-        if(index < childNodes.length-1) {
-            childNodes[index].insertAdjacentElement('beforebegin', tabNode.tab);
-        }else{
-            groupNodes[groupId].newtab.insertAdjacentElement('beforebegin', tabNode.tab);
+        if (groupId != -1) {
+
+            var childNodeTabsByIndex = {};
+            var tabIndexes = [];
+            //Get tabs all at once to make sure the data doesn't change out from under us
+            await forEachTab(async otherTab =>{
+                if(groupId == await getGroupId(otherTab.id)){
+                    childNodeTabsByIndex[otherTab.index] = otherTab;
+                    tabIndexes.push(otherTab.index);
+                }
+            });
+
+            var higherIndexes = tabIndexes.filter(idx => idx > tab.index);
+            var lowerIndexes = tabIndexes.filter(idx => idx < tab.index);
+
+            if(higherIndexes.length == 0){
+                groupNodes[groupId].newtab.insertAdjacentElement('beforebegin', tabNode.tab);
+            } else {
+                var childNodes = Array.from(groupNodes[groupId].content.childNodes);
+                var sortedIndexes = higherIndexes.sort((a, b) =>  a - b);
+                for(const idx of sortedIndexes){
+                    let candidateNodeIdx = childNodes.findIndex(node => Number(node.getAttribute('tabId')) === childNodeTabsByIndex[idx].id);
+                    if(candidateNodeIdx != -1){
+                        if(lowerIndexes.length > 0){
+                            try{
+                                let nextLowestIdx = Math.max(...lowerIndexes);
+                                let precedingNodeID = Number(childNodes[candidateNodeIdx - 1].getAttribute('tabId'));
+                                if(precedingNodeID == tab.id){
+                                    precedingNodeID = Number(childNodes[candidateNodeIdx - 2].getAttribute('tabId'));
+                                }
+                                if(precedingNodeID != childNodeTabsByIndex[nextLowestIdx].id){
+                                    // Seems like more than one tab is being moved at once.
+                                    // Rebuild the full UI to maintain consistency.
+                                    setTimeout(() => fillGroupNodes(), 100);
+                                }
+                            }catch{
+                                // We probably went past the edge of the array, rebuild everything instead.
+                                setTimeout(() => fillGroupNodes(), 100);
+                            }
+                        }
+                        childNodes[candidateNodeIdx].insertAdjacentElement('beforebegin', tabNode.tab);
+                        return;
+                    }
+                }
+                // Couldn't find any nodes with the next highest index. Rebuilding everything just to be safe
+                setTimeout(() => fillGroupNodes(), 100);
+            }
         }
+    } finally {
+        modifyingGroupContent = false;
     }
 }
 
 export function resizeGroups(groupId, groupRect) {
-
     var rect = {};
 
     groups.forEach(function(group) {
@@ -453,6 +514,12 @@ export function resizeGroups(groupId, groupRect) {
 
         updateGroupFit(group);
     });
+}
+
+export function raiseGroup(groupId) {
+    let lastMoved = (new Date).getTime();
+    groups.get(groupId).lastMoved = lastMoved;
+    groupNodes[groupId].group.style.zIndex = lastMoved.toString().substr(-9);
 }
 
 function getFit(param) {
@@ -502,6 +569,9 @@ export function updateGroupFit(group) {
 
     node.tabCount.innerHTML = '';
     node.tabCount.appendChild(document.createTextNode(childNodes.length-1));
+
+    node.groupId.innerHTML = ''
+    node.groupId.appendChild(document.createTextNode(group.id));
 
     // fit
     var rect = node.content.getBoundingClientRect();
