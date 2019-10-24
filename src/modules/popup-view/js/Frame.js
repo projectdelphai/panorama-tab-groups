@@ -75,30 +75,35 @@ export class Frame {
         window.close();
     }
 
-    getRenderedTabList(tabs) {
-        let tabNodes = tabs.map((tab) => {
-            const isActive = tab.id === window.View.lastActiveTab.id;
+    getRenderedTabList(Tabs) {
+        let tabNodes = Tabs.map((Tab) => {
+            const isActive = Tab.id === window.View.lastActiveTab.id;
             const node = getElementNodeFromString(`
-                <li id="tab-${tab.id}" class="list__item ${isActive ? 'list__item--highlight' : ''}" data-nav-row>
-                    <button class="list__link" title="${tab.title}
-${tab.url}">
-                        <img class="tab__icon" src="${tab.favIconUrl}" width="16" height="16" alt="" />
-                        <span>${tab.title}</span>
+                <li data-tab="${Tab.id}" class="list__item list__item--tab ${isActive ? 'list__item--highlight' : ''}" data-nav-row>
+                    <button class="list__link" title="${Tab.title}
+${Tab.url}">
+                        <img class="tab__icon" src="${Tab.favIconUrl}" width="16" height="16" alt="" />
+                        <span>${Tab.title}</span>
                     </button>
                     <button class="list__close" title="${browser.i18n.getMessage('closeTab')}"></button>
                 </li>
             `);
 
+            // Save Tab within Node
+            Object.defineProperty(node, 'Tab', {
+                value: Tab,
+            });
+
             node.querySelector('.list__link').addEventListener('click', async (event) => {
                 event.preventDefault();
-                await browser.tabs.update(tab.id, { active: true });
+                Tab.open();
                 this.closePopupView();
             });
 
             node.querySelector('.list__close').addEventListener('click', async (event) => {
                 event.preventDefault();
                 // Remove from Browser
-                await tab.remove();
+                await Tab.remove();
                 // Remove from List
                 node.remove();
                 // TODO: Move focus to the next sibling

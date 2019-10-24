@@ -8,6 +8,10 @@ export class Tab {
         })();
     }
 
+    async open() {
+        await browser.tabs.update(this.id, { active: true });
+    }
+
     async remove() {
         await browser.tabs.remove(this.id);
     }
