@@ -115,18 +115,42 @@ export class View {
     async createGroup() {
         const groupIndex = await browser.sessions.getWindowValue(this.windowId, 'groupIndex');
         let groups = await this.getGroups();
+        const pitchIndex = groups.length - 1;
+        let pitchX = 4;
+        let pitchY = 2;
+
+        if (groups.length > 8) {
+            pitchX = 6;
+            pitchY = 3;
+        } else if (groups.length > 18) {
+            pitchX = 8;
+            pitchY = 4;
+        }
 
         // Update group index
-        let uid = groupIndex || 0;
-        let newGroupUid = uid + 1;
+        const uid = groupIndex || 0;
+        const newGroupUid = uid + 1;
         await browser.sessions.setWindowValue(this.windowId, 'groupIndex', newGroupUid);
 
         // Legacy: Add group
-        // TODO: Maybe save new Group()?
+        // TODO: Maybe save new Group() in the future?
+        const rectX = (1 / pitchX) * (pitchIndex % pitchX);
+        const rectW = 1 / pitchX;
+        const rectY = (1 / pitchY) * Math.floor(pitchIndex / pitchX);
+        const rectH = 1 / pitchY;
         const newGroup = {
             id: newGroupUid,
             name: `${newGroupUid}: ${browser.i18n.getMessage('defaultGroupName')}`,
             containerId: 'firefox-default',
+            rect: {
+                x: rectX,
+                y: rectY,
+                w: rectW,
+                h: rectH,
+                i: rectX + rectW,
+                y: rectY + rectH,
+            },
+            lastMoved: (new Date).getTime(),
         };
         groups.push(newGroup);
         
