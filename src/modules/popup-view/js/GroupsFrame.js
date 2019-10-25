@@ -93,16 +93,16 @@ class GroupsFrame extends Frame {
         this.enableGroupDragAndDrop();
     }
 
-    async renderGroupListItem(group) {
-        await group.loadTabs();
-        const tabCount = group.tabs.length || 0;
-        const isActive = group.id === window.View.lastActiveTab.groupId;
+    async renderGroupListItem(Group) {
+        await Group.loadTabs();
+        const tabCount = Group.tabs.length || 0;
+        const isActive = Group.id === window.View.lastActiveTab.groupId;
         const node = getElementNodeFromString(`
-                <li id="group-${group.id}" data-group="${group.id}" class="list__item ${isActive ? 'list__item--highlight' : ''}" data-nav-row>
+                <li id="group-${Group.id}" class="list__item ${isActive ? 'list__item--highlight' : ''}" data-nav-row>
                     <div class="list__drag"></div>
                     <div class="list__close-wrapper">
                         <button class="list__link">
-                            <span>${group.name}</span>
+                            <span>${Group.name}</span>
                         </button>
                         <button class="list__close" title="${browser.i18n.getMessage('closeGroup')}"></button>
                     </div>
@@ -112,11 +112,16 @@ class GroupsFrame extends Frame {
                 </li>
             `);
 
+        // Save Group within Node
+        Object.defineProperty(node, 'Group', {
+            value: Group,
+        });
+
         // Open group
         node.querySelector('.list__link:not(.list__link--extend)').addEventListener(
             'click',
             async () => {
-                group.show();
+                Group.show();
                 this.closePopupView();
             }
         );
@@ -129,7 +134,7 @@ class GroupsFrame extends Frame {
                 // Remove from List
                 node.remove();
 
-                const leftGroups = await group.remove();
+                const leftGroups = await Group.remove();
                 // TODO: what todo when last group?
                 if (leftGroups.length >= 1) {
                     // TODO: Maybe show last group available group instead of first
@@ -143,14 +148,14 @@ class GroupsFrame extends Frame {
         // Show group details
         const showGroupNode = node.querySelector('.list__link--extend');
         showGroupNode.addEventListener('click', () => {
-            GroupDetailFrame.render(group);
+            GroupDetailFrame.render(Group);
         });
         showGroupNode.addEventListener('keyup', (event) => {
             if (event.key !== 'ArrowRight') {
                 return;
             }
             event.stopPropagation();
-            GroupDetailFrame.render(group);
+            GroupDetailFrame.render(Group);
         });
 
         return node;
@@ -174,7 +179,7 @@ class GroupsFrame extends Frame {
         this.list.classList.add('dragging');
         event.target.classList.add('dragged');
         event.target.setAttribute('aria-grabbed', true);
-        event.dataTransfer.setData('text', event.target.getAttribute('data-group'));
+        event.dataTransfer.setData('text', event.target.id);
         event.dataTransfer.dropEffect = 'move';
     }
 
@@ -232,11 +237,10 @@ class GroupsFrame extends Frame {
     async handleGroupDrop(event) {
         event.preventDefault();
         const groupId = event.dataTransfer.getData('text');
-        const droppedListItem = document.querySelector(`[data-group="${groupId}"]`);
+        const droppedGroupNode = document.getElementById(groupId);
         const targetIndex = event.target.getAttribute('data-index');
-        event.target.replaceWith(droppedListItem);
-        const group = await window.View.getGroupById(groupId);
-        group.moveToIndex(targetIndex);
+        event.target.replaceWith(droppedGroupNode);
+        droppedGroupNode.Group.moveToIndex(targetIndex);
     }
 
     renderFooter() {
