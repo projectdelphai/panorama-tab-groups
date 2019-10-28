@@ -35,6 +35,12 @@
     "optionKeyboardShortcutsButtonsReset": {
         "message": "Redefinir"
     },
+    "optionKeyboardShortcutsButtonsDisable": {
+        "message": "Desativar"
+    },
+    "optionKeyboardShortcutsButtonsEnable": {
+        "message": "Ativar"
+    },
     "optionKeyboardShortcutsToggle": {
         "message": "Alternar visão de panorama"
     },
@@ -100,5 +106,11 @@
     },
     "optionsStatisticsThumbnailCacheSize": {
         "message": "Espaço em disco das minuaturas:"
+    },
+    "refreshGroups": {
+        "message": "Atualizar grupos"
+    },
+    "sendTab": {
+        "message": "Enviar para grupo"
     }
 }
