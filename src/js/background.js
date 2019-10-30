@@ -421,7 +421,6 @@ async function init() {
 
     await migrate(); //keep until everyone are on 0.8.0
     
-    // TODO: Reinitialize this after option has changed
     const disablePopupView = options.viewPopup === false;
     if (disablePopupView) {
         // Disable popup
@@ -441,6 +440,42 @@ async function init() {
 }
 
 init();
+
+window.refreshView = async function() {
+    const options = await loadOptions();
+
+    console.log('Refresh Panorama Tab View');
+
+    browser.browserAction.onClicked.removeListener(toggleView);
+    browser.commands.onCommand.removeListener(triggerCommand);
+    browser.windows.onCreated.removeListener(createGroupInWindowIfMissing);
+    browser.tabs.onCreated.removeListener(tabCreated);
+    browser.tabs.onAttached.removeListener(tabAttached);
+    browser.tabs.onDetached.removeListener(tabDetached);
+    browser.tabs.onActivated.removeListener(tabActivated);
+
+    const disablePopupView = options.viewPopup === false;
+    if (disablePopupView) {
+        // Disable popup
+        browser.browserAction.setPopup({
+            popup: '',
+        });
+
+        browser.browserAction.onClicked.addListener(toggleView);
+    } else {
+        // Re-enable popup
+        browser.browserAction.setPopup({
+            popup: 'modules/popup-view/index.html',
+        });
+    }
+
+    browser.commands.onCommand.addListener(triggerCommand);
+    browser.windows.onCreated.addListener(createGroupInWindowIfMissing);
+    browser.tabs.onCreated.addListener(tabCreated);
+    browser.tabs.onAttached.addListener(tabAttached);
+    browser.tabs.onDetached.addListener(tabDetached);
+    browser.tabs.onActivated.addListener(tabActivated);
+}
 
 // migrate to transformable groups
 async function migrate() {
