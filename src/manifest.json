@@ -18,7 +18,7 @@
         "96": "icons/logo/logo-96.png"
     },
     "commands": {
-        "toggle-panorama-view": {
+        "_execute_browser_action": {
             "suggested_key": {
                 "default": "Ctrl+Shift+F"
             },

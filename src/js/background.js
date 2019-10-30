@@ -155,8 +155,6 @@ async function triggerCommand(command) {
     await changeActiveGroupBy(1);
   } else if (command === "activate-previous-group") {
     await changeActiveGroupBy(-1);
-  } else if (command === "toggle-panorama-view") {
-    await toggleView();
   }
 }
 
@@ -480,11 +478,9 @@ async function migrate() {
     }
 }
 
+// TODO: Remove? Is this used?
 function handleMessage(message, sender) {
-    if (message === "toggle-panorama-view") {
-        toggleView();
-    }
-    else if (message == "activate-next-group") {
+    if (message == "activate-next-group") {
         triggerCommand("activate-next-group");
     }
     else if (message == "activate-previous-group") {

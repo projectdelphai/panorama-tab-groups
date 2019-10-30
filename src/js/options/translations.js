@@ -49,7 +49,7 @@ export function addTranslations() {
     );
   });
   document.querySelector(
-    'label[for="toggle-panorama-view"]'
+    'label[for="_execute_browser_action"]'
   ).innerHTML = browser.i18n.getMessage("optionKeyboardShortcutsToggle");
   document.querySelector(
     'label[for="activate-next-group"]'

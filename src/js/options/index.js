@@ -28,6 +28,9 @@ async function init() {
 function restoreOptions(options, shortcuts) {
   // Shortcuts
   for (const shortcut of shortcuts) {
+    if (!options.shortcut.hasOwnProperty(shortcut.name)) {
+      continue;
+    }
     if (options.shortcut[shortcut.name].disabled) {
       disableShortcutForm(shortcut.name);
     }
@@ -50,19 +53,28 @@ function restoreOptions(options, shortcuts) {
 function attachEventHandler(options, shortcuts) {
   // Shortcuts
   for (const shortcut of shortcuts) {
-    document.querySelector(`#${shortcut.name} input`).value = shortcut.shortcut;
-    document
-      .querySelector(`#${shortcut.name} .updateShortcut`)
+    const shortcutNode = document.querySelector(`#${shortcut.name}`);
+
+    if (!shortcutNode) {
+      continue;
+    }
+
+    shortcutNode.querySelector(`input`).value = shortcut.shortcut;
+    shortcutNode
+      .querySelector(`.updateShortcut`)
       .addEventListener('click', updateShortcut);
-    document
-      .querySelector(`#${shortcut.name} .resetShortcut`)
+    shortcutNode
+      .querySelector(`.resetShortcut`)
       .addEventListener('click', resetShortcut);
-    document
-      .querySelector(`#${shortcut.name} .disableShortcut`)
-      .addEventListener('click', disableShortcut.bind(this, options));
-    document
-      .querySelector(`#${shortcut.name} .enableShortcut`)
+    shortcutNode
+      .querySelector(`.enableShortcut`)
       .addEventListener('click', enableShortcut.bind(this, options));
+
+    if (options.shortcut.hasOwnProperty(shortcut.name)) {
+      shortcutNode
+        .querySelector(`.disableShortcut`)
+        .addEventListener('click', disableShortcut.bind(this, options));
+    }
   }
 
   // View

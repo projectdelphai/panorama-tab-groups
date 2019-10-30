@@ -11,13 +11,15 @@
 			<p>
 				<em><a href="https://developer.mozilla.org/en-US/Add-ons/WebExtensions/manifest.json/commands#Key_combinations" target="_blank">The format for the shortcut option is detailed here.</a></em>
 			</p>
+			<p>
+				<em>Users can also update shortcuts via the "Manage Extension Shortcuts" option at about:addons in Firefox as seen <a href="https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/commands#Updating_shortcuts">in the example video</a>.</em>
+			</p>
 			<div class="keyboardShortcuts">
-				<form id="toggle-panorama-view" class="browser-style">
-					<label for="toggle-panorama-view">Toggle Panorama View</label>
+				<form id="_execute_browser_action" class="browser-style">
+					<label for="_execute_browser_action">Toggle Panorama View</label>
 					<input type="text">
 					<button class="updateShortcut" class="browser-style">Update</button>
 					<button class="resetShortcut" class="browser-style">Reset</button>
-					<button class="disableShortcut" class="browser-style">Disable</button>
 					<button class="enableShortcut" class="browser-style" hidden>Enable</button>
 				</form>
 			</div>

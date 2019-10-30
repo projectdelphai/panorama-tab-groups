@@ -3,9 +3,6 @@ export const defaultOptions = {
   viewPopup: false,
   toolbarPosition: "top",
   shortcut: {
-    "toggle-panorama-view": {
-      disabled: false
-    },
     "activate-next-group": {
       disabled: false
     },
