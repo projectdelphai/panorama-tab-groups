@@ -97,6 +97,8 @@ class GroupDetailFrame extends Frame {
         inputNode.addEventListener('keydown', async (event) => {
             event.stopPropagation();
             // TODO: Prevent popup from closing
+            // Seems to currently impossible:
+            // https://discourse.mozilla.org/t/prevent-toolbar-popup-from-closing-when-pressing-esc/47464
             if (event.key === 'Esc') {
                 event.preventDefault();
                 const newGroupNameNode = this.getRenderedGroupName();
