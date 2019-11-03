@@ -242,15 +242,17 @@ export function makeGroupNode(group) {
         await browser.tabs.create({active: true});
     }, false);
 
-    // move
+    // move content pane as a whole around
     var moveFunc = function(event) {
         event.preventDefault();
         event.stopPropagation();
+        
         groupTransform(group, node, 1, 1, 1, 1, header);
     };
 
-    header.addEventListener('mousedown', moveFunc, false);
-    content.addEventListener('mousedown', moveFunc, false);
+    // allow whole content to be moved except for new tab (existing tabs are done in newtab)
+    newtab.addEventListener('mousedown', (e) => { e.stopPropagation(); });
+    inner.addEventListener('mousedown', moveFunc, false);
 
     // renaming groups
     var editing = false;

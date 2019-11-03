@@ -64,6 +64,11 @@ export function makeTabNode(tab) {
 	node.addEventListener('drop', tabDrop, false);
 	node.addEventListener('dragend', tabDragEnd, false);
 
+    // Stop new tab from bubbling mousedown to the content tab. 
+    // This allows you to move just the tab to a new group
+    // and still allow you to move the whole pane around (see issue 10)
+    node.addEventListener('mousedown', (e) => { e.stopPropagation(); });
+
 	tabNodes[tab.id] = {
 		tab: node,
 		inner: inner,
