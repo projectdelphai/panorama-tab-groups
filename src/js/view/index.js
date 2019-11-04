@@ -298,10 +298,12 @@ async function activateTiling() {
 
     let groupIds = groups.getIds();
     let currentIndex = 0;
+    console.log(gridLayout);
     // gridLayout[i] = number of cells per row
     for (let i in gridLayout) {
         // j = specific cell in each row
         for (let j=0; j < gridLayout[i]; j++) {
+            console.log("i: " + i + ", j: " + j);
             let rect = {};
             rect.x = j / gridLayout[i];
             rect.y = i / gridLayout.length;
@@ -309,6 +311,8 @@ async function activateTiling() {
             rect.h = 1.0 / gridLayout.length;
             rect.i = rect.x + rect.w;
             rect.j = rect.y + rect.h;
+            console.log(groupIds[currentIndex]);
+            console.log(rect);
             groups.transform(groupIds[currentIndex], rect);
             resizeGroups(groupIds[currentIndex], rect);
             currentIndex++;
@@ -468,4 +472,3 @@ function tabDetached(tabId, detachInfo) {
         });
     }
 }
-

@@ -3,9 +3,8 @@ import { groupDragOver, groupDrop } from './drag.js';
 import * as groups from './groups.js';
 import { new_element, getPluralForm } from '../_share/utils.js';
 import { tabNodes, getTabNode } from './tabNodes.js';
-import { createMenuList } from '../background.js';
 
-export var groupNodes = [];
+export var groupNodes = {};
 
 export async function initGroupNodes(groupsNode) {
 
@@ -57,6 +56,7 @@ async function groupTransform(group, node, top, right, bottom, left, elem) {
 
     var onmousemove = function(event) {
         event.preventDefault();
+        console.log("a");
         x = event.pageX / groupsRect.width;
         y = event.pageY / groupsRect.height;
 
@@ -169,6 +169,7 @@ export async function closeGroup(content, group) {
     var tabCount = childNodes.length-1;
 
     if(tabCount > 0) {
+        console.log(tabCount);
         const confirmationText = getPluralForm(tabCount, browser.i18n.getMessage("closeGroupWarning", [tabCount]));
         if(window.confirm(confirmationText)) {
             groups.remove(group.id);
@@ -338,7 +339,7 @@ export function makeGroupNode(group) {
         groupTransform(group, node, 1, 0, 0, 1, this);
     }, false);
 
-    groupNodes.push({
+    groupNodes[group.id] = {
         group: node,
         content: content,
         newtab: newtab,
@@ -346,22 +347,13 @@ export function makeGroupNode(group) {
         tabCount: tabCount,
         name: name,
         input: input
-    });
+    };
     return node;
 }
 
 function removeGroupNode(groupId) {
     groupNodes[groupId].group.parentNode.removeChild(groupNodes[groupId].group);
-    groupNodes.splice(groupId, 1);
-
-    // refresh send to menu items since all ids need to be adjusted
-    browser.menus.removeAll();
-    createMenuList();
-        
-    groups.forEach(function(group) {
-        updateGroupFit(group);
-    });
-    
+    delete groupNodes[groupId];
 }
 
 // primitive mutex to make sure the functions that deal with groups aren't stepping on each other's toes
@@ -571,9 +563,6 @@ export function updateGroupFit(group) {
 
     node.tabCount.innerHTML = '';
     node.tabCount.appendChild(document.createTextNode(childNodes.length-1));
-
-    node.groupId.innerHTML = ''
-    node.groupId.appendChild(document.createTextNode(group.id));
 
     // fit
     var rect = node.content.getBoundingClientRect();
