@@ -138,6 +138,24 @@ async function singleClick(e) {
     event.stopPropagation();
 }
 
+/*
+ * Search through tabs based on input field
+ */
+async function searchTabs() {
+    let tabs = await browser.tabs.query({currentWindow: true});
+    let searchInput = document.getElementById('tab-search').value;
+    // get old active tab in case search doesn't find any valid tabs
+    let futureActiveTabId = getActiveTabId();
+    for (let tabIndex in tabs) {
+        let title = tabs[tabIndex].title;
+        // lowercase both inputs and compare to see if match
+        if (title.toLowerCase().includes(searchInput.toLowerCase())) {
+            futureActiveTabId = tabs[tabIndex].id;
+            break;
+        }
+    }
+    setActiveTabNodeById(futureActiveTabId);
+}
 /**
  * Initialize the Panorama View tab
  *
@@ -192,6 +210,9 @@ async function initView() {
     document.getElementById('tiling').addEventListener('click', function() {
         setLayoutMode("tiling");
     }, false);
+   
+    // Listen for search input
+    document.getElementById('tab-search').addEventListener('input', searchTabs);
 
     // Listen for middle clicks in background to open new group
     document.getElementById('groups').addEventListener('auxclick', async function(event) {
@@ -242,6 +263,7 @@ async function initView() {
     view.groupsNode.addEventListener('drop', outsideDrop, false);
     view.groupsNode.addEventListener('dblclick', doubleClick, false);
     view.groupsNode.addEventListener('click', singleClick, false);
+
 }
 
 // Tiling functionality
