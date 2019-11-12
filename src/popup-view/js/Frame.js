@@ -1,4 +1,4 @@
-import { getElementNodeFromString } from "../../_shared/js/models/Node.js";
+import { getElementNodeFromString } from "../../_shared/js/utilities/node.js";
 
 export class Frame {
     constructor(id) {
