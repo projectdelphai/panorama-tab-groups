@@ -58,7 +58,13 @@ export function addTranslations() {
     'label[for="activate-previous-group"]'
   ).innerHTML = browser.i18n.getMessage("optionKeyboardShortcutsPreviousGroup");
   document.querySelector(
-    'label[for="viewPopup"]'
+    '#optionsView h2'
+  ).innerHTML = browser.i18n.getMessage("optionsView");
+  document.querySelector(
+    'label[for="viewFreeform"] span'
+  ).innerHTML = browser.i18n.getMessage("optionsViewFreeform");
+  document.querySelector(
+    'label[for="viewPopup"] span'
   ).innerHTML = browser.i18n.getMessage("optionsViewPopup");
   document.querySelector(
     "#optionsTheme h2"
@@ -70,10 +76,10 @@ export function addTranslations() {
     'label[for="themeDark"] span'
   ).innerHTML = browser.i18n.getMessage("optionsThemeDark");
   document.querySelector(
-    "#optionsToolbar h2"
+    "#optionsToolbar h3"
   ).innerHTML = browser.i18n.getMessage("optionsToolbar");
   document.querySelector(
-    "#optionsToolbar h3"
+    "#optionsToolbar h4"
   ).innerHTML = browser.i18n.getMessage("optionsToolbarPosition");
   document.querySelector(
     'label[for="toolbarPositionTop"] span'

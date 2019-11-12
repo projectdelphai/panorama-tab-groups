@@ -420,8 +420,8 @@ async function init() {
     console.log('Finished setup');
 
     await migrate(); //keep until everyone are on 0.8.0
-    
-    const disablePopupView = options.viewPopup === false;
+
+    const disablePopupView = options.view !== 'popup';
     if (disablePopupView) {
         // Disable popup
         browser.browserAction.setPopup({
@@ -454,7 +454,7 @@ window.refreshView = async function() {
     browser.tabs.onDetached.removeListener(tabDetached);
     browser.tabs.onActivated.removeListener(tabActivated);
 
-    const disablePopupView = options.viewPopup === false;
+    const disablePopupView = options.view !== 'popup';
     if (disablePopupView) {
         // Disable popup
         browser.browserAction.setPopup({

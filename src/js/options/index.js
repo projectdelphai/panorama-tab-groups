@@ -8,7 +8,10 @@ import {
   disableShortcutForm,
   enableShortcut
 } from "./shortcuts.js";
-import { saveOptionViewPopup } from "./view.js";
+import { 
+  saveOptionView,
+  showViewSpecificOptions 
+} from "./view.js";
 import { saveOptionTheme } from "./theme.js";
 import { saveOptionToolbarPosition } from "./toolbar.js";
 import { loadBackup, saveBackup } from "./backup.js";
@@ -37,7 +40,10 @@ function restoreOptions(options, shortcuts) {
   }
 
   // View
-  document.querySelector('#viewPopup').checked = options.viewPopup;
+  document.querySelector(
+    `input[name="view"][value="${options.view}"]`
+  ).checked = true;
+  showViewSpecificOptions(options.view);
 
   // Theme
   document.querySelector(
@@ -79,8 +85,8 @@ function attachEventHandler(options, shortcuts) {
 
   // View
   document
-    .querySelector('#viewPopup')
-    .addEventListener('change', saveOptionViewPopup);
+    .querySelector('form[name="formView"]')
+    .addEventListener('change', saveOptionView);
 
   // Theme
   document

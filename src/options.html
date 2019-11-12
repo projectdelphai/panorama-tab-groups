@@ -45,14 +45,60 @@
 			</div>
 		</section>
 
-		<section id="optionsView">
-			<h2>Popup</h2>
-			<form class="browser-style" name="formView">
-				<input type="checkbox" id="viewPopup" name="viewPopup" value="1" />
-				<label for="viewPopup">
-					Enable Popup
-				</label>
-			</form>
+		<section>
+			<div id="optionsView">
+				<h2>View</h2>
+				<form class="browser-style" name="formView">
+					<div class="input-radio-image input-radio-image--extended">
+						<input type="radio" id="viewFreeform" name="view" value="freeform" />
+						<label for="viewFreeform">
+							<img src="/icons/options/view-freeform.svg" height="40" alt="" />
+							<span>Freeform (classic)</span>
+						</label>
+					</div>
+					<div class="input-radio-image input-radio-image--extended">
+						<input type="radio" id="viewPopup" name="view" value="popup" />
+						<label for="viewPopup">
+							<img src="/icons/options/view-popup.svg" height="40" alt="" />
+							<span>Popup</span>
+						</label>
+					</div>
+				</form>
+			</div>
+			<div id="optionsToolbar">
+				<h3>Toolbar</h3>
+				<h4>Position</h4>
+				<form class="browser-style" name="formToolbarPosition">
+					<div class="input-radio-image">
+						<input type="radio" id="toolbarPositionTop" name="toolbarPosition" value="top" />
+						<label for="toolbarPositionTop">
+							<img src="/icons/options/toolbar-position-top.png" alt="" />
+							<span>top</span>
+						</label>
+					</div>
+					<div class="input-radio-image">
+						<input type="radio" id="toolbarPositionRight" name="toolbarPosition" value="right" />
+						<label for="toolbarPositionRight">
+							<img src="/icons/options/toolbar-position-right.png" alt="" />
+							<span>right</span>
+						</label>
+					</div>
+					<div class="input-radio-image">
+						<input type="radio" id="toolbarPositionBottom" name="toolbarPosition" value="bottom" />
+						<label for="toolbarPositionBottom">
+							<img src="/icons/options/toolbar-position-bottom.png" alt="" />
+							<span>bottom</span>
+						</label>
+					</div>
+					<div class="input-radio-image">
+						<input type="radio" id="toolbarPositionLeft" name="toolbarPosition" value="left" />
+						<label for="toolbarPositionLeft">
+							<img src="/icons/options/toolbar-position-left.png" alt="" />
+							<span>left</span>
+						</label>
+					</div>
+				</form>
+			</section>
 		</section>
 
 		<section id="optionsTheme">
@@ -70,41 +116,6 @@
 				  <label for="themeDark">
 						<img src="/icons/options/theme-dark.png" alt="" />
 						<span>dark</span>
-					</label>
-				</div>
-			</form>
-		</section>
-		
-        <section id="optionsToolbar">
-			<h2>Toolbar</h2>
-			<h3>Position</h3>
-			<form class="browser-style" name="formToolbarPosition">
-				<div class="input-radio-image">
-				  <input type="radio" id="toolbarPositionTop" name="toolbarPosition" value="top"/>
-				  <label for="toolbarPositionTop">
-						<img src="/icons/options/toolbar-position-top.png" alt="" />
-						<span>top</span>
-					</label>
-				</div>
-				<div class="input-radio-image">
-				  <input type="radio" id="toolbarPositionRight" name="toolbarPosition" value="right"/>
-				  <label for="toolbarPositionRight">
-						<img src="/icons/options/toolbar-position-right.png" alt="" />
-						<span>right</span>
-					</label>
-				</div>
-				<div class="input-radio-image">
-				  <input type="radio" id="toolbarPositionBottom" name="toolbarPosition" value="bottom"/>
-				  <label for="toolbarPositionBottom">
-						<img src="/icons/options/toolbar-position-bottom.png" alt="" />
-						<span>bottom</span>
-					</label>
-				</div>
-				<div class="input-radio-image">
-				  <input type="radio" id="toolbarPositionLeft" name="toolbarPosition" value="left"/>
-				  <label for="toolbarPositionLeft">
-						<img src="/icons/options/toolbar-position-left.png" alt="" />
-						<span>left</span>
 					</label>
 				</div>
 			</form>

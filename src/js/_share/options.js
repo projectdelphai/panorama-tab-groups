@@ -1,6 +1,6 @@
 export const defaultOptions = {
   theme: "light",
-  viewPopup: false,
+  view: "freeform",
   toolbarPosition: "top",
   shortcut: {
     "activate-next-group": {

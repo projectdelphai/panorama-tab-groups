@@ -65,8 +65,14 @@
     "optionKeyboardShortcutsPreviousGroup": {
         "message": "Activate the previous Tab Group"
     },
+    "optionsView": {
+        "message": "View"
+    },
+    "optionsViewFreeform": {
+        "message": "Freeform (classic)"
+    },
     "optionsViewPopup": {
-        "message": "Enable Popup"
+        "message": "Popup"
     },
     "optionsTheme": {
         "message": "Theme"

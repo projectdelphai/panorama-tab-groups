@@ -1,8 +1,27 @@
-export async function saveOptionViewPopup() {
+export async function saveOptionView() {
+  const currentView = document.querySelector(
+    'input[name="view"]:checked'
+  ).value;
   await browser.storage.sync.set({
-    viewPopup: document.querySelector('#viewPopup').checked,
+    view: currentView,
   });
 
   let background = browser.extension.getBackgroundPage();
   background.refreshView();
+
+  showViewSpecificOptions(currentView);
+}
+
+export function showViewSpecificOptions(currentView) {
+  const optionsToolbar = document.querySelector('#optionsToolbar');
+
+  // Hide all
+  optionsToolbar.setAttribute('hidden', true);
+
+  // Show specific
+  switch (currentView) {
+    case 'freeform':
+      optionsToolbar.removeAttribute('hidden');
+      break;
+  }
 }
