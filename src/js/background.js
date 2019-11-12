@@ -465,7 +465,7 @@ window.refreshView = async function() {
     } else {
         // Re-enable popup
         browser.browserAction.setPopup({
-            popup: 'modules/popup-view/index.html',
+            popup: 'popup-view/index.html',
         });
     }
 

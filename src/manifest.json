@@ -54,7 +54,7 @@
         "dark": "icons/icon.svg",
         "size": 32
         }],
-        "default_popup": "modules/popup-view/index.html"
+        "default_popup": "popup-view/index.html"
     },
 
     "options_ui": {

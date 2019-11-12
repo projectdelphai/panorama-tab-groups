@@ -1,7 +1,7 @@
 import { Frame } from "./Frame.js";
 import GroupDetailFrame from "./GroupDetailFrame.js";
-import { getElementNodeFromString } from "../../models/Node.js";
-import { getPluralForm } from "../../../js/_share/utils.js";
+import { getElementNodeFromString } from "../../_shared/js/models/Node.js";
+import { getPluralForm } from "../../js/_share/utils.js";
 
 class GroupsFrame extends Frame {
     constructor(id) {

@@ -1,4 +1,4 @@
-import { loadOptions } from '../../js/_share/options.js';
+import { loadOptions } from '../../../js/_share/options.js';
 import { Group } from './Group.js';
 import { Tab } from './Tab.js';
 

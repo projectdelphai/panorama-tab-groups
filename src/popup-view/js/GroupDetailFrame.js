@@ -1,6 +1,6 @@
 import { Frame } from "./Frame.js";
 import GroupsFrame from "./GroupsFrame.js";
-import { getElementNodeFromString } from "../../models/Node.js";
+import { getElementNodeFromString } from "../../_shared/js/models/Node.js";
 
 class GroupDetailFrame extends Frame {
     constructor(id) {
