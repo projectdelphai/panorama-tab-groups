@@ -162,16 +162,16 @@ export class View {
     }
 
     setTheme(theme) {
-        this.replaceClass('theme', theme);
+        _updateViewSetting('theme', theme);
     }
+}
 
-    replaceClass(prefix, value) {
-        let classList = document.getElementsByTagName('body')[0].classList;
-        for (let classObject of classList) {
-            if (classObject.startsWith(`${prefix}-`)) {
-                classList.remove(classObject);
-            }
+function _updateViewSetting(prefix, value) {
+    let classList = document.getElementsByTagName('body')[0].classList;
+    for (let classObject of classList) {
+        if (classObject.startsWith(`${prefix}-`)) {
+            classList.remove(classObject);
         }
-        classList.add(`${prefix}-${value}`);
     }
+    classList.add(`${prefix}-${value}`);
 }

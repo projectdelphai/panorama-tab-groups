@@ -28,16 +28,16 @@ export class Frame {
             return;
         }
         if (['ArrowUp', 'ArrowDown'].indexOf(event.key) >= 0) {
-            navigateVerticalByKeyboard.call(this, event);
+            _navigateVerticalByKeyboard.call(this, event);
         }
         if (['ArrowLeft', 'ArrowRight'].indexOf(event.key) >= 0) {
-            navigateHorizontalByKeyboard.call(this, event);
+            _navigateHorizontalByKeyboard.call(this, event);
         }
     }
 
     enable() {
         document.body.classList.add('content-loading');
-        this.disableSibling();
+        _disableSibling.call(this);
 
         this.node.classList.add('frame--active');
 
@@ -51,33 +51,21 @@ export class Frame {
         document.body.classList.remove('content-loading');
     }
 
-    disableSibling() {
-        const siblings = getSiblings.call(this);
-
-        siblings.forEach((sibling) => {
-            sibling.classList.remove('frame--active');
-        })
-    }
-
     setHeaderContent(content) {
-        updateContent(this.header, content);
+        _updateContent(this.header, content);
     }
 
     setContent(content) {
-        updateContent(this.content, content);
+        _updateContent(this.content, content);
     }
 
     setFooterContent(content) {
-        updateContent(this.footer, content);
-    }
-
-    closePopupView() {
-        window.close();
+        _updateContent(this.footer, content);
     }
 
     getRenderedTabList(Tabs) {
         let tabNodes = Tabs.map((Tab) => {
-            const isActive = Tab.id === window.View.lastActiveTab.id;
+            const isActive = Tab.id === window.PopupView.lastActiveTab.id;
             const node = getElementNodeFromString(`
                 <li data-tab="${Tab.id}" class="list__item list__item--tab ${isActive ? 'list__item--highlight' : ''}" data-nav-row>
                     <button class="list__link" title="${Tab.title}
@@ -97,7 +85,7 @@ ${Tab.url}">
             node.querySelector('.list__link').addEventListener('click', async (event) => {
                 event.preventDefault();
                 Tab.open();
-                this.closePopupView();
+                window.PopupView.close();
             });
 
             node.querySelector('.list__close').addEventListener('click', async (event) => {
@@ -119,10 +107,18 @@ ${Tab.url}">
     }
 }
 
+function _disableSibling() {
+    const siblings = _getSiblings.call(this);
+
+    siblings.forEach((sibling) => {
+        sibling.classList.remove('frame--active');
+    })
+}
+
 /**
  * Basic functionality forked from jQuery
  */
-function getSiblings() {
+function _getSiblings() {
     let n = this.shell.firstChild;
     let siblings = [];
 
@@ -135,7 +131,7 @@ function getSiblings() {
     return siblings;
 }
 
-function updateContent(contentNode, content) {
+function _updateContent(contentNode, content) {
     // Reset
     contentNode.innerHTML = '';
 
@@ -151,10 +147,10 @@ function updateContent(contentNode, content) {
     }
 }
 
-function navigateVerticalByKeyboard(event) {
+function _navigateVerticalByKeyboard(event) {
     const rows = this.node.querySelectorAll('[data-nav-row');
     const currentRow = event.target.closest('[data-nav-row');
-    const currentIndex = getCurrentIndex(currentRow, rows);
+    const currentIndex = _getCurrentIndex(currentRow, rows);
     let targetIndex = 0;
 
 
@@ -186,10 +182,10 @@ function navigateVerticalByKeyboard(event) {
     }
 }
 
-function navigateHorizontalByKeyboard(event) {
+function _navigateHorizontalByKeyboard(event) {
     const currentRow = event.target.closest('[data-nav-row');
     const cols = currentRow.querySelectorAll('button,input');
-    const currentIndex = getCurrentIndex(event.target, cols);
+    const currentIndex = _getCurrentIndex(event.target, cols);
     let targetIndex = 0;
 
     if (event.key === 'ArrowLeft') {
@@ -210,7 +206,7 @@ function navigateHorizontalByKeyboard(event) {
     cols[targetIndex].focus();
 }
 
-function getCurrentIndex(element, siblings) {
+function _getCurrentIndex(element, siblings) {
     const currentIndex = Array.from(siblings).findIndex((sibling) => {
         return sibling === element;
     });
