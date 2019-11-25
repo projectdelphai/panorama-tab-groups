@@ -1,6 +1,23 @@
+:root {
+    --footer-button-background: hsla(0,0%,80%,.35);
+    --footer-button-hover-background: hsla(0,0%,80%,.5);
+    --list-item-hover-background: var(--grey-90-a05);
+    --list-item-highlight-box-shadow: inset 0px 0px 3px var(--grey-90-a30);
+}
+
+.theme-dark {
+    --footer-button-background: var(--grey-10-a10);
+    --footer-button-hover-background: var(--grey-10-a15);
+    --list-item-hover-background: var(--grey-10-a10);
+    --list-item-highlight-box-shadow: inset 0px 0px 3px var(--grey-10-a40);
+}
+
 body {
     width: 400px;
     overflow: hidden;
+    background: var(--body-background);
+    color: var(--body-color);
+    font-size: 12px;
 }
 
 body > * {
@@ -68,6 +85,7 @@ header {
     align-items: center;
     column-gap: 5px;
     padding: 5px;
+	border-bottom: 1px solid var(--separator-color);
 }
 
 header .button-ghost {
@@ -80,10 +98,10 @@ header .button-ghost {
 
 .frame-content {
     max-height: 500px;
+    margin-top: 4px;
+    margin-bottom: 4px;
     overflow-y: auto;
     overflow-x: hidden;
-	border-top: 1px solid rgba(12, 12, 13, 0.1); /* TODO: color to CSS var*/
-	border-bottom: 1px solid rgba(12, 12, 13, 0.1); /* TODO: color to CSS var*/
 }
 
 footer {
@@ -92,11 +110,17 @@ footer {
 
 footer .button-ghost {
     width: 100%;
+    height: 40px;
     padding-left: 40px;
     border-radius: 0;
+    border-top: 1px solid var(--separator-color);
+    background: var(--footer-button-background);
+    color: var(--button-ghost-icon-color);
 }
 
+footer .button-ghost:hover,
 footer .button-ghost:focus {
+    background: var(--footer-button-hover-background);
     box-shadow: none;
 }
 
@@ -118,11 +142,11 @@ footer .button-ghost::before {
 }
 
 .list__item--highlight {
-    box-shadow: inset 0px 0px 3px var(--grey-90-a30);
+    box-shadow: var(--list-item-highlight-box-shadow);
 }
 
 .list__item:hover {
-	background-color: var(--grey-90-a10);
+	background-color: var(--list-item-hover-background);
 }
 
 .list__close-wrapper,
@@ -140,8 +164,8 @@ footer .button-ghost::before {
     overflow: hidden;
 }
 
-.list__link:focus {
-	background-color: var(--grey-90-a10);
+.keyboard-navigation .list__link:focus {
+	background-color: var(--list-item-hover-background);
 }
 
 .list__close-wrapper {
@@ -217,13 +241,13 @@ footer .button-ghost::before {
 .list__drag:hover,
 .list__close:hover,
 .list__close:focus {
-	background-color: rgba(12, 12, 13, 0.05);
+	background-color: var(--list-item-hover-background);
 }
 
 .list__link--extend {
     flex: 0 0 30%;
     justify-content: space-between;
-    border-left: 1px solid rgba(12, 12, 13, 0.1);
+    border-left: 1px solid var(--separator-color);
 }
 
 .list__link--extend::after {
@@ -236,7 +260,7 @@ footer .button-ghost::before {
 }
 
 .list__link--extend:hover {
-	background-color: rgba(12, 12, 13, 0.05);
+	background-color: var(--list-item-hover-background);
 }
 
 .tab__icon {
@@ -277,7 +301,7 @@ footer .button-ghost::before {
 
 .group-edit:hover,
 .group-edit:focus {
-	background-color: rgba(12, 12, 13, 0.05);
+	background-color: var(--list-item-hover-background);
 }
 
 .group-edit::after {
@@ -307,7 +331,7 @@ footer .button-ghost::before {
 
 .drop-zone {
     height: 0px;
-    background-color: var(--blue-80);
+    background-color: var(--drag-zone-background);
     transition: height .3s linear;
 }
 
@@ -317,7 +341,7 @@ footer .button-ghost::before {
 
 .dragging .drop-zone--entered {
     height: 10px;
-    background-color: var(--blue-50);
+    background-color: var(--drag-zone-entered-background);
 }
 
 .drop-zone * {

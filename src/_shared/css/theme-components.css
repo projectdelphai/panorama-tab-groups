@@ -2,6 +2,8 @@
  * Input field
  */
 .form-field {
+    border-radius: 2px;
+    border: 1px solid var(--input-border-color);
     position: relative;
     width: auto;
     z-index: 0;
@@ -11,16 +13,19 @@
 
 .form-field__input {
     border-radius: 2px;
-    border-width: 1px;
+    border: 0;
     width: 100%;
     height: 32px;
     padding: 0 8px;
     position: relative;
     z-index: 1;
 
-    border-color: var(--input-border-color);
     background-color: transparent;
     color: var(--input-color);
+}
+
+.form-field__input::placeholder {
+    color: var(--input-placeholder-color);
 }
 
 .form-field__input:hover {

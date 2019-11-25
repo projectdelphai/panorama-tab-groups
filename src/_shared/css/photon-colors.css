@@ -59,11 +59,12 @@
 
   --grey-10: #f9f9fa;
   --grey-10-a10: rgba(249, 249, 250, 0.1);
+  --grey-10-a15: rgba(249, 249, 250, 0.15); /* custom, but used in Firefox UI */
   --grey-10-a20: rgba(249, 249, 250, 0.2);
   --grey-10-a40: rgba(249, 249, 250, 0.4);
   --grey-10-a60: rgba(249, 249, 250, 0.6);
   --grey-10-a80: rgba(249, 249, 250, 0.8);
-  --grey-20: #ededf0;
+  --grey-20: #828285;
   --grey-30: #d7d7db;
   --grey-40: #b1b1b3;
   --grey-50: #737373;
