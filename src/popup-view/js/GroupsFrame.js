@@ -10,13 +10,13 @@ class GroupsFrame extends Frame {
 
     async render() {
         const headerRendered = _renderHeader.call(this);
-        const groupListRenderd = _renderGroupList.call(this);
+        const groupListRendered = _renderGroupList.call(this);
         _renderFooter.call(this);
         super.render();
 
         // Setup the focus
         if (this.lastViewedGroupDetail >= 0) {
-            groupListRenderd.then(() => {
+            groupListRendered.then(() => {
                 this.node.querySelector(`#group-${this.lastViewedGroupDetail} .list__link--extend`).focus();
                 this.lastViewedGroupDetail = -1;
             });
