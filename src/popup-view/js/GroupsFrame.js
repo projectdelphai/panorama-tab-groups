@@ -50,7 +50,16 @@ async function _renderHeader() {
 
             if (resultTabs.length) {
                 // TODO: Maybe list tabs by group
-                this.setContent(this.getRenderedTabList(resultTabs));
+                const renderedTabs = this.getRenderedTabList(resultTabs);
+
+                // Show that the first search result is selected when hitting enter
+                const firstTabItem = renderedTabs.querySelector('.list__item');
+                firstTabItem.classList.add('list__item--selected');
+                firstTabItem.querySelector('.list__link').addEventListener('blur', () => {
+                    firstTabItem.classList.remove('list__item--selected');
+                });
+
+                this.setContent(renderedTabs);
             } else {
                 this.setContent('No results');
                 // TODO: add translation

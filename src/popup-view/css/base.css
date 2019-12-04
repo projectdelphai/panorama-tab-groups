@@ -145,7 +145,8 @@ footer .button-ghost::before {
     box-shadow: var(--list-item-highlight-box-shadow);
 }
 
-.list__item:hover {
+.list__item:hover,
+.list__item--selected {
 	background-color: var(--list-item-hover-background);
 }
 

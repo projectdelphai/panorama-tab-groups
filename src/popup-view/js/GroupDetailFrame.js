@@ -93,6 +93,7 @@ function _activateGroupNameEdit(groupNameNode) {
             newGroupNameNode.querySelector('.group-edit').focus();
         }
     });
+    // TODO: Save edited group name on input blur
     inputNode.addEventListener('keyup', async (event) => {
         // Allow arrow navigation inside the input
         event.stopPropagation();
