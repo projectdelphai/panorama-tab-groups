@@ -9,6 +9,7 @@ class GroupsFrame extends Frame {
     }
 
     async render() {
+        this.setContentLoadingStart();
         const headerRendered = _renderHeader.call(this);
         const groupListRendered = _renderGroupList.call(this);
         _renderFooter.call(this);

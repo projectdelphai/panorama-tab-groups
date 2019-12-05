@@ -9,6 +9,7 @@ class GroupDetailFrame extends Frame {
     }
 
     async render(group) {
+        this.setContentLoadingStart();
         this.group = group; // TODO: Do it smarter?
         GroupsFrame.lastViewedGroupDetail = this.group.id;
         _renderHeader.call(this);
@@ -20,13 +21,15 @@ class GroupDetailFrame extends Frame {
             _activateGroupNameEdit.call(this, this.header.querySelector('.group-name'));
         }
 
-        // Setup the focus
-        const firstTab = this.node.querySelector('.list__link');
-        if (firstTab !== null) {
-            firstTab.focus();
-        } else {
-            this.node.querySelector('button').focus();
-        }
+        this.shell.addEventListener("frameshell.transitionEnd", () => {
+            // Setup the focus
+            const firstTab = this.node.querySelector(".list__link");
+            if (firstTab !== null) {
+                firstTab.focus();
+            } else {
+                this.node.querySelector("button").focus();
+            }
+        });
     }
 
     handleEvent(event) {

@@ -35,10 +35,11 @@ export class Frame {
         }
     }
 
-    enable() {
-        document.body.classList.add('content-loading');
-        _disableSibling.call(this);
+    setContentLoadingStart() {
+        document.body.classList.add("content-loading");
+    }
 
+    enable() {
         this.node.classList.add('frame--active');
 
         // TODO: something smarter?
@@ -47,7 +48,13 @@ export class Frame {
         } else {
             this.shell.classList.remove('frame-shell--aside-active');
         }
+        setTimeout(() => {
+            this.shell.dispatchEvent(
+              new CustomEvent("frameshell.transitionEnd")
+            );
+        }, 200);
 
+        _disableSibling.call(this);
         document.body.classList.remove('content-loading');
     }
 
