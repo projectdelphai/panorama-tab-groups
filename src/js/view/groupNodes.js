@@ -121,18 +121,20 @@ async function groupTransform(group, node, top, right, bottom, left, elem) {
                 rect.x = 0;
                 rect.i = rect.x+rect.w;
             }
+            //TODO: add option to enable-disable scrolling
             if(rect.i > 1) {
-                rect.i = 1;
-                rect.x = rect.i - rect.w;
+                //rect.i = 1;
+                //rect.x = rect.i - rect.w;
             }
 
             if(rect.y < 0) {
                 rect.y = 0;
                 rect.j = rect.y+rect.h;
             }
+            //TODO: add option to enable-disable scrolling
             if(rect.j > 1) {
-                rect.j = 1;
-                rect.y = rect.j - rect.h;
+                //rect.j = 1;
+                //rect.y = rect.j - rect.h;
             }
         }else{
             if(left)   { rect.x = clamp(rect.x, 0, rect.i-minw); }
