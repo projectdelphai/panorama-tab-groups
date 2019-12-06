@@ -1,5 +1,5 @@
-import { View } from '../_shared/js/models/View.js';
-import GroupsFrame from './js/GroupsFrame.js';
+import { View } from "../_shared/js/models/View.js";
+import GroupsFrame from "./js/GroupsFrame.js";
 
 /*
  * TODO:
@@ -8,7 +8,7 @@ import GroupsFrame from './js/GroupsFrame.js';
  * - async more things
  */
 
-new class PopupView extends View {
+new (class PopupView extends View {
   constructor() {
     super();
     return (async () => {
@@ -25,4 +25,4 @@ new class PopupView extends View {
   close() {
     window.close();
   }
-}
+})();

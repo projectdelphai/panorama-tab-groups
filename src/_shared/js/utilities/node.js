@@ -1,33 +1,32 @@
 /**
- * 
- * @param {string} string 
+ * @param {string} string
  * @returns {HtmlElement} node
  */
 export function getElementNodeFromString(string) {
-    const doc = new DOMParser().parseFromString(string, 'text/html');
+  const doc = new DOMParser().parseFromString(string, "text/html");
 
-    let node = doc.body.firstChild;
+  let node = doc.body.firstChild;
 
-    for (; node; node = node.nextSibling) {
-        if (node.nodeType === 1) {
-            return node;
-        }
+  for (; node; node = node.nextSibling) {
+    if (node.nodeType === 1) {
+      return node;
     }
+  }
 
-    return document.createTextNode('');
-};
+  return document.createTextNode("");
+}
 
 export function getElementNodesFromString(string) {
-    const doc = new DOMParser().parseFromString(string, 'text/html');
+  const doc = new DOMParser().parseFromString(string, "text/html");
 
-    let node = doc.body.firstChild;
-    let nodes = [];
+  let node = doc.body.firstChild;
+  let nodes = [];
 
-    for (; node; node = node.nextSibling) {
-        if (node.nodeType === 1) {
-            nodes.push(node);
-        }
+  for (; node; node = node.nextSibling) {
+    if (node.nodeType === 1) {
+      nodes.push(node);
     }
+  }
 
-    return nodes;
-};
+  return nodes;
+}

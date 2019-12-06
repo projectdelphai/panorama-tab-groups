@@ -8,10 +8,7 @@ import {
   disableShortcutForm,
   enableShortcut
 } from "./shortcuts.js";
-import { 
-  saveOptionView,
-  showViewSpecificOptions 
-} from "./view.js";
+import { saveOptionView, showViewSpecificOptions } from "./view.js";
 import { saveOptionTheme } from "./theme.js";
 import { saveOptionToolbarPosition } from "./toolbar.js";
 import { loadBackup, saveBackup } from "./backup.js";
@@ -65,47 +62,45 @@ function attachEventHandler(options, shortcuts) {
       continue;
     }
 
-    shortcutNode.querySelector(`input`).value = shortcut.shortcut;
+    shortcutNode.querySelector("input").value = shortcut.shortcut;
     shortcutNode
-      .querySelector(`.updateShortcut`)
-      .addEventListener('click', updateShortcut);
+      .querySelector(".updateShortcut")
+      .addEventListener("click", updateShortcut);
     shortcutNode
-      .querySelector(`.resetShortcut`)
-      .addEventListener('click', resetShortcut);
+      .querySelector(".resetShortcut")
+      .addEventListener("click", resetShortcut);
     shortcutNode
-      .querySelector(`.enableShortcut`)
-      .addEventListener('click', enableShortcut.bind(this, options));
+      .querySelector(".enableShortcut")
+      .addEventListener("click", enableShortcut.bind(this, options));
 
     if (options.shortcut.hasOwnProperty(shortcut.name)) {
       shortcutNode
-        .querySelector(`.disableShortcut`)
-        .addEventListener('click', disableShortcut.bind(this, options));
+        .querySelector(".disableShortcut")
+        .addEventListener("click", disableShortcut.bind(this, options));
     }
   }
 
   // View
   document
     .querySelector('form[name="formView"]')
-    .addEventListener('change', saveOptionView);
+    .addEventListener("change", saveOptionView);
 
   // Theme
   document
     .querySelector('form[name="formTheme"]')
-    .addEventListener('change', saveOptionTheme);
+    .addEventListener("change", saveOptionTheme);
 
   // Toolbar
   document
     .querySelector('form[name="formToolbarPosition"]')
-    .addEventListener('change', saveOptionToolbarPosition);
+    .addEventListener("change", saveOptionToolbarPosition);
 
   // Backup
   document
-    .getElementById('backupFileInput')
-    .addEventListener('change', loadBackup);
+    .getElementById("backupFileInput")
+    .addEventListener("change", loadBackup);
   document
-    .getElementById('saveBackupButton')
-    .addEventListener('click', saveBackup);
-  document
-    .getElementById('resetAddon')
-    .addEventListener('click', resetPTG);
+    .getElementById("saveBackupButton")
+    .addEventListener("click", saveBackup);
+  document.getElementById("resetAddon").addEventListener("click", resetPTG);
 }
