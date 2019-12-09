@@ -257,7 +257,7 @@ footer .button-ghost::before {
   height: 16px;
   width: 16px;
   background: var(--button-ghost-icon-color);
-  mask: url(../../_shared/icons/Arrowhead\Right.svg) center center no-repeat;
+  mask: url(../../_shared/icons/Arrowhead_Right.svg) center center no-repeat;
   mask-size: 16px;
 }
 

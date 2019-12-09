@@ -128,5 +128,5 @@
 }
 
 .button-ghost--back::before {
-  mask-image: url(../icons/Arrowhead\Left.svg);
+  mask-image: url(../icons/Arrowhead_Left.svg);
 }
