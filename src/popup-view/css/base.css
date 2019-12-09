@@ -75,7 +75,7 @@ body > * {
 }
 
 .frame:not(.frame--active) > * {
-  visibility: hidden;
+  display: none;
 }
 
 header {
