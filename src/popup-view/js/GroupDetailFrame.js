@@ -9,12 +9,24 @@ class GroupDetailFrame extends Frame {
   }
 
   async render(group) {
-    this.setContentLoadingStart();
     this.group = group; // TODO: Do it smarter?
+    this.setContentLoadingStart();
     GroupsFrame.lastViewedGroupDetail = this.group.id;
     _renderHeader.call(this);
     _renderTabList.call(this);
     _renderFooter.call(this);
+    if (this.frameShellEventAttachted === false) {
+      this.frameShellEventAttachted = true;
+      this.shell.addEventListener("frameShell.transitionEnd", () => {
+        // Set initial Focus
+        const firstTab = this.node.querySelector(".list__link");
+        if (firstTab !== null) {
+          firstTab.focus();
+        } else {
+          this.node.querySelector("button").focus();
+        }
+      });
+    }
     super.render();
 
     if (this.group.status === "new") {
@@ -23,16 +35,6 @@ class GroupDetailFrame extends Frame {
         this.header.querySelector(".group-name")
       );
     }
-
-    this.shell.addEventListener("frameshell.transitionEnd", () => {
-      // Setup the focus
-      const firstTab = this.node.querySelector(".list__link");
-      if (firstTab !== null) {
-        firstTab.focus();
-      } else {
-        this.node.querySelector("button").focus();
-      }
-    });
   }
 
   handleEvent(event) {

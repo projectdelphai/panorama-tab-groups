@@ -8,6 +8,7 @@ export class Frame {
     this.content = this.node.querySelector(".frame-content");
     this.footer = this.node.querySelector(".frame-footer");
     this.isAside = false;
+    this.frameShellEventAttachted = false;
     this.navigateHorizontalIndex = 0;
   }
 
@@ -49,10 +50,10 @@ export class Frame {
       this.shell.classList.remove("frame-shell--aside-active");
     }
     setTimeout(() => {
-      this.shell.dispatchEvent(new CustomEvent("frameshell.transitionEnd"));
+      _disableSibling.call(this);
+      this.shell.dispatchEvent(new CustomEvent("frameShell.transitionEnd"));
     }, 200);
 
-    _disableSibling.call(this);
     document.body.classList.remove("content-loading");
   }
 
