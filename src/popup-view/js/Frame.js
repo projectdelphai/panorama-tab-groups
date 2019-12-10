@@ -50,9 +50,9 @@ export class Frame {
       this.shell.classList.remove("frame-shell--aside-active");
     }
     setTimeout(() => {
-      _disableSibling.call(this);
       this.shell.dispatchEvent(new CustomEvent("frameShell.transitionEnd"));
     }, 200);
+    setTimeout(_disableSibling.bind(this), 100);
 
     document.body.classList.remove("content-loading");
   }
