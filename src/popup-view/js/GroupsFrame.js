@@ -234,7 +234,7 @@ function _handleGroupDragStart(event) {
   event.dataTransfer.dropEffect = "move";
 }
 
-function _handleGroupDragEnd() {
+function _handleGroupDragEnd(event) {
   this.list.classList.remove("dragging");
   event.target.classList.remove("dragged");
   event.target.setAttribute("aria-grabbed", false);
