@@ -107,6 +107,7 @@ async function _renderHeader() {
     "click",
     function() {
       browser.runtime.openOptionsPage();
+      window.PopupView.close();
     },
     false
   );
