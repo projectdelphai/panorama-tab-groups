@@ -80,7 +80,7 @@ function changeMenu(message) {
 
 async function moveTab(tabId, groupId) {
     let windowId = (await browser.windows.getCurrent()).id;
-    await browser.sessions.setTabValue(tabId, 'groupId', groupId);
+    await browser.sessions.setTabValue(tabId, 'groupId', parseInt(groupId));
 
     let toIndex = -1;
     await browser.tabs.move(tabId, {index: toIndex});

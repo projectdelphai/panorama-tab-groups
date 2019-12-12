@@ -1,6 +1,6 @@
 
 export async function setGroupId(tabId, groupId) {
-	await browser.sessions.setTabValue(tabId, 'groupId', groupId);
+	await browser.sessions.setTabValue(tabId, 'groupId', parseInt(groupId));
 };
 
 export async function getGroupId(tabId) {

@@ -146,7 +146,7 @@ async function openBackup(data) {
 			}).catch((err) => { console.log(err); });
 
 			if(tab) {
-				await browser.sessions.setTabValue(tab.id, 'groupId', data.windows[wi].tabs[ti].groupId);
+				await browser.sessions.setTabValue(tab.id, 'groupId', parseInt(data.windows[wi].tabs[ti].groupId));
 				//await browser.tabs.discard(tab.id);
 			}
 		}
