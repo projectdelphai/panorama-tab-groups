@@ -1,4 +1,4 @@
-import { currentOptions } from "../_share/options.js";
+import { loadOptions } from "../_share/options.js";
 import { addTranslations } from "./translations.js";
 import {
   shortcuts,
@@ -18,7 +18,7 @@ import { resetPTG } from "./reset.js";
 document.addEventListener("DOMContentLoaded", init);
 
 async function init() {
-  let options = await currentOptions;
+  let options = await loadOptions();
   restoreOptions(options, await shortcuts);
   addTranslations();
   attachEventHandler(options, await shortcuts);

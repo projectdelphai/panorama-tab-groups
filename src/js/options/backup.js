@@ -1,3 +1,4 @@
+import { currentOptions } from "../_share/options.js";
 
 function convertBackup(tgData) {
 
@@ -150,9 +151,25 @@ async function openBackup(data) {
 				//await browser.tabs.discard(tab.id);
 			}
 		}
-
-		var pwTab = await browser.tabs.create({url: "/view.html", active: true, windowId: window.id});
-		await browser.sessions.setTabValue(pwTab.id, 'groupId', -1);
+		
+		if ((await currentOptions).view === "freeform") {
+			// Show freeform view
+			const freeformViewTab = await browser.tabs.create({
+				url: "/view.html",
+				active: true,
+				windowId: window.id
+			});
+			await browser.sessions.setTabValue(freeformViewTab.id, "groupId", -1);
+		} else {
+			// Remove the "New tab"-tab
+  			const activeNewTabs = await browser.tabs.query({
+				windowId: window.id,
+				active: true
+			});
+			if (activeNewTabs.length === 1) {
+				await browser.tabs.remove(activeNewTabs[0].id);
+      		}
+		}
 	}
 	background.backgroundState.openingBackup = false;
 }
