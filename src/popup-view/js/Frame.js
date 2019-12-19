@@ -69,7 +69,11 @@ export class Frame {
     _updateContent(this.footer, content);
   }
 
-  getRenderedTabList(Tabs) {
+  getRenderedTabList(Tabs, options) {
+    options = Object.assign({
+      hideCloseButton: false,
+    }, options);
+
     let tabNodes = Tabs.map(Tab => {
       const isActive = Tab.id === window.PopupView.lastActiveTab.id;
       const node = getElementNodeFromString(`
@@ -85,9 +89,8 @@ ${Tab.url}">
                         <span>${Tab.title}</span>
                     </button>
                     <button class="list__close" 
-                            title="${browser.i18n.getMessage(
-                              "closeTab"
-                            )}"></button>
+                            title="${browser.i18n.getMessage("closeTab")}"
+                            ${options.hideCloseButton ? "hidden" : ""}></button>
                 </li>
             `);
 

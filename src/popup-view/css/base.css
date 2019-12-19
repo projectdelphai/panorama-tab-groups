@@ -128,6 +128,18 @@ footer .button-ghost::before {
   mask-position: 13px 50%;
 }
 
+.list-title {
+  padding: 0 10px;
+  margin: 10px 0 4px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.list-title:first-child {
+  margin-top: 0;
+}
+
 .list {
   list-style: none;
   margin: 0;
@@ -224,7 +236,7 @@ footer .button-ghost::before {
   display: none;
 }
 
-.keyboard-navigation .list__close {
+.keyboard-navigation .list__close:not([hidden]) {
   display: block;
 }
 

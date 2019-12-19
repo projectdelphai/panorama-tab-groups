@@ -45,7 +45,10 @@ async function _renderHeader() {
         </div>
     `);
   const searchInput = searchNode.querySelector('[type="search"]');
-  const tabs = await window.PopupView.getAllTabs();
+  const groups = await window.PopupView.getGroups();
+  await groups.forEach(async group => {
+    await group.loadTabs();
+  });
 
   searchInput.addEventListener(
     "keyup",
@@ -53,19 +56,33 @@ async function _renderHeader() {
       const searchQuery = searchInput.value;
 
       if (searchQuery.length >= 2) {
-        const resultTabs = tabs.filter(tab => {
-          return (
-            new RegExp(searchQuery, "gi").test(tab.title) ||
-            new RegExp(searchQuery, "gi").test(tab.url)
-          );
+        const groupsToSearch = groups.map(group => Object.assign({}, group));
+        const resultGroups = groupsToSearch.filter(group => {
+          group.tabs = group.tabs.filter(tab => {
+            return (
+              new RegExp(searchQuery, "gi").test(tab.title) ||
+              new RegExp(searchQuery, "gi").test(tab.url)
+            );
+          });
+
+          return group.tabs.length > 0;
         });
 
-        if (resultTabs.length) {
-          // TODO: Maybe list tabs by group
-          const renderedTabs = this.getRenderedTabList(resultTabs);
+        if (resultGroups.length) {
+          const resultsNode = getElementNodeFromString(`<div></div>`);
+          resultGroups.map(group => {
+            const groupNode = getElementNodeFromString(`
+                <h2 class="list-title">${group.name}</h2>
+            `);
+            resultsNode.append(groupNode);
+            const tabNodes = this.getRenderedTabList(group.tabs, {
+              hideCloseButton: true
+            });
+            resultsNode.append(tabNodes);
+          });
 
           // Show that the first search result is selected when hitting enter
-          const firstTabItem = renderedTabs.querySelector(".list__item");
+          const firstTabItem = resultsNode.querySelector(".list__item--tab");
           firstTabItem.classList.add("list__item--selected");
           firstTabItem
             .querySelector(".list__link")
@@ -73,7 +90,7 @@ async function _renderHeader() {
               firstTabItem.classList.remove("list__item--selected");
             });
 
-          this.setContent(renderedTabs);
+          this.setContent(resultsNode);
         } else {
           this.setContent("No results");
           // TODO: add translation
