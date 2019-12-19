@@ -99,8 +99,8 @@ async function _renderHeader() {
         } else {
           this.setContent(noResultNode);
         }
-      } else if (searchQuery.length === 0) {
-        _renderGroupList.call(this);
+      } else {
+        // TODO: restore or show all?
       }
     },
     false
