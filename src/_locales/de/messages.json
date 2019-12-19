@@ -32,6 +32,9 @@
     "searchForTab.placeholder": {
         "message": "Suche nach einem Tab..."
     },
+    "searchForTab.noResults": {
+        "message": "Keine Tabs gefunden"
+    },
     "goBackToGroups": {
         "message": "Zurück zu den Gruppen"
     },

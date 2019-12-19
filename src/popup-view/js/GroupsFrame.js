@@ -49,6 +49,11 @@ async function _renderHeader() {
   await groups.forEach(async group => {
     await group.loadTabs();
   });
+  const noResultNode = getElementNodeFromString(`
+      <h2 class="list-title">${browser.i18n.getMessage(
+        "searchForTab.noResults"
+      )}</h2>
+  `);
 
   searchInput.addEventListener(
     "keyup",
@@ -92,9 +97,7 @@ async function _renderHeader() {
 
           this.setContent(resultsNode);
         } else {
-          this.setContent("No results");
-          // TODO: add translation
-          // TODO: add proper markup
+          this.setContent(noResultNode);
         }
       } else {
         // TODO: restore or show all?
