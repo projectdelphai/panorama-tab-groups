@@ -99,8 +99,11 @@ async function _renderHeader() {
         } else {
           this.setContent(noResultNode);
         }
-      } else {
-        // TODO: restore or show all?
+      } else if (
+        searchQuery.length === 0 &&
+        ["ArrowUp", "ArrowDown"].indexOf(event.key) === -1
+      ) {
+        _renderGroupList.call(this);
       }
     },
     false
