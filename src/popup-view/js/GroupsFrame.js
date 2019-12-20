@@ -54,6 +54,7 @@ async function _renderHeader() {
         "searchForTab.noResults"
       )}</h2>
   `);
+  let lastSearchInput = '';
 
   searchInput.addEventListener(
     "keyup",
@@ -72,6 +73,7 @@ async function _renderHeader() {
 
           return group.tabs.length > 0;
         });
+        lastSearchInput = searchQuery;
 
         if (resultGroups.length) {
           const resultsNode = getElementNodeFromString(`<div></div>`);
@@ -101,8 +103,12 @@ async function _renderHeader() {
         }
       } else if (
         searchQuery.length === 0 &&
-        ["ArrowUp", "ArrowDown"].indexOf(event.key) === -1
+        lastSearchInput.length > 0 &&
+        ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].indexOf(
+          event.key
+        ) === -1
       ) {
+        lastSearchInput = "";
         _renderGroupList.call(this);
       }
     },
