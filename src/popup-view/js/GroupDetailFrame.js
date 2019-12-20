@@ -91,22 +91,27 @@ function _activateGroupNameEdit(groupNameNode) {
         </div>
     `);
   const inputNode = node.querySelector("input");
+  
+  // Save edited group name when leaving input
+  inputNode.addEventListener("blur", async event => {
+      _saveGroupName.call(this, node, inputNode);
+  });
+
+  // Save edited group name when hitting enter
   inputNode.addEventListener("keypress", async event => {
     event.stopPropagation();
 
     if (event.key === "Enter") {
-      const newGroupName = inputNode.value;
-      this.group = await this.group.rename(newGroupName);
-      const newGroupNameNode = _getRenderedGroupName.call(this);
-      node.parentNode.replaceChild(newGroupNameNode, node);
-      newGroupNameNode.querySelector(".group-edit").focus();
+      _saveGroupName.call(this, node, inputNode);
     }
   });
-  // TODO: Save edited group name on input blur
+  
+  // Allow arrow navigation inside the input
   inputNode.addEventListener("keyup", async event => {
-    // Allow arrow navigation inside the input
     event.stopPropagation();
   });
+
+  // Save edited group name when hitting esc
   inputNode.addEventListener("keydown", async event => {
     event.stopPropagation();
     // TODO: Prevent popup from closing
@@ -114,14 +119,21 @@ function _activateGroupNameEdit(groupNameNode) {
     // https://discourse.mozilla.org/t/prevent-toolbar-popup-from-closing-when-pressing-esc/47464
     if (event.key === "Esc") {
       event.preventDefault();
-      const newGroupNameNode = _getRenderedGroupName.call(this);
-      node.parentNode.replaceChild(newGroupNameNode, node);
-      newGroupNameNode.querySelector(".group-edit").focus();
+      _saveGroupName.call(this, node, inputNode);
     }
   });
+
   groupNameNode.parentNode.replaceChild(node, groupNameNode);
   inputNode.focus();
   inputNode.select();
+}
+
+async function _saveGroupName(formNode, inputNode) {
+  const newGroupName = inputNode.value;
+  this.group = await this.group.rename(newGroupName);
+  const newGroupNameNode = _getRenderedGroupName.call(this);
+  formNode.parentNode.replaceChild(newGroupNameNode, formNode);
+  newGroupNameNode.querySelector(".group-edit").focus();
 }
 
 function _renderTabList() {
