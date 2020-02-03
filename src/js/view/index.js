@@ -81,31 +81,31 @@ async function captureThumbnail(tab) {
     var cachedThumbnail = await browser.sessions.getTabValue(tabId, 'thumbnail')
 
     // Only capture a new thumbnail if there's no cached one, the cached one doesn't have a capturedTime,
-    // or the tab was accessed since the cache was made 
+    // or the tab was accessed since the cache was made
     if(!cachedThumbnail || !cachedThumbnail.capturedTime || cachedThumbnail.capturedTime < tab.lastAccessed){
         var data = await browser.tabs.captureTab(tabId, {format: 'jpeg', quality: 25});
         var img = new Image;
-    
+
         img.onload = async function() {
             var canvas = document.createElement('canvas');
             var ctx = canvas.getContext('2d');
-    
+
             canvas.width = 500;
             canvas.height = canvas.width * (this.height / this.width);
-    
+
             //ctx.imageSmoothingEnabled = true;
             //ctx.imageSmoothingQuality = 'high';
             ctx.drawImage(this, 0, 0, canvas.width, canvas.height);
-    
+
             var thumbnail = canvas.toDataURL('image/jpeg', 0.7);
-    
+
             updateThumbnail(tabId, thumbnail);
             browser.sessions.setTabValue(tabId, 'thumbnail', {
-                thumbnail: thumbnail, 
+                thumbnail: thumbnail,
                 capturedTime: Date.now()
             });
         };
-    
+
         img.src = data;
     }
 }
@@ -171,6 +171,8 @@ async function initView() {
     // set locale specific titles
     document.getElementById('newGroup').title = browser.i18n.getMessage("newGroupButton");
     document.getElementById('settings').title = browser.i18n.getMessage("settingsButton");
+    document.getElementById('tiling').title   = browser.i18n.getMessage("tilingButton");
+    document.getElementById('freeform').title = browser.i18n.getMessage("freeformButton");
 
 
     view.windowId = (await browser.windows.getCurrent()).id;
@@ -210,7 +212,7 @@ async function initView() {
     document.getElementById('tiling').addEventListener('click', function() {
         setLayoutMode("tiling");
     }, false);
-   
+
     // Listen for search input
     document.getElementById('tab-search').addEventListener('input', searchTabs);
 
@@ -247,7 +249,7 @@ async function initView() {
         // We don't want to listen for every property because that includes
         // the hidden state changing which generates a ton of events
         // every time the active group changes
-        properties:[ 
+        properties:[
             "discarded",
             "favIconUrl",
             "pinned",
@@ -290,7 +292,7 @@ async function activateTiling() {
     let maxGroups = Math.ceil(Math.sqrt(numGroups))
     let quotient = Math.floor(numGroups / maxGroups);
     let remainder = numGroups % maxGroups;
-    
+
     let gridLayout = Array(quotient).fill(maxGroups);
     if (remainder != 0) {
         gridLayout.push(remainder);
@@ -318,7 +320,7 @@ async function activateTiling() {
             currentIndex++;
         }
     }
-    
+
 }
 
 async function keyInput(e) {
@@ -450,7 +452,7 @@ async function tabUpdated( tabId, changeInfo, tab ) {
         //FIXME for some reason the pinned tabs aren't updating reliably.
         //putting a temporary reload trigger in until someone can figure out why that's happening
         queueReload();
-        
+
         fillGroupNodes();
         updateTabNode( tab );
     }

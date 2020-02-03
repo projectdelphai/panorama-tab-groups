@@ -5,6 +5,12 @@
     "newGroupButton": {
         "message": "Add new group"
     },
+    "freeformButton": {
+        "message": "Free-form alignment"
+    },
+    "tilingButton": {
+        "message": "Automatic (tiling) alignment"
+    },
     "settingsButton": {
         "message": "Settings"
     },
