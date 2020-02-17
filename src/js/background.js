@@ -317,6 +317,7 @@ async function setActionTitle(windowId, activeGroup = null) {
     }
     browser.browserAction.setTitle({title: `Active Group: ${name}`, 'windowId': windowId});
     browser.browserAction.setBadgeText({text: String(groups.length), windowId: windowId});
+    browser.browserAction.setBadgeBackgrounColor({color: "#666666"});
 }
 
 /** Make sure each window has a group */
@@ -354,6 +355,7 @@ async function createGroupInWindowIfMissing(browserWindow) {
     }
     browser.browserAction.setTitle({title: `Active Group: Unnamed group`, 'windowId': browserWindow.id});
     browser.browserAction.setBadgeText({text: '1', windowId: browserWindow.id});
+    browser.browserAction.setBadgeBackgroundColor({color: "#666666"});
 }
 
 /** Create the first group in a window
