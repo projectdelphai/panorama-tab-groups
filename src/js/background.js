@@ -367,15 +367,20 @@ async function createGroupInWindow(browserWindow) {
         return;
     }
 
-    let groupId = await newGroupUid(browserWindow.id);
+    const options = await loadOptions();
+    let groups = [];
 
-    let groups = [{
-        id: groupId,
-        name: groupId + ": " + browser.i18n.getMessage("defaultGroupName"),
-        containerId: 'firefox-default',
-        rect: {x: 0, y: 0, w: 0.5, h: 0.5},
-        lastMoved: (new Date).getTime(),
-    }];
+    for (let i = 1; i <= options.tabGroupsStartNumber; i++) {
+        let groupId = await newGroupUid(browserWindow.id);
+        let groupData = {
+            id: groupId,
+            name: groupId + ': ' + browser.i18n.getMessage('defaultGroupName'),
+            containerId: 'firefox-default',
+            rect: { x: 0, y: 0, w: 0.5, h: 0.5 },
+            lastMoved: (new Date).getTime(),
+        };
+        groups.push(groupData);
+    }
 
     await browser.sessions.setWindowValue(browserWindow.id, 'groups', groups);
     await browser.sessions.setWindowValue(browserWindow.id, 'activeGroup', groupId);
