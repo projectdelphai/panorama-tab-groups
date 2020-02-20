@@ -227,9 +227,13 @@ async function initView() {
 
     document.addEventListener('visibilitychange', function() {
         if(!document.hidden) {
-            if(pendingReload){
-                location.reload();
+            let background = browser.extension.getBackgroundPage();
+
+            if (pendingReload || background.viewRefreshOrdered) {
+              background.viewRefreshOrdered = false;
+              location.reload();
             }
+
             setActiveTabNode(view.tabId);
             captureThumbnails();
         }

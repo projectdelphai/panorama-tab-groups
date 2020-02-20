@@ -9,6 +9,8 @@ window.backgroundState = {
   openingBackup: false,
 };
 
+window.viewRefreshOrdered = false;
+
 /** Modulo in javascript does not behave like modulo in mathematics when x is negative.
  * Following code is based from this:
  * https://stackoverflow.com/questions/4467539/javascript-modulo-gives-a-negative-result-for-negative-numbers */
@@ -445,6 +447,7 @@ window.refreshView = async function() {
   const options = await loadOptions();
 
   console.log("Refresh Panorama Tab View");
+  window.viewRefreshOrdered = true;
 
   browser.browserAction.onClicked.removeListener(toggleView);
   browser.commands.onCommand.removeListener(triggerCommand);
