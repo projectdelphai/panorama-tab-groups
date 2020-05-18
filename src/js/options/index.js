@@ -1,4 +1,4 @@
-import { currentOptions } from "../_share/options.js";
+import { loadOptions } from "../_share/options.js";
 import { addTranslations } from "./translations.js";
 import {
   shortcuts,
@@ -8,6 +8,7 @@ import {
   disableShortcutForm,
   enableShortcut
 } from "./shortcuts.js";
+import { saveOptionView, showViewSpecificOptions } from "./view.js";
 import { saveOptionTheme } from "./theme.js";
 import { saveOptionToolbarPosition } from "./toolbar.js";
 import { loadBackup, saveBackup } from "./backup.js";
@@ -17,7 +18,7 @@ import { resetPTG } from "./reset.js";
 document.addEventListener("DOMContentLoaded", init);
 
 async function init() {
-  let options = await currentOptions;
+  let options = await loadOptions();
   restoreOptions(options, await shortcuts);
   addTranslations();
   attachEventHandler(options, await shortcuts);
@@ -27,10 +28,19 @@ async function init() {
 function restoreOptions(options, shortcuts) {
   // Shortcuts
   for (const shortcut of shortcuts) {
+    if (!options.shortcut.hasOwnProperty(shortcut.name)) {
+      continue;
+    }
     if (options.shortcut[shortcut.name].disabled) {
       disableShortcutForm(shortcut.name);
     }
   }
+
+  // View
+  document.querySelector(
+    `input[name="view"][value="${options.view}"]`
+  ).checked = true;
+  showViewSpecificOptions(options.view);
 
   // Theme
   document.querySelector(
@@ -46,20 +56,34 @@ function restoreOptions(options, shortcuts) {
 function attachEventHandler(options, shortcuts) {
   // Shortcuts
   for (const shortcut of shortcuts) {
-    document.querySelector(`#${shortcut.name} input`).value = shortcut.shortcut;
-    document
-      .querySelector(`#${shortcut.name} .updateShortcut`)
+    const shortcutNode = document.querySelector(`#${shortcut.name}`);
+
+    if (!shortcutNode) {
+      continue;
+    }
+
+    shortcutNode.querySelector("input").value = shortcut.shortcut;
+    shortcutNode
+      .querySelector(".updateShortcut")
       .addEventListener("click", updateShortcut);
-    document
-      .querySelector(`#${shortcut.name} .resetShortcut`)
+    shortcutNode
+      .querySelector(".resetShortcut")
       .addEventListener("click", resetShortcut);
-    document
-      .querySelector(`#${shortcut.name} .disableShortcut`)
-      .addEventListener("click", disableShortcut.bind(this, options));
-    document
-      .querySelector(`#${shortcut.name} .enableShortcut`)
+    shortcutNode
+      .querySelector(".enableShortcut")
       .addEventListener("click", enableShortcut.bind(this, options));
+
+    if (options.shortcut.hasOwnProperty(shortcut.name)) {
+      shortcutNode
+        .querySelector(".disableShortcut")
+        .addEventListener("click", disableShortcut.bind(this, options));
+    }
   }
+
+  // View
+  document
+    .querySelector('form[name="formView"]')
+    .addEventListener("change", saveOptionView);
 
   // Theme
   document
@@ -78,7 +102,5 @@ function attachEventHandler(options, shortcuts) {
   document
     .getElementById("saveBackupButton")
     .addEventListener("click", saveBackup);
-  document
-    .getElementById("resetAddon")
-    .addEventListener("click", resetPTG);
+  document.getElementById("resetAddon").addEventListener("click", resetPTG);
 }

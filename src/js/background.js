@@ -9,6 +9,8 @@ window.backgroundState = {
   openingBackup: false,
 };
 
+window.viewRefreshOrdered = false;
+
 /** Modulo in javascript does not behave like modulo in mathematics when x is negative.
  * Following code is based from this:
  * https://stackoverflow.com/questions/4467539/javascript-modulo-gives-a-negative-result-for-negative-numbers */
@@ -80,7 +82,7 @@ function changeMenu(message) {
 
 async function moveTab(tabId, groupId) {
     let windowId = (await browser.windows.getCurrent()).id;
-    await browser.sessions.setTabValue(tabId, 'groupId', groupId);
+    await browser.sessions.setTabValue(tabId, 'groupId', parseInt(groupId));
 
     let toIndex = -1;
     await browser.tabs.move(tabId, {index: toIndex});
@@ -155,8 +157,6 @@ async function triggerCommand(command) {
     await changeActiveGroupBy(1);
   } else if (command === "activate-previous-group") {
     await changeActiveGroupBy(-1);
-  } else if (command === "toggle-panorama-view") {
-    await toggleView();
   }
 }
 
@@ -414,26 +414,73 @@ async function salvageGrouplessTabs() {
 }
 
 async function init() {
+  const options = await loadOptions();
 
-    console.log('Initializing Panorama Tab View');
+  console.log("Initializing Panorama Tab View");
 
-    await setupWindows();
-    await salvageGrouplessTabs();
+  await setupWindows();
+  await salvageGrouplessTabs();
 
-    console.log('Finished setup');
+  console.log("Finished setup");
 
-    await migrate(); //keep until everyone are on 0.8.0
+  await migrate(); //keep until everyone are on 0.8.0
 
-    browser.commands.onCommand.addListener(triggerCommand);
+  const disablePopupView = options.view !== "popup";
+  if (disablePopupView) {
+    // Disable popup
+    browser.browserAction.setPopup({
+      popup: ""
+    });
+
     browser.browserAction.onClicked.addListener(toggleView);
-    browser.windows.onCreated.addListener(createGroupInWindowIfMissing);
-    browser.tabs.onCreated.addListener(tabCreated);
-    browser.tabs.onAttached.addListener(tabAttached);
-    browser.tabs.onDetached.addListener(tabDetached);
-    browser.tabs.onActivated.addListener(tabActivated);
+  }
+
+  browser.commands.onCommand.addListener(triggerCommand);
+  browser.windows.onCreated.addListener(createGroupInWindowIfMissing);
+  browser.tabs.onCreated.addListener(tabCreated);
+  browser.tabs.onAttached.addListener(tabAttached);
+  browser.tabs.onDetached.addListener(tabDetached);
+  browser.tabs.onActivated.addListener(tabActivated);
 }
 
 init();
+
+window.refreshView = async function() {
+  const options = await loadOptions();
+
+  console.log("Refresh Panorama Tab View");
+  window.viewRefreshOrdered = true;
+
+  browser.browserAction.onClicked.removeListener(toggleView);
+  browser.commands.onCommand.removeListener(triggerCommand);
+  browser.windows.onCreated.removeListener(createGroupInWindowIfMissing);
+  browser.tabs.onCreated.removeListener(tabCreated);
+  browser.tabs.onAttached.removeListener(tabAttached);
+  browser.tabs.onDetached.removeListener(tabDetached);
+  browser.tabs.onActivated.removeListener(tabActivated);
+
+  const disablePopupView = options.view !== "popup";
+  if (disablePopupView) {
+    // Disable popup
+    browser.browserAction.setPopup({
+      popup: ""
+    });
+
+    browser.browserAction.onClicked.addListener(toggleView);
+  } else {
+    // Re-enable popup
+    browser.browserAction.setPopup({
+      popup: "popup-view/index.html"
+    });
+  }
+
+  browser.commands.onCommand.addListener(triggerCommand);
+  browser.windows.onCreated.addListener(createGroupInWindowIfMissing);
+  browser.tabs.onCreated.addListener(tabCreated);
+  browser.tabs.onAttached.addListener(tabAttached);
+  browser.tabs.onDetached.addListener(tabDetached);
+  browser.tabs.onActivated.addListener(tabActivated);
+};
 
 // migrate to transformable groups
 async function migrate() {
@@ -471,11 +518,9 @@ async function migrate() {
     }
 }
 
+// TODO: Remove? Is this used?
 function handleMessage(message, sender) {
-    if (message === "toggle-panorama-view") {
-        toggleView();
-    }
-    else if (message == "activate-next-group") {
+    if (message == "activate-next-group") {
         triggerCommand("activate-next-group");
     }
     else if (message == "activate-previous-group") {

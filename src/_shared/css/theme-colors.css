@@ -1,0 +1,44 @@
+:root {
+  --body-background: var(--white-100);
+  --body-color: inherit;
+  --separator-color: hsla(210, 4%, 10%, 0.14);
+
+  --input-color: var(--grey-90);
+  --input-placeholder-color: var(--grey-50);
+  --input-placeholder-icon-color: var(--grey-90-a40);
+  --input-background-color: var(--white-100);
+  --input-border-color: var(--grey-90-a20);
+  --input-hover-border-color: var(--grey-90-a30);
+  --input-focus-border-color: var(--blue-50);
+  --input-focus-box-shadow: 0 0 0 1px var(--blue-50),
+    0 0 0 4px var(--blue-50-a30);
+
+  --button-ghost-icon-color: var(--grey-90-a80);
+  --button-ghost-hover-background-color: var(--grey-90-a10);
+  --button-ghost-active-background-color: var(--grey-90-a20);
+  --button-ghost-focus-box-shadow: 0 0 0 1px var(--blue-50) inset,
+    0 0 0 1px var(--blue-50), 0 0 0 4px var(--blue-50-a30);
+
+  --drag-zone-background: var(--blue-80);
+  --drag-zone-entered-background: var(--blue-50);
+}
+
+.theme-dark {
+  --body-background: var(--grey-60);
+  --body-color: var(--grey-10);
+  --separator-color: var(--grey-10-a10);
+
+  --input-color: var(--white-100);
+  --input-placeholder-color: var(--grey-10);
+  --input-placeholder-icon-color: var(--grey-20);
+  --input-background-color: rgb(
+    91,
+    91,
+    97
+  ); /* like --grey-10-a10 but without alpha so the gradient at the right doesn't multiply */
+  --input-border-color: var(--grey-10-a10);
+
+  --button-ghost-icon-color: var(--grey-10);
+  --button-ghost-hover-background-color: var(--grey-10-a10);
+  --button-ghost-active-background-color: var(--grey-10-a20);
+}

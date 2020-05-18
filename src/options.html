@@ -11,13 +11,15 @@
 			<p>
 				<em><a href="https://developer.mozilla.org/en-US/Add-ons/WebExtensions/manifest.json/commands#Key_combinations" target="_blank">The format for the shortcut option is detailed here.</a></em>
 			</p>
+			<p>
+				<em>Users can also update shortcuts via the "Manage Extension Shortcuts" option at about:addons in Firefox as seen <a href="https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/commands#Updating_shortcuts">in the example video</a>.</em>
+			</p>
 			<div class="keyboardShortcuts">
-				<form id="toggle-panorama-view" class="browser-style">
-					<label for="toggle-panorama-view">Toggle Panorama View</label>
+				<form id="_execute_browser_action" class="browser-style">
+					<label for="_execute_browser_action">Toggle Panorama View</label>
 					<input type="text">
 					<button class="updateShortcut" class="browser-style">Update</button>
 					<button class="resetShortcut" class="browser-style">Reset</button>
-					<button class="disableShortcut" class="browser-style">Disable</button>
 					<button class="enableShortcut" class="browser-style" hidden>Enable</button>
 				</form>
 			</div>
@@ -42,6 +44,63 @@
 				</form>
 			</div>
 		</section>
+
+		<section>
+			<div id="optionsView">
+				<h2>View</h2>
+				<form class="browser-style" name="formView">
+					<div class="input-radio-image input-radio-image--extended">
+						<input type="radio" id="viewFreeform" name="view" value="freeform" />
+						<label for="viewFreeform">
+							<img src="/icons/options/view-freeform.svg" height="40" alt="" />
+							<span>Freeform (classic)</span>
+						</label>
+					</div>
+					<div class="input-radio-image input-radio-image--extended">
+						<input type="radio" id="viewPopup" name="view" value="popup" />
+						<label for="viewPopup">
+							<img src="/icons/options/view-popup.svg" height="40" alt="" />
+							<span>Popup</span>
+						</label>
+					</div>
+				</form>
+			</div>
+			<div id="optionsToolbar">
+				<h3>Toolbar</h3>
+				<h4>Position</h4>
+				<form class="browser-style" name="formToolbarPosition">
+					<div class="input-radio-image">
+						<input type="radio" id="toolbarPositionTop" name="toolbarPosition" value="top" />
+						<label for="toolbarPositionTop">
+							<img src="/icons/options/toolbar-position-top.png" alt="" />
+							<span>top</span>
+						</label>
+					</div>
+					<div class="input-radio-image">
+						<input type="radio" id="toolbarPositionRight" name="toolbarPosition" value="right" />
+						<label for="toolbarPositionRight">
+							<img src="/icons/options/toolbar-position-right.png" alt="" />
+							<span>right</span>
+						</label>
+					</div>
+					<div class="input-radio-image">
+						<input type="radio" id="toolbarPositionBottom" name="toolbarPosition" value="bottom" />
+						<label for="toolbarPositionBottom">
+							<img src="/icons/options/toolbar-position-bottom.png" alt="" />
+							<span>bottom</span>
+						</label>
+					</div>
+					<div class="input-radio-image">
+						<input type="radio" id="toolbarPositionLeft" name="toolbarPosition" value="left" />
+						<label for="toolbarPositionLeft">
+							<img src="/icons/options/toolbar-position-left.png" alt="" />
+							<span>left</span>
+						</label>
+					</div>
+				</form>
+			</section>
+		</section>
+
 		<section id="optionsTheme">
 			<h2>Theme</h2>
 			<form class="browser-style" name="formTheme">
@@ -57,41 +116,6 @@
 				  <label for="themeDark">
 						<img src="/icons/options/theme-dark.png" alt="" />
 						<span>dark</span>
-					</label>
-				</div>
-			</form>
-		</section>
-		
-        <section id="optionsToolbar">
-			<h2>Toolbar</h2>
-			<h3>Position</h3>
-			<form class="browser-style" name="formToolbarPosition">
-				<div class="input-radio-image">
-				  <input type="radio" id="toolbarPositionTop" name="toolbarPosition" value="top"/>
-				  <label for="toolbarPositionTop">
-						<img src="/icons/options/toolbar-position-top.png" alt="" />
-						<span>top</span>
-					</label>
-				</div>
-				<div class="input-radio-image">
-				  <input type="radio" id="toolbarPositionRight" name="toolbarPosition" value="right"/>
-				  <label for="toolbarPositionRight">
-						<img src="/icons/options/toolbar-position-right.png" alt="" />
-						<span>right</span>
-					</label>
-				</div>
-				<div class="input-radio-image">
-				  <input type="radio" id="toolbarPositionBottom" name="toolbarPosition" value="bottom"/>
-				  <label for="toolbarPositionBottom">
-						<img src="/icons/options/toolbar-position-bottom.png" alt="" />
-						<span>bottom</span>
-					</label>
-				</div>
-				<div class="input-radio-image">
-				  <input type="radio" id="toolbarPositionLeft" name="toolbarPosition" value="left"/>
-				  <label for="toolbarPositionLeft">
-						<img src="/icons/options/toolbar-position-left.png" alt="" />
-						<span>left</span>
 					</label>
 				</div>
 			</form>

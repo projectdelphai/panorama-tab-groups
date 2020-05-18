@@ -48,3 +48,25 @@ h2 {
   left: 50%;
   transform: translateX(-50%);
 }
+
+.input-radio-image--extended img {
+  margin-bottom: 2px;
+}
+
+.input-radio-image--extended input ~ label:before {
+  content: "";
+  outline: 2px solid #737373;
+  width: 75px;
+  height: 40px;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.input-radio-image--extended input:checked ~ label:before {
+  border: none;
+  outline-color: #0a84ff;
+  width: 75px;
+  height: 40px;
+}
