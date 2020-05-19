@@ -1,0 +1,149 @@
+{
+    "pluralRule": {
+        "message": "1"
+    },
+    "newGroupButton": {
+        "message": "Προσθήκη νέου γκρουπ"
+    },
+    "freeformButton": {
+        "message": "Ελεύθερη ευθυγράμμιση"
+    },
+    "tilingButton": {
+        "message": "Αυτόματη (ψηφιδωτή) ευθυγράμμιση"
+    },
+    "settingsButton": {
+        "message": "Ρυθμίσεις"
+    },
+    "defaultGroupName": {
+        "message": "Ανώνυμο γκρουπ"
+    },
+    "dragGroup": {
+        "message": "Μετακίνηση γκρουπ"
+    },
+    "closeGroup": {
+        "message": "Κλείσιμο γκρουπ"
+    },
+    "closeGroupWarning": {
+        "message": "Με το κλείσιμο αυτού του γκρουπ, θα χαθεί και η καρτέλα $1 μαζί. Είστε σίγουροι για αυτό;|Με το κλείσιμο αυτού του γκρουπ, θα χαθούν και οι καρτέλες $1 μαζί. Είστε σίγουροι για αυτό;"
+    },
+    "closeTab": {
+        "message": "Κλείσιμο καρτέλας"
+    },
+    "openNewTab": {
+        "message": "Άνοιγμα νέας καρτέλας"
+    },
+    "tabCount": {
+        "message": "$1 καρτέλα|$1 καρτέλες"
+    },
+    "searchForTab.placeholder": {
+        "message": "Αναζήτηση καρτέλας..."
+    },
+    "searchForTab.noResults": {
+        "message": "Δε βρέθηκαν καρτέλες"
+    },
+    "goBackToGroups": {
+        "message": "Επιστροφή στα γκρουπ"
+    },
+    "optionKeyboardShortcuts": {
+        "message": "Συντομεύσεις πληκτρολογίου"
+    },
+    "optionKeyboardShortcutsHelpLink": {
+        "message": "https://developer.mozilla.org/el/docs/Mozilla/Add-ons/WebExtensions/manifest.json/commands#Key_combinations"
+    },
+    "optionKeyboardShortcutsHelpLinkText": {
+        "message": "The format for the shortcut option is detailed here."
+    },
+    "optionKeyboardShortcutsButtonsUpdate": {
+        "message": "Ενημέρωση"
+    },
+    "optionKeyboardShortcutsButtonsReset": {
+        "message": "Επαναφορά"
+    },
+    "optionKeyboardShortcutsButtonsDisable": {
+        "message": "Απενεργοποίηση"
+    },
+    "optionKeyboardShortcutsButtonsEnable": {
+        "message": "Ενεργοποίηση"
+    },
+    "optionKeyboardShortcutsToggle": {
+        "message": "Εναλλαγή σε Προβολή Panorama"
+    },
+    "optionKeyboardShortcutsNextGroup": {
+        "message": "Ενεργοποίηση του επόμενου Γκρουπ Καρτελών"
+    },
+    "optionKeyboardShortcutsPreviousGroup": {
+        "message": "Ενεργοποίηση του επόμενου Γκρουπ Καρτελών"
+    },
+    "optionsView": {
+        "message": "Προβολή"
+    },
+    "optionsViewFreeform": {
+        "message": "Ελεύθερη (κλασσική)"
+    },
+    "optionsViewPopup": {
+        "message": "Εικόνα εντός εικόνας (Popup)"
+    },
+    "optionsTheme": {
+        "message": "Θέμα"
+    },
+    "optionsThemeLight": {
+        "message": "ανοιχτό"
+    },
+    "optionsThemeDark": {
+        "message": "σκούρο"
+    },
+    "optionsToolbar": {
+        "message": "Γραμμή Εργαλείων"
+    },
+    "optionsToolbarPosition": {
+        "message": "Θέση"
+    },
+    "optionsToolbarPositionTop": {
+        "message": "πάνω"
+    },
+    "optionsToolbarPositionRight": {
+        "message": "δεξιά"
+    },
+    "optionsToolbarPositionBottom": {
+        "message": "κάτω"
+    },
+    "optionsToolbarPositionLeft": {
+        "message": "αριστερά"
+    },
+    "optionsBackup": {
+        "message": "Αντίγραφο Ασφαλείας"
+    },
+    "optionsBackupImport": {
+        "message": "Εισαγωγή"
+    },
+    "optionsBackupImportText": {
+        "message": "Τα εισαγόμενα αντίγραφα ασφαλείας θα ανοίξουν σε νέα παράθυρα και δε θα αντικαταστήσουν κάτι.<br />Μπορείτε επίσης να εισάγετε αντίγραφα ασφαλείας από το παλιό πρόσθετο \"Tab Groups\"."
+    },
+    "optionsBackupExport": {
+        "message": "Εξαγωγή"
+    },
+    "optionsBackupExportText": {
+        "message": "Αυτό το τμήμα ίσως καταστεί παρωχημένο όταν μια πρέπουσα διαχείριση συνεδρίας είναι δυνατή στο Firefox."
+    },
+    "optionsBackupExportButton": {
+        "message": "Αποθήκευση αντιγράφου ασφαλείας"
+    },
+    "optionsStatistics": {
+        "message": "Στατιστικά"
+    },
+    "optionsStatisticsNumberOfTabs": {
+        "message": "Αριθμός Καρτελών:"
+    },
+    "optionsStatisticsNumberOfTabsActive": {
+        "message": "Ενεργές:"
+    },
+    "optionsStatisticsThumbnailCacheSize": {
+        "message": "Μέγεθος Προσωρινής Μνήμης Thumbnail:"
+    },
+    "refreshGroups": {
+        "message": "Ανανέωση των Γκρουπ"
+    },
+    "sendTab": {
+        "message": "Αποστολή σε Γκρουπ"
+    }
+}
