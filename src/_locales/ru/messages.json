@@ -5,11 +5,17 @@
     "newGroupButton": {
         "message": "Новая группа"
     },
+    "freeformButton": {
+        "message": "Свободное положение групп"
+    },
+    "tilingButton": {
+        "message": "Выровнять по сетке"
+    },
     "settingsButton": {
         "message": "Настройки"
     },
     "defaultGroupName": {
-        "message": "Группа без названия"
+        "message": "Безымянная группа"
     },
     "dragGroup": {
         "message": "Переместить"
@@ -20,8 +26,26 @@
     "closeGroupWarning": {
         "message": "Закрывая эту группу, вы закроете $1 вкладку в ней. Вы уверенны что хотите этого?|Закрывая эту группу, вы закроете $1 вкладки в ней. Вы уверенны что хотите этого?|Закрывая эту группу, вы закроете $1 вкладок в ней. Вы уверенны что хотите этого?"
     },
+    "closeTab": {
+        "message": "Закрыть вкладку"
+    },
+    "openNewTab": {
+        "message": "Открыть новую вкладку"
+    },
+    "tabCount": {
+        "message": "$1 вкладка|$1 вкладки|$1 вкладок"
+    },
+    "searchForTab.placeholder": {
+        "message": "Поиск вкладки..."
+    },
+    "searchForTab.noResults": {
+        "message": "Вкладка не найдена"
+    },
+    "goBackToGroups": {
+        "message": "Вернуться к группам"
+    },
     "optionKeyboardShortcuts": {
-        "message": "Сочетания клавиш"
+        "message": "Комбинации клавиш"
     },
     "optionKeyboardShortcutsHelpLink": {
         "message": "https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/commands#Key_combinations"
@@ -35,14 +59,29 @@
     "optionKeyboardShortcutsButtonsReset": {
         "message": "Сброс"
     },
+    "optionKeyboardShortcutsButtonsDisable": {
+        "message": "Отключить"
+    },
+    "optionKeyboardShortcutsButtonsEnable": {
+        "message": "Включить"
+    },
     "optionKeyboardShortcutsToggle": {
-        "message": "Просмотр в режиме панорамы"
+        "message": "Открыть панораму"
     },
     "optionKeyboardShortcutsNextGroup": {
         "message": "Выбрать следующую группу вкладок"
     },
     "optionKeyboardShortcutsPreviousGroup": {
         "message": "Выбрать предыдущую группу вкладок"
+    },
+    "optionsView": {
+        "message": "Тип представления"
+    },
+    "optionsViewFreeform": {
+        "message": "Панорама (классическая)"
+    },
+    "optionsViewPopup": {
+        "message": "Выпадающее меню"
     },
     "optionsTheme": {
         "message": "Тема оформления"
@@ -57,7 +96,7 @@
         "message": "Панель инструментов"
     },
     "optionsToolbarPosition": {
-      "message": "Положение"
+        "message": "Положение"
     },
     "optionsToolbarPositionTop": {
         "message": "сверху"
@@ -102,9 +141,9 @@
         "message": "Размер кэша миниатюр:"
     },
     "refreshGroups": {
-        "message": "Переместить в группу"
+        "message": "Обновить список групп"
     },
     "sendTab": {
-        "message": "Обновить список групп"
+        "message": "Переместить в группу"
     }
 }
