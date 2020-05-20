@@ -89,8 +89,12 @@ export function getPluralForm(pluralCount = 1, translatedString = '') {
 }
 
 export function formatByteSize(bytes) {
-	if(bytes < 1024) return bytes + " bytes";
-	else if(bytes < 1048576) return(bytes / 1024).toFixed(3) + " KiB";
-	else if(bytes < 1073741824) return(bytes / 1048576).toFixed(3) + " MiB";
-	else return(bytes / 1073741824).toFixed(3) + " GiB";
+	if(bytes < 1024) return formatNumber(bytes, 0) + " bytes";
+	else if(bytes < 1048576) return formatNumber(bytes / 1024, 3) + " KiB";
+	else if(bytes < 1073741824) return formatNumber(bytes / 1048576, 3) + " MiB";
+	else return formatNumber(bytes / 1073741824, 3) + " GiB";
+};
+
+export function formatNumber(nb, dgt) {
+	return new Intl.NumberFormat({ minimumFractionDigits: dgt, maximumFractionDigits: dgt }).format(nb);
 };
