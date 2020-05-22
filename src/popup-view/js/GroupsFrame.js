@@ -195,7 +195,11 @@ async function _renderGroupListItem(Group) {
   node
     .querySelector(".list__link:not(.list__link--extend)")
     .addEventListener("click", async () => {
-      Group.show();
+      if (tabCount === 0) {
+        await Group.addNewTab();
+      } else {
+        Group.show();
+      }
       window.PopupView.close();
     });
 
