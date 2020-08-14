@@ -1,7 +1,7 @@
 import { getGroupId } from './tabs.js';
 import { tabMoved, groupDragOver, outsideDrop, createDragIndicator } from './drag.js';
 import { groupNodes, initGroupNodes, closeGroup, makeGroupNode, fillGroupNodes, insertTab, resizeGroups, raiseGroup, updateGroupFit } from './groupNodes.js';
-import { initTabNodes, makeTabNode, updateTabNode, setActiveTabNode, setActiveTabNodeById, getActiveTabId, deleteTabNode, updateThumbnail, updateFavicon } from './tabNodes.js';
+import { initTabNodes, makeTabNode, updateTabNode, setActiveTabNode, setActiveTabNodeById, highlightTabNodes, getActiveTabId, deleteTabNode, updateThumbnail, updateFavicon } from './tabNodes.js';
 import * as groups from './groups.js';
 
 var view = {
@@ -144,17 +144,19 @@ async function singleClick(e) {
 async function searchTabs() {
     let tabs = await browser.tabs.query({currentWindow: true});
     let searchInput = document.getElementById('tab-search').value;
-    // get old active tab in case search doesn't find any valid tabs
-    let futureActiveTabId = getActiveTabId();
-    for (let tabIndex in tabs) {
-        let title = tabs[tabIndex].title;
+    let matches = [];
+    for (let tab of tabs) {
         // lowercase both inputs and compare to see if match
-        if (title.toLowerCase().includes(searchInput.toLowerCase())) {
-            futureActiveTabId = tabs[tabIndex].id;
-            break;
+        if (tab.title.toLowerCase().includes(searchInput.toLowerCase())) {
+            matches.push(tab.id);
         }
     }
+    // get old active tab in case search doesn't find any valid tabs
+    let futureActiveTabId = matches.length > 0 ? matches[0] : getActiveTabId();
     setActiveTabNodeById(futureActiveTabId);
+    if (searchInput.length > 0) {
+        highlightTabNodes(matches);
+    }
 }
 /**
  * Initialize the Panorama View tab

@@ -142,6 +142,12 @@ export function setActiveTabNodeById(tabId) {
     activeTabId = tabId;
 }
 
+export function highlightTabNodes(tabIds) {
+	for(var tabId of tabIds) {
+		tabNodes[tabId].tab.classList.add('selected');
+	}
+}
+
 export function getActiveTabId() {
     return activeTabId;
 }
