@@ -5,6 +5,12 @@
     "newGroupButton": {
         "message": "Ajouter un nouveau groupe"
     },
+    "freeformButton": {
+        "message": "Alignement de forme libre"
+    },
+    "tilingButton": {
+        "message": "Alignement (tuiles) automatique"
+    },
     "settingsButton": {
         "message": "Réglages"
     },
@@ -18,7 +24,25 @@
         "message": "Fermer le groupe"
     },
     "closeGroupWarning": {
-        "message": "La fermeture de ce groupe fermera $1 onglet à l'intérieur de celui-ci. Êtes-vous sûr de vouloir faire ça ?`|La fermeture de ce groupe fermera $1 onglets à l'intérieur de celui-ci. Êtes-vous sûr de vouloir faire ça ?`"
+        "message": "La fermeture de ce groupe fermera $1 onglet à l'intérieur de celui-ci. Êtes-vous sûr de vouloir faire ça ?|La fermeture de ce groupe fermera $1 onglets à l'intérieur de celui-ci. Êtes-vous sûr de vouloir faire ça ?"
+    },
+    "closeTab": {
+        "message": "Fermer l'onglet"
+    },
+    "openNewTab": {
+        "message": "Ouvrir un nouvel onglet"
+    },
+    "tabCount": {
+        "message": "$1 onglet|$1 onglets"
+    },
+    "searchForTab.placeholder": {
+        "message": "Rechercher un onglet..."
+    },
+    "searchForTab.noResults": {
+        "message": "Aucun onglet trouvé"
+    },
+    "goBackToGroups": {
+        "message": "Retour aux groupes"
     },
     "optionKeyboardShortcuts": {
         "message": "Raccourcis clavier"
@@ -35,6 +59,12 @@
     "optionKeyboardShortcutsButtonsReset": {
         "message": "Réinitialiser"
     },
+    "optionKeyboardShortcutsButtonsDisable": {
+        "message": "Désactiver"
+    },
+    "optionKeyboardShortcutsButtonsEnable": {
+        "message": "Activer"
+    },
     "optionKeyboardShortcutsToggle": {
         "message": "Basculer vers Panorama View"
     },
@@ -43,6 +73,15 @@
     },
     "optionKeyboardShortcutsPreviousGroup": {
         "message": "Activer le Groupe d'onglets précédent"
+    },
+    "optionsView": {
+        "message": "Vue"
+    },
+    "optionsViewFreeform": {
+        "message": "Forme libre (classique)"
+    },
+    "optionsViewPopup": {
+        "message": "Popup"
     },
     "optionsTheme": {
         "message": "Thème"
@@ -93,13 +132,13 @@
         "message": "Statistiques"
     },
     "optionsStatisticsNumberOfTabs": {
-        "message": "Nombre d'onglets:"
+        "message": "Nombre d'onglets :"
     },
     "optionsStatisticsNumberOfTabsActive": {
-        "message": "Actif:"
+        "message": "Actif :"
     },
     "optionsStatisticsThumbnailCacheSize": {
-        "message": "Taille du cache des miniatures:"
+        "message": "Taille du cache des miniatures :"
     },
     "refreshGroups": {
         "message": "Actualiser les groupes"
