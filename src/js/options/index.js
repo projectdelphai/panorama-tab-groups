@@ -1,24 +1,24 @@
-import { loadOptions } from "../_share/options.js";
-import { addTranslations } from "./translations.js";
+import { loadOptions } from '../_share/options.js';
+import { addTranslations } from './translations.js';
 import {
   shortcuts,
   updateShortcut,
   resetShortcut,
   disableShortcut,
   disableShortcutForm,
-  enableShortcut
-} from "./shortcuts.js";
-import { saveOptionView, showViewSpecificOptions } from "./view.js";
-import { saveOptionTheme } from "./theme.js";
-import { saveOptionToolbarPosition } from "./toolbar.js";
-import { loadBackup, saveBackup } from "./backup.js";
-import { getStatistics } from "./statistics.js";
-import { resetPTG } from "./reset.js";
+  enableShortcut,
+} from './shortcuts.js';
+import { saveOptionView, showViewSpecificOptions } from './view.js';
+import { saveOptionTheme } from './theme.js';
+import { saveOptionToolbarPosition } from './toolbar.js';
+import { loadBackup, saveBackup } from './backup.js';
+import { getStatistics } from './statistics.js';
+import { resetPTG } from './reset.js';
 
-document.addEventListener("DOMContentLoaded", init);
+document.addEventListener('DOMContentLoaded', init);
 
 async function init() {
-  let options = await loadOptions();
+  const options = await loadOptions();
   restoreOptions(options, await shortcuts);
   addTranslations();
   attachEventHandler(options, await shortcuts);
@@ -38,18 +38,18 @@ function restoreOptions(options, shortcuts) {
 
   // View
   document.querySelector(
-    `input[name="view"][value="${options.view}"]`
+    `input[name="view"][value="${options.view}"]`,
   ).checked = true;
   showViewSpecificOptions(options.view);
 
   // Theme
   document.querySelector(
-    `input[name="theme"][value="${options.theme}"]`
+    `input[name="theme"][value="${options.theme}"]`,
   ).checked = true;
 
   // Toolbar
   document.querySelector(
-    `input[name="toolbarPosition"][value="${options.toolbarPosition}"]`
+    `input[name="toolbarPosition"][value="${options.toolbarPosition}"]`,
   ).checked = true;
 }
 
@@ -62,45 +62,45 @@ function attachEventHandler(options, shortcuts) {
       continue;
     }
 
-    shortcutNode.querySelector("input").value = shortcut.shortcut;
+    shortcutNode.querySelector('input').value = shortcut.shortcut;
     shortcutNode
-      .querySelector(".updateShortcut")
-      .addEventListener("click", updateShortcut);
+      .querySelector('.updateShortcut')
+      .addEventListener('click', updateShortcut);
     shortcutNode
-      .querySelector(".resetShortcut")
-      .addEventListener("click", resetShortcut);
+      .querySelector('.resetShortcut')
+      .addEventListener('click', resetShortcut);
     shortcutNode
-      .querySelector(".enableShortcut")
-      .addEventListener("click", enableShortcut.bind(this, options));
+      .querySelector('.enableShortcut')
+      .addEventListener('click', enableShortcut.bind(this, options));
 
     if (options.shortcut.hasOwnProperty(shortcut.name)) {
       shortcutNode
-        .querySelector(".disableShortcut")
-        .addEventListener("click", disableShortcut.bind(this, options));
+        .querySelector('.disableShortcut')
+        .addEventListener('click', disableShortcut.bind(this, options));
     }
   }
 
   // View
   document
     .querySelector('form[name="formView"]')
-    .addEventListener("change", saveOptionView);
+    .addEventListener('change', saveOptionView);
 
   // Theme
   document
     .querySelector('form[name="formTheme"]')
-    .addEventListener("change", saveOptionTheme);
+    .addEventListener('change', saveOptionTheme);
 
   // Toolbar
   document
     .querySelector('form[name="formToolbarPosition"]')
-    .addEventListener("change", saveOptionToolbarPosition);
+    .addEventListener('change', saveOptionToolbarPosition);
 
   // Backup
   document
-    .getElementById("backupFileInput")
-    .addEventListener("change", loadBackup);
+    .getElementById('backupFileInput')
+    .addEventListener('change', loadBackup);
   document
-    .getElementById("saveBackupButton")
-    .addEventListener("click", saveBackup);
-  document.getElementById("resetAddon").addEventListener("click", resetPTG);
+    .getElementById('saveBackupButton')
+    .addEventListener('click', saveBackup);
+  document.getElementById('resetAddon').addEventListener('click', resetPTG);
 }

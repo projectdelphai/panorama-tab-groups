@@ -1,6 +1,6 @@
-import { Frame } from "./Frame.js";
-import GroupsFrame from "./GroupsFrame.js";
-import { getElementNodeFromString } from "../../_shared/js/utilities/node.js";
+import { Frame } from './Frame.js';
+import GroupsFrame from './GroupsFrame.js';
+import { getElementNodeFromString } from '../../_shared/js/utilities/node.js';
 
 class GroupDetailFrame extends Frame {
   constructor(id) {
@@ -17,31 +17,31 @@ class GroupDetailFrame extends Frame {
     _renderFooter.call(this);
     if (this.frameShellEventAttachted === false) {
       this.frameShellEventAttachted = true;
-      this.shell.addEventListener("frameShell.transitionEnd", () => {
+      this.shell.addEventListener('frameShell.transitionEnd', () => {
         // Set initial Focus
-        const firstTab = this.node.querySelector(".list__link");
+        const firstTab = this.node.querySelector('.list__link');
         if (firstTab !== null) {
           firstTab.focus();
         } else {
-          this.node.querySelector("button").focus();
+          this.node.querySelector('button').focus();
         }
       });
     }
     super.render();
 
-    if (this.group.status === "new") {
+    if (this.group.status === 'new') {
       _activateGroupNameEdit.call(
         this,
-        this.header.querySelector(".group-name")
+        this.header.querySelector('.group-name'),
       );
     }
   }
 
   handleEvent(event) {
     if (
-      event.type === "keyup" &&
-      event.key === "ArrowLeft" &&
-      this.navigateHorizontalIndex === 0
+      event.type === 'keyup'
+      && event.key === 'ArrowLeft'
+      && this.navigateHorizontalIndex === 0
     ) {
       GroupsFrame.render();
       return;
@@ -50,13 +50,13 @@ class GroupDetailFrame extends Frame {
   }
 }
 
-export default new GroupDetailFrame("aside-frame");
+export default new GroupDetailFrame('aside-frame');
 
 function _renderHeader() {
   const backNode = getElementNodeFromString(`
         <button class="button-ghost button-ghost--back"></button>
     `);
-  backNode.addEventListener("click", () => {
+  backNode.addEventListener('click', () => {
     GroupsFrame.render();
   });
 
@@ -75,8 +75,8 @@ function _getRenderedGroupName() {
     `);
 
   groupNameNode
-    .querySelector(".group-edit")
-    .addEventListener("click", event => {
+    .querySelector('.group-edit')
+    .addEventListener('click', (event) => {
       event.stopPropagation();
       _activateGroupNameEdit.call(this, groupNameNode);
     });
@@ -90,34 +90,34 @@ function _activateGroupNameEdit(groupNameNode) {
             <input class="form-field__input" type="search" value="${this.group.name}" />
         </div>
     `);
-  const inputNode = node.querySelector("input");
-  
+  const inputNode = node.querySelector('input');
+
   // Save edited group name when leaving input
-  inputNode.addEventListener("blur", async event => {
-      _saveGroupName.call(this, node, inputNode);
+  inputNode.addEventListener('blur', async (event) => {
+    _saveGroupName.call(this, node, inputNode);
   });
 
   // Save edited group name when hitting enter
-  inputNode.addEventListener("keypress", async event => {
+  inputNode.addEventListener('keypress', async (event) => {
     event.stopPropagation();
 
-    if (event.key === "Enter") {
+    if (event.key === 'Enter') {
       _saveGroupName.call(this, node, inputNode);
     }
   });
-  
+
   // Allow arrow navigation inside the input
-  inputNode.addEventListener("keyup", async event => {
+  inputNode.addEventListener('keyup', async (event) => {
     event.stopPropagation();
   });
 
   // Save edited group name when hitting esc
-  inputNode.addEventListener("keydown", async event => {
+  inputNode.addEventListener('keydown', async (event) => {
     event.stopPropagation();
     // TODO: Prevent popup from closing
     // Seems to currently impossible:
     // https://discourse.mozilla.org/t/prevent-toolbar-popup-from-closing-when-pressing-esc/47464
-    if (event.key === "Esc") {
+    if (event.key === 'Esc') {
       event.preventDefault();
       _saveGroupName.call(this, node, inputNode);
     }
@@ -133,7 +133,7 @@ async function _saveGroupName(formNode, inputNode) {
   this.group = await this.group.rename(newGroupName);
   const newGroupNameNode = _getRenderedGroupName.call(this);
   formNode.parentNode.replaceChild(newGroupNameNode, formNode);
-  newGroupNameNode.querySelector(".group-edit").focus();
+  newGroupNameNode.querySelector('.group-edit').focus();
 }
 
 function _renderTabList() {
@@ -144,10 +144,10 @@ function _renderTabList() {
 function _renderFooter() {
   const addTabNode = getElementNodeFromString(`
         <button class="button-ghost button-ghost--new">
-            ${browser.i18n.getMessage("openNewTab")}
+            ${browser.i18n.getMessage('openNewTab')}
         </button>
     `);
-  addTabNode.addEventListener("click", async event => {
+  addTabNode.addEventListener('click', async (event) => {
     event.preventDefault();
     await this.group.addNewTab();
     window.PopupView.close();

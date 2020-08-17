@@ -1,26 +1,26 @@
 export const defaultOptions = (() => {
   const majorVersion = parseInt(browser.runtime.getManifest().version);
   let options = {
-    toolbarPosition: "top",
+    toolbarPosition: 'top',
     shortcut: {
-      "activate-next-group": {
-        disabled: false
+      'activate-next-group': {
+        disabled: false,
       },
-      "activate-previous-group": {
-        disabled: false
-      }
-    }
+      'activate-previous-group': {
+        disabled: false,
+      },
+    },
   };
 
   if (majorVersion >= 1) {
     options = Object.assign(options, {
-      theme: "dark",
-      view: "popup",
+      theme: 'dark',
+      view: 'popup',
     });
   } else {
     options = Object.assign(options, {
-      theme: "light",
-      view: "freeform"
+      theme: 'light',
+      view: 'freeform',
     });
   }
 
@@ -37,4 +37,4 @@ export async function loadOptions() {
   return options;
 }
 
-export let currentOptions = loadOptions();
+export const currentOptions = loadOptions();

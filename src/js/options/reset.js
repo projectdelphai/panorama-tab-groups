@@ -1,3 +1,3 @@
 export function resetPTG() {
-    window.alert("Not implemented yet");
+  window.alert('Not implemented yet');
 }

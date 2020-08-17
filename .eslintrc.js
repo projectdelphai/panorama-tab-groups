@@ -1,19 +1,19 @@
 module.exports = {
-  "env": {
+  env: {
     browser: true,
     es2020: true,
   },
-  "extends": [
-    "airbnb-base",
-    "plugin:json/recommended"
+  extends: [
+    'airbnb-base',
+    'plugin:json/recommended',
   ],
-  "plugins": [
-      "json"
+  plugins: [
+    'json',
   ],
-  "parserOptions": {
+  parserOptions: {
     ecmaVersion: 11,
-    sourceType: "module",
+    sourceType: 'module',
   },
-  "rules": {
+  rules: {
   },
 };

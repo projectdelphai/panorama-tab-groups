@@ -2,19 +2,18 @@
  * Helper function to create a new element with the given attributes and children
  */
 export function new_element(name, attributes, children) {
-    const e = document.createElement(name);
-    for (const key in attributes) {
-        if (key == 'content') {
-            e.appendChild(document.createTextNode(attributes[key]));
-        }
-        else {
-            e.setAttribute(key.replace(/_/g, '-'), attributes[key]);
-        }
+  const e = document.createElement(name);
+  for (const key in attributes) {
+    if (key == 'content') {
+      e.appendChild(document.createTextNode(attributes[key]));
+    } else {
+      e.setAttribute(key.replace(/_/g, '-'), attributes[key]);
     }
-    for (const child of children || []) {
-        e.appendChild(child);
-    }
-    return e;
+  }
+  for (const child of children || []) {
+    e.appendChild(child);
+  }
+  return e;
 }
 
 /**
@@ -44,9 +43,9 @@ export function getPluralForm(pluralCount = 1, translatedString = '') {
     case 1:
       if (count === 1) {
         return pluralForms[0];
-      } else {
-        return pluralForms[1];
       }
+      return pluralForms[1];
+
       break;
       break;
     /*
@@ -55,9 +54,9 @@ export function getPluralForm(pluralCount = 1, translatedString = '') {
     case 2:
       if (count < 2) {
         return pluralForms[0];
-      } else {
-        return pluralForms[1];
       }
+      return pluralForms[1];
+
       break;
     /*
      * Rule #7 [is 1, excluding 11]|[2-4, excluding 12-14]|[everything else]
@@ -65,11 +64,11 @@ export function getPluralForm(pluralCount = 1, translatedString = '') {
     case 7:
       if (count % 10 === 1 && count % 100 !== 11) {
         return pluralForms[0];
-      } else if (count % 10 >= 2 && count % 10 <= 4 && (count % 100 < 10 || count % 100 > 20)) {
+      } if (count % 10 >= 2 && count % 10 <= 4 && (count % 100 < 10 || count % 100 > 20)) {
         return pluralForms[1];
-      } else {
-        return pluralForms[2];
       }
+      return pluralForms[2];
+
       break;
     /*
      * Rule #9 [is 1]|[2-4, excluding 12-14]|[everything else]
@@ -77,11 +76,11 @@ export function getPluralForm(pluralCount = 1, translatedString = '') {
     case 9:
       if (count === 1) {
         return pluralForms[0];
-      } else if (count % 10 >= 2 && count % 10 <= 4 && (count % 100 < 10 || count % 100 > 20)) {
+      } if (count % 10 >= 2 && count % 10 <= 4 && (count % 100 < 10 || count % 100 > 20)) {
         return pluralForms[1];
-      } else {
-        return pluralForms[2];
       }
+      return pluralForms[2];
+
       break;
     default:
       return translatedString;
@@ -89,8 +88,8 @@ export function getPluralForm(pluralCount = 1, translatedString = '') {
 }
 
 export function formatByteSize(bytes) {
-	if(bytes < 1024) return bytes + " bytes";
-	else if(bytes < 1048576) return(bytes / 1024).toFixed(3) + " KiB";
-	else if(bytes < 1073741824) return(bytes / 1048576).toFixed(3) + " MiB";
-	else return(bytes / 1073741824).toFixed(3) + " GiB";
-};
+  if (bytes < 1024) return `${bytes} bytes`;
+  if (bytes < 1048576) return `${(bytes / 1024).toFixed(3)} KiB`;
+  if (bytes < 1073741824) return `${(bytes / 1048576).toFixed(3)} MiB`;
+  return `${(bytes / 1073741824).toFixed(3)} GiB`;
+}

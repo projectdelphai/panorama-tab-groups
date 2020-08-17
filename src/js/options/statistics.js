@@ -1,4 +1,4 @@
-import { formatByteSize } from "../_share/utils.js";
+import { formatByteSize } from '../_share/utils.js';
 
 export async function getStatistics() {
   const tabs = await browser.tabs.query({});
@@ -7,7 +7,7 @@ export async function getStatistics() {
   let numActiveTabs = 0;
 
   for (const tab of tabs) {
-    const thumbnail = await browser.sessions.getTabValue(tab.id, "thumbnail");
+    const thumbnail = await browser.sessions.getTabValue(tab.id, 'thumbnail');
 
     if (thumbnail) {
       if (thumbnail.thumbnail) {
@@ -21,19 +21,19 @@ export async function getStatistics() {
     }
   }
 
-  document.getElementById("thumbnailCacheSize").innerHTML = "";
+  document.getElementById('thumbnailCacheSize').innerHTML = '';
   document
-    .getElementById("thumbnailCacheSize")
+    .getElementById('thumbnailCacheSize')
     .appendChild(document.createTextNode(formatByteSize(totalSize)));
 
-  document.getElementById("numberOfTabs").innerHTML = "";
+  document.getElementById('numberOfTabs').innerHTML = '';
   document
-    .getElementById("numberOfTabs")
+    .getElementById('numberOfTabs')
     .appendChild(
       document.createTextNode(
         `${tabs.length} (${browser.i18n.getMessage(
-          "optionsStatisticsNumberOfTabsActive"
-        )} ${numActiveTabs})`
-      )
+          'optionsStatisticsNumberOfTabsActive',
+        )} ${numActiveTabs})`,
+      ),
     );
 }

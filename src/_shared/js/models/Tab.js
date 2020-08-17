@@ -18,5 +18,5 @@ export class Tab {
 }
 
 async function getGroupId(Tab) {
-  return await browser.sessions.getTabValue(Tab.id, "groupId");
+  return await browser.sessions.getTabValue(Tab.id, 'groupId');
 }

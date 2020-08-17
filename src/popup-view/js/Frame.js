@@ -1,60 +1,60 @@
-import { getElementNodeFromString } from "../../_shared/js/utilities/node.js";
+import { getElementNodeFromString } from '../../_shared/js/utilities/node.js';
 
 export class Frame {
   constructor(id) {
     this.node = document.getElementById(id);
     this.shell = this.node.parentNode;
-    this.header = this.node.querySelector(".frame-header");
-    this.content = this.node.querySelector(".frame-content");
-    this.footer = this.node.querySelector(".frame-footer");
+    this.header = this.node.querySelector('.frame-header');
+    this.content = this.node.querySelector('.frame-content');
+    this.footer = this.node.querySelector('.frame-footer');
     this.isAside = false;
     this.frameShellEventAttachted = false;
     this.navigateHorizontalIndex = 0;
   }
 
   render() {
-    this.node.addEventListener("mousedown", this);
-    this.node.addEventListener("keyup", this);
+    this.node.addEventListener('mousedown', this);
+    this.node.addEventListener('keyup', this);
     this.enable();
   }
 
   handleEvent(event) {
-    if (event.type === "mousedown") {
-      document.body.classList.remove("keyboard-navigation");
+    if (event.type === 'mousedown') {
+      document.body.classList.remove('keyboard-navigation');
       return;
     }
-    if (event.type === "keyup") {
-      document.body.classList.add("keyboard-navigation");
+    if (event.type === 'keyup') {
+      document.body.classList.add('keyboard-navigation');
     } else {
       return;
     }
-    if (["ArrowUp", "ArrowDown"].indexOf(event.key) >= 0) {
+    if (['ArrowUp', 'ArrowDown'].indexOf(event.key) >= 0) {
       _navigateVerticalByKeyboard.call(this, event);
     }
-    if (["ArrowLeft", "ArrowRight"].indexOf(event.key) >= 0) {
+    if (['ArrowLeft', 'ArrowRight'].indexOf(event.key) >= 0) {
       _navigateHorizontalByKeyboard.call(this, event);
     }
   }
 
   setContentLoadingStart() {
-    document.body.classList.add("content-loading");
+    document.body.classList.add('content-loading');
   }
 
   enable() {
-    this.node.classList.add("frame--active");
+    this.node.classList.add('frame--active');
 
     // TODO: something smarter?
     if (this.isAside) {
-      this.shell.classList.add("frame-shell--aside-active");
+      this.shell.classList.add('frame-shell--aside-active');
     } else {
-      this.shell.classList.remove("frame-shell--aside-active");
+      this.shell.classList.remove('frame-shell--aside-active');
     }
     setTimeout(() => {
-      this.shell.dispatchEvent(new CustomEvent("frameShell.transitionEnd"));
+      this.shell.dispatchEvent(new CustomEvent('frameShell.transitionEnd'));
     }, 200);
     setTimeout(_disableSibling.bind(this), 100);
 
-    document.body.classList.remove("content-loading");
+    document.body.classList.remove('content-loading');
   }
 
   setHeaderContent(content) {
@@ -70,17 +70,15 @@ export class Frame {
   }
 
   getRenderedTabList(Tabs, options) {
-    options = Object.assign({
-      hideCloseButton: false,
-    }, options);
+    options = { hideCloseButton: false, ...options };
 
-    let tabNodes = Tabs.map(Tab => {
+    const tabNodes = Tabs.map((Tab) => {
       const isActive = Tab.id === window.PopupView.lastActiveTab.id;
       const node = getElementNodeFromString(`
                 <li data-tab="${Tab.id}" 
                     class="list__item list__item--tab ${
-                      isActive ? "list__item--highlight" : ""
-                    }" data-nav-row>
+  isActive ? 'list__item--highlight' : ''
+}" data-nav-row>
                     <button class="list__link" title="${Tab.title}
 ${Tab.url}">
                         <img class="tab__icon" 
@@ -89,27 +87,27 @@ ${Tab.url}">
                         <span>${Tab.title}</span>
                     </button>
                     <button class="list__close" 
-                            title="${browser.i18n.getMessage("closeTab")}"
-                            ${options.hideCloseButton ? "hidden" : ""}></button>
+                            title="${browser.i18n.getMessage('closeTab')}"
+                            ${options.hideCloseButton ? 'hidden' : ''}></button>
                 </li>
             `);
 
       // Save Tab within Node
-      Object.defineProperty(node, "Tab", {
-        value: Tab
+      Object.defineProperty(node, 'Tab', {
+        value: Tab,
       });
 
       node
-        .querySelector(".list__link")
-        .addEventListener("click", async event => {
+        .querySelector('.list__link')
+        .addEventListener('click', async (event) => {
           event.preventDefault();
           Tab.open();
           window.PopupView.close();
         });
 
       node
-        .querySelector(".list__close")
-        .addEventListener("click", async event => {
+        .querySelector('.list__close')
+        .addEventListener('click', async (event) => {
           event.preventDefault();
           // Remove from Browser
           await Tab.remove();
@@ -121,7 +119,7 @@ ${Tab.url}">
       return node;
     });
 
-    let tabList = getElementNodeFromString(`<ul class="list"></ul>`);
+    const tabList = getElementNodeFromString('<ul class="list"></ul>');
     tabList.append(...tabNodes);
 
     return tabList;
@@ -131,8 +129,8 @@ ${Tab.url}">
 function _disableSibling() {
   const siblings = _getSiblings.call(this);
 
-  siblings.forEach(sibling => {
-    sibling.classList.remove("frame--active");
+  siblings.forEach((sibling) => {
+    sibling.classList.remove('frame--active');
   });
 }
 
@@ -141,7 +139,7 @@ function _disableSibling() {
  */
 function _getSiblings() {
   let n = this.shell.firstChild;
-  let siblings = [];
+  const siblings = [];
 
   for (; n; n = n.nextSibling) {
     if (n.nodeType === 1 && n !== this.node) {
@@ -154,13 +152,13 @@ function _getSiblings() {
 
 function _updateContent(contentNode, content) {
   // Reset
-  contentNode.innerHTML = "";
+  contentNode.innerHTML = '';
 
   // Set
-  if (typeof content === "string") {
+  if (typeof content === 'string') {
     contentNode.innerHTML = content;
   } else if (Array.isArray(content)) {
-    content.forEach(item => {
+    content.forEach((item) => {
       contentNode.append(item);
     });
   } else {
@@ -169,15 +167,15 @@ function _updateContent(contentNode, content) {
 }
 
 function _navigateVerticalByKeyboard(event) {
-  const rows = this.node.querySelectorAll("[data-nav-row");
-  const currentRow = event.target.closest("[data-nav-row");
+  const rows = this.node.querySelectorAll('[data-nav-row');
+  const currentRow = event.target.closest('[data-nav-row');
   const currentIndex = _getCurrentIndex(currentRow, rows);
   let targetIndex = 0;
 
-  if (event.key === "ArrowUp") {
+  if (event.key === 'ArrowUp') {
     targetIndex = currentIndex - 1;
   }
-  if (event.key === "ArrowDown") {
+  if (event.key === 'ArrowDown') {
     targetIndex = currentIndex + 1;
   }
 
@@ -192,10 +190,9 @@ function _navigateVerticalByKeyboard(event) {
   let targetFound = false;
 
   while (horizontalTargetIndex >= 0 && targetFound === false) {
-    const horizontalTarget =
-      rows[targetIndex].querySelectorAll("button,input")[
-        horizontalTargetIndex
-      ] || null;
+    const horizontalTarget = rows[targetIndex].querySelectorAll('button,input')[
+      horizontalTargetIndex
+    ] || null;
 
     if (horizontalTarget) {
       horizontalTarget.focus();
@@ -206,15 +203,15 @@ function _navigateVerticalByKeyboard(event) {
 }
 
 function _navigateHorizontalByKeyboard(event) {
-  const currentRow = event.target.closest("[data-nav-row");
-  const cols = currentRow.querySelectorAll("button,input");
+  const currentRow = event.target.closest('[data-nav-row');
+  const cols = currentRow.querySelectorAll('button,input');
   const currentIndex = _getCurrentIndex(event.target, cols);
   let targetIndex = 0;
 
-  if (event.key === "ArrowLeft") {
+  if (event.key === 'ArrowLeft') {
     targetIndex = currentIndex - 1;
   }
-  if (event.key === "ArrowRight") {
+  if (event.key === 'ArrowRight') {
     targetIndex = currentIndex + 1;
   }
 
@@ -230,9 +227,7 @@ function _navigateHorizontalByKeyboard(event) {
 }
 
 function _getCurrentIndex(element, siblings) {
-  const currentIndex = Array.from(siblings).findIndex(sibling => {
-    return sibling === element;
-  });
+  const currentIndex = Array.from(siblings).findIndex((sibling) => sibling === element);
 
   if (currentIndex === -1) {
     throw new Error(`Can't find current index for element ${element}`);

@@ -3,7 +3,7 @@ export class Group {
     return (async () => {
       Object.assign(this, group);
       this.View = View;
-      this.status = group.status || "default";
+      this.status = group.status || 'default';
 
       return this;
     })();
@@ -12,8 +12,8 @@ export class Group {
   async setActive() {
     await browser.sessions.setWindowValue(
       this.View.windowId,
-      "activeGroup",
-      this.id
+      'activeGroup',
+      this.id,
     );
   }
 
@@ -29,9 +29,7 @@ export class Group {
 
   async loadTabs() {
     const tabs = await this.View.getTabs();
-    const tabsFromGroup = tabs.filter(tab => {
-      return tab.groupId === this.id;
-    });
+    const tabsFromGroup = tabs.filter((tab) => tab.groupId === this.id);
 
     this.tabs = tabsFromGroup;
   }
@@ -39,7 +37,7 @@ export class Group {
   async addNewTab() {
     await this.setActive();
     const tab = await browser.tabs.create({ active: true });
-    await browser.sessions.setTabValue(tab.id, "groupId", this.id);
+    await browser.sessions.setTabValue(tab.id, 'groupId', this.id);
   }
 
   /**
@@ -52,15 +50,13 @@ export class Group {
       await this.loadTabs();
     }
 
-    const leftGroups = groups.filter(group => {
-      return group.id !== this.id;
-    });
+    const leftGroups = groups.filter((group) => group.id !== this.id);
 
-    this.tabs.forEach(tab => {
+    this.tabs.forEach((tab) => {
       browser.tabs.remove(tab.id);
     });
 
-    browser.sessions.setWindowValue(this.View.windowId, "groups", leftGroups);
+    browser.sessions.setWindowValue(this.View.windowId, 'groups', leftGroups);
 
     return leftGroups;
   }
@@ -68,7 +64,7 @@ export class Group {
   async rename(newName) {
     const groups = await this.getAll();
 
-    const updatedGroups = groups.map(group => {
+    const updatedGroups = groups.map((group) => {
       if (group.id === this.id) {
         this.name = newName;
         group.name = newName;
@@ -79,8 +75,8 @@ export class Group {
 
     await browser.sessions.setWindowValue(
       this.View.windowId,
-      "groups",
-      updatedGroups
+      'groups',
+      updatedGroups,
     );
 
     return this;
@@ -91,9 +87,7 @@ export class Group {
     targetIndex = parseInt(targetIndex);
 
     // Get current index
-    const currentIndex = groups.findIndex(group => {
-      return group.id === this.id;
-    });
+    const currentIndex = groups.findIndex((group) => group.id === this.id);
 
     if (currentIndex === -1) {
       throw new Error(`Can't find current index for group ${group}`);
@@ -109,19 +103,16 @@ export class Group {
     // Update position of group
     const groupData = groups.splice(currentIndex, 1);
     groups.splice(targetIndex, 0, groupData[0]);
-    await browser.sessions.setWindowValue(this.View.windowId, "groups", groups);
+    await browser.sessions.setWindowValue(this.View.windowId, 'groups', groups);
   }
 
   // TODO: How to resolve this duplicate?
   async getAll() {
-    const groups =
-      (await browser.sessions.getWindowValue(this.View.windowId, "groups")) ||
-      [];
+    const groups = (await browser.sessions.getWindowValue(this.View.windowId, 'groups'))
+      || [];
 
     return Promise.all(
-      groups.map(async group => {
-        return new Group(this.View, group);
-      })
+      groups.map(async (group) => new Group(this.View, group)),
     );
   }
 }

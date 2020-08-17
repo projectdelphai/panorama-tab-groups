@@ -3,7 +3,7 @@
  * @returns {HtmlElement} node
  */
 export function getElementNodeFromString(string) {
-  const doc = new DOMParser().parseFromString(string, "text/html");
+  const doc = new DOMParser().parseFromString(string, 'text/html');
 
   let node = doc.body.firstChild;
 
@@ -13,14 +13,14 @@ export function getElementNodeFromString(string) {
     }
   }
 
-  return document.createTextNode("");
+  return document.createTextNode('');
 }
 
 export function getElementNodesFromString(string) {
-  const doc = new DOMParser().parseFromString(string, "text/html");
+  const doc = new DOMParser().parseFromString(string, 'text/html');
 
   let node = doc.body.firstChild;
-  let nodes = [];
+  const nodes = [];
 
   for (; node; node = node.nextSibling) {
     if (node.nodeType === 1) {
