@@ -3,6 +3,111 @@ import GroupDetailFrame from './GroupDetailFrame.js';
 import { getElementNodeFromString } from '../../_shared/js/utilities/node.js';
 import { getPluralForm } from '../../js/_share/utils.js';
 
+function handleGroupDragStart(event) {
+  event.target.previousSibling.style.display = 'none';
+  event.target.nextSibling.style.display = 'none';
+  this.list.classList.add('dragging');
+  event.target.classList.add('dragged');
+  event.target.setAttribute('aria-grabbed', true);
+  event.dataTransfer.setData('text', event.target.id);
+  event.dataTransfer.dropEffect = 'move';
+}
+
+function handleGroupDragEnter(event) {
+  event.target.classList.add('drop-zone--entered');
+}
+
+function handleGroupDragLeave(event) {
+  event.target.classList.remove('drop-zone--entered');
+}
+
+function handleGroupDragOver(event) {
+  // Necessary to enable drop
+  event.preventDefault();
+}
+
+async function handleGroupDrop(event) {
+  event.preventDefault();
+  const groupId = event.dataTransfer.getData('text');
+  const droppedGroupNode = document.getElementById(groupId);
+  const targetIndex = event.target.getAttribute('data-index');
+  event.target.replaceWith(droppedGroupNode);
+  droppedGroupNode.Group.moveToIndex(targetIndex);
+}
+
+function addOrUpdateDropZoneHandler() {
+  this.list.querySelectorAll('.drop-zone').forEach((dropZone) => {
+    dropZone.remove();
+  });
+  // Fetch fresh list (f.e. after drop)
+  this.listItems = this.list.querySelectorAll('.list__item');
+  const dropZone = getElementNodeFromString(`
+        <li class="drop-zone" aria-dropeffect="move"></li>
+    `);
+
+  this.listItems.forEach((listItem, index) => {
+    const newDropZone = dropZone.cloneNode();
+    newDropZone.setAttribute('data-index', index);
+
+    listItem.before(newDropZone);
+    newDropZone.addEventListener(
+      'dragenter',
+      handleGroupDragEnter.bind(this),
+      false,
+    );
+    newDropZone.addEventListener(
+      'dragleave',
+      handleGroupDragLeave.bind(this),
+      false,
+    );
+    newDropZone.addEventListener('dragover', handleGroupDragOver, false);
+    newDropZone.addEventListener('drop', handleGroupDrop.bind(this), false);
+
+    if (index === this.listItems.length - 1) {
+      const newDropZone = dropZone.cloneNode();
+      newDropZone.setAttribute('data-index', index + 1);
+      listItem.after(newDropZone);
+      newDropZone.addEventListener(
+        'dragenter',
+        handleGroupDragEnter.bind(this),
+        false,
+      );
+      newDropZone.addEventListener(
+        'dragleave',
+        handleGroupDragLeave.bind(this),
+        false,
+      );
+      newDropZone.addEventListener('dragover', handleGroupDragOver, false);
+      newDropZone.addEventListener('drop', handleGroupDrop.bind(this), false);
+    }
+  });
+}
+
+function handleGroupDragEnd(event) {
+  this.list.classList.remove('dragging');
+  event.target.classList.remove('dragged');
+  event.target.setAttribute('aria-grabbed', false);
+
+  addOrUpdateDropZoneHandler.call(this);
+}
+
+function renderFooter() {
+  const addGroupNode = getElementNodeFromString(`
+        <button class="button-ghost button-ghost--new">
+            ${browser.i18n.getMessage('newGroupButton')}
+        </button>
+    `);
+  addGroupNode.addEventListener('click', async (event) => {
+    event.preventDefault();
+    const group = await window.PopupView.createGroup();
+    await group.addNewTab();
+    // TODO: Bring focus back to Popup afterwards
+    await group.loadTabs();
+    GroupDetailFrame.render(group);
+  });
+  this.setFooterContent(addGroupNode);
+}
+
 async function renderHeader() {
   const searchNode = getElementNodeFromString(`
         <div class="form-field form-field--search">
@@ -110,18 +215,6 @@ async function renderHeader() {
   this.setHeaderContent([searchNode, settingsNode]);
 }
 
-async function renderGroupList() {
-  const groups = await window.PopupView.getGroups();
-  const groupNodes = await Promise.all(
-    groups.map(renderGroupListItem.bind(this)),
-  );
-  const groupList = getElementNodeFromString('<ul class="list"></ul>');
-  groupList.append(...groupNodes);
-
-  this.setContent(groupList);
-  enableGroupDragAndDrop.call(this);
-}
-
 async function renderGroupListItem(Group) {
   await Group.loadTabs();
   const tabCount = Group.tabs.length || 0;
@@ -220,109 +313,16 @@ function enableGroupDragAndDrop() {
   addOrUpdateDropZoneHandler.call(this);
 }
 
-function handleGroupDragStart(event) {
-  event.target.previousSibling.style.display = 'none';
-  event.target.nextSibling.style.display = 'none';
-  this.list.classList.add('dragging');
-  event.target.classList.add('dragged');
-  event.target.setAttribute('aria-grabbed', true);
-  event.dataTransfer.setData('text', event.target.id);
-  event.dataTransfer.dropEffect = 'move';
-}
+async function renderGroupList() {
+  const groups = await window.PopupView.getGroups();
+  const groupNodes = await Promise.all(
+    groups.map(renderGroupListItem.bind(this)),
+  );
+  const groupList = getElementNodeFromString('<ul class="list"></ul>');
+  groupList.append(...groupNodes);
 
-function handleGroupDragEnd(event) {
-  this.list.classList.remove('dragging');
-  event.target.classList.remove('dragged');
-  event.target.setAttribute('aria-grabbed', false);
-
-  addOrUpdateDropZoneHandler.call(this);
-}
-
-function addOrUpdateDropZoneHandler() {
-  this.list.querySelectorAll('.drop-zone').forEach((dropZone) => {
-    dropZone.remove();
-  });
-  // Fetch fresh list (f.e. after drop)
-  this.listItems = this.list.querySelectorAll('.list__item');
-  const dropZone = getElementNodeFromString(`
-        <li class="drop-zone" aria-dropeffect="move"></li>
-    `);
-
-  this.listItems.forEach((listItem, index) => {
-    const newDropZone = dropZone.cloneNode();
-    newDropZone.setAttribute('data-index', index);
-
-    listItem.before(newDropZone);
-    newDropZone.addEventListener(
-      'dragenter',
-      handleGroupDragEnter.bind(this),
-      false,
-    );
-    newDropZone.addEventListener(
-      'dragleave',
-      handleGroupDragLeave.bind(this),
-      false,
-    );
-    newDropZone.addEventListener('dragover', handleGroupDragOver, false);
-    newDropZone.addEventListener('drop', handleGroupDrop.bind(this), false);
-
-    if (index === this.listItems.length - 1) {
-      const newDropZone = dropZone.cloneNode();
-      newDropZone.setAttribute('data-index', index + 1);
-      listItem.after(newDropZone);
-      newDropZone.addEventListener(
-        'dragenter',
-        handleGroupDragEnter.bind(this),
-        false,
-      );
-      newDropZone.addEventListener(
-        'dragleave',
-        handleGroupDragLeave.bind(this),
-        false,
-      );
-      newDropZone.addEventListener('dragover', handleGroupDragOver, false);
-      newDropZone.addEventListener('drop', handleGroupDrop.bind(this), false);
-    }
-  });
-}
-
-function handleGroupDragEnter(event) {
-  event.target.classList.add('drop-zone--entered');
-}
-
-function handleGroupDragLeave(event) {
-  event.target.classList.remove('drop-zone--entered');
-}
-
-function handleGroupDragOver(event) {
-  // Necessary to enable drop
-  event.preventDefault();
-}
-
-async function handleGroupDrop(event) {
-  event.preventDefault();
-  const groupId = event.dataTransfer.getData('text');
-  const droppedGroupNode = document.getElementById(groupId);
-  const targetIndex = event.target.getAttribute('data-index');
-  event.target.replaceWith(droppedGroupNode);
-  droppedGroupNode.Group.moveToIndex(targetIndex);
-}
-
-function renderFooter() {
-  const addGroupNode = getElementNodeFromString(`
-        <button class="button-ghost button-ghost--new">
-            ${browser.i18n.getMessage('newGroupButton')}
-        </button>
-    `);
-  addGroupNode.addEventListener('click', async (event) => {
-    event.preventDefault();
-    const group = await window.PopupView.createGroup();
-    await group.addNewTab();
-    // TODO: Bring focus back to Popup afterwards
-    await group.loadTabs();
-    GroupDetailFrame.render(group);
-  });
-  this.setFooterContent(addGroupNode);
+  this.setContent(groupList);
+  enableGroupDragAndDrop.call(this);
 }
 
 class GroupsFrame extends Frame {
