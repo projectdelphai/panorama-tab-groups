@@ -1,0 +1,29 @@
+{
+  "name": "panorama-tab-groups",
+  "version": "0.0.1",
+  "description": "Tab Groups with Panorama View",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm-run-all test:*",
+    "test:lint": "npm run lint",
+    "lint": "npm-run-all linst:*",
+    "lint:eslint": "eslint --ext=.js,.json .",
+    "lint:webext": "web-ext -s src lint"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/projectdelphai/panorama-tab-groups.git"
+  },
+  "author": "Reuben Castelino",
+  "license": "MPL-2.0",
+  "bugs": {
+    "url": "https://github.com/projectdelphai/panorama-tab-groups/issues"
+  },
+  "homepage": "https://github.com/projectdelphai/panorama-tab-groups#readme",
+  "devDependencies": {
+    "eslint": "^7.7.0",
+    "eslint-config-airbnb-base": "^14.2.0",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-json": "^2.1.2"
+  }
+}
