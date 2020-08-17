@@ -317,7 +317,7 @@ async function setActionTitle(windowId, activeGroup = null) {
     }
     browser.browserAction.setTitle({title: `Active Group: ${name}`, 'windowId': windowId});
     browser.browserAction.setBadgeText({text: String(groups.length), windowId: windowId});
-    browser.browserAction.setBadgeBackgrounColor({color: "#666666"});
+    browser.browserAction.setBadgeBackgroundColor({color: "#666666"});
 }
 
 /** Make sure each window has a group */
