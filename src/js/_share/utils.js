@@ -1,10 +1,10 @@
 /**
  * Helper function to create a new element with the given attributes and children
  */
-export function new_element(name, attributes, children) {
+export function newElement(name, attributes, children) {
   const e = document.createElement(name);
   for (const key in attributes) {
-    if (key == 'content') {
+    if (key === 'content') {
       e.appendChild(document.createTextNode(attributes[key]));
     } else {
       e.setAttribute(key.replace(/_/g, '-'), attributes[key]);
@@ -22,8 +22,8 @@ export function new_element(name, attributes, children) {
  * https://developer.mozilla.org/en-US/docs/Mozilla/Localization/Localization_and_Plurals#List_of_Plural_Rules
  */
 export function getPluralForm(pluralCount = 1, translatedString = '') {
-  const count = parseInt(pluralCount);
-  const pluralRule = parseInt(browser.i18n.getMessage('pluralRule'));
+  const count = parseInt(pluralCount, 10);
+  const pluralRule = parseInt(browser.i18n.getMessage('pluralRule'), 10);
   const pluralForms = translatedString.split('|');
 
   if (pluralForms.length === 1) {
@@ -36,7 +36,6 @@ export function getPluralForm(pluralCount = 1, translatedString = '') {
      */
     case 0:
       return pluralForms[0];
-      break;
     /*
      * Rule #1 [is 1]|[everything else]
      */
@@ -45,9 +44,6 @@ export function getPluralForm(pluralCount = 1, translatedString = '') {
         return pluralForms[0];
       }
       return pluralForms[1];
-
-      break;
-      break;
     /*
      * Rule #2 [0 or 1]|[everything else]
      */
@@ -56,8 +52,6 @@ export function getPluralForm(pluralCount = 1, translatedString = '') {
         return pluralForms[0];
       }
       return pluralForms[1];
-
-      break;
     /*
      * Rule #7 [is 1, excluding 11]|[2-4, excluding 12-14]|[everything else]
      */
@@ -68,8 +62,6 @@ export function getPluralForm(pluralCount = 1, translatedString = '') {
         return pluralForms[1];
       }
       return pluralForms[2];
-
-      break;
     /*
      * Rule #9 [is 1]|[2-4, excluding 12-14]|[everything else]
      */
@@ -80,8 +72,6 @@ export function getPluralForm(pluralCount = 1, translatedString = '') {
         return pluralForms[1];
       }
       return pluralForms[2];
-
-      break;
     default:
       return translatedString;
   }

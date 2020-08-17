@@ -1,5 +1,5 @@
 export const defaultOptions = (() => {
-  const majorVersion = parseInt(browser.runtime.getManifest().version);
+  const majorVersion = parseInt(browser.runtime.getManifest().version, 10);
   let options = {
     toolbarPosition: 'top',
     shortcut: {
