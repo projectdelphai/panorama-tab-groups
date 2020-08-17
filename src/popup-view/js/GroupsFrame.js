@@ -3,39 +3,7 @@ import GroupDetailFrame from './GroupDetailFrame.js';
 import { getElementNodeFromString } from '../../_shared/js/utilities/node.js';
 import { getPluralForm } from '../../js/_share/utils.js';
 
-class GroupsFrame extends Frame {
-  constructor(id) {
-    super(id);
-  }
-
-  async render() {
-    this.setContentLoadingStart();
-    const headerRendered = _renderHeader.call(this);
-    const groupListRendered = _renderGroupList.call(this);
-    _renderFooter.call(this);
-    super.render();
-
-    // Setup the focus
-    if (this.lastViewedGroupDetail >= 0) {
-      groupListRendered.then(() => {
-        this.node
-          .querySelector(
-            `#group-${this.lastViewedGroupDetail} .list__link--extend`,
-          )
-          .focus();
-        this.lastViewedGroupDetail = -1;
-      });
-    } else {
-      headerRendered.then(() => {
-        this.node.querySelector('input, button').focus();
-      });
-    }
-  }
-}
-
-export default new GroupsFrame('main-frame');
-
-async function _renderHeader() {
+async function renderHeader() {
   const searchNode = getElementNodeFromString(`
         <div class="form-field form-field--search">
             <input class="form-field__input" type="search" name="query" 
@@ -107,7 +75,7 @@ async function _renderHeader() {
         ) === -1
       ) {
         lastSearchInput = '';
-        _renderGroupList.call(this);
+        renderGroupList.call(this);
       }
     },
     false,
@@ -142,19 +110,19 @@ async function _renderHeader() {
   this.setHeaderContent([searchNode, settingsNode]);
 }
 
-async function _renderGroupList() {
+async function renderGroupList() {
   const groups = await window.PopupView.getGroups();
   const groupNodes = await Promise.all(
-    groups.map(_renderGroupListItem.bind(this)),
+    groups.map(renderGroupListItem.bind(this)),
   );
   const groupList = getElementNodeFromString('<ul class="list"></ul>');
   groupList.append(...groupNodes);
 
   this.setContent(groupList);
-  _enableGroupDragAndDrop.call(this);
+  enableGroupDragAndDrop.call(this);
 }
 
-async function _renderGroupListItem(Group) {
+async function renderGroupListItem(Group) {
   await Group.loadTabs();
   const tabCount = Group.tabs.length || 0;
   const isActive = Group.id === window.PopupView.lastActiveTab.groupId;
@@ -215,7 +183,7 @@ async function _renderGroupListItem(Group) {
         leftGroups[0].show();
       }
 
-      _addOrUpdateDropZoneHandler.call(this);
+      addOrUpdateDropZoneHandler.call(this);
     }
   });
 
@@ -235,7 +203,7 @@ async function _renderGroupListItem(Group) {
   return node;
 }
 
-function _enableGroupDragAndDrop() {
+function enableGroupDragAndDrop() {
   this.list = this.content.querySelector('.list');
   this.listItems = this.list.querySelectorAll('.list__item');
 
@@ -243,16 +211,16 @@ function _enableGroupDragAndDrop() {
     listItem.setAttribute('draggable', 'true');
     listItem.addEventListener(
       'dragstart',
-      _handleGroupDragStart.bind(this),
+      handleGroupDragStart.bind(this),
       false,
     );
-    listItem.addEventListener('dragend', _handleGroupDragEnd.bind(this), false);
+    listItem.addEventListener('dragend', handleGroupDragEnd.bind(this), false);
   });
 
-  _addOrUpdateDropZoneHandler.call(this);
+  addOrUpdateDropZoneHandler.call(this);
 }
 
-function _handleGroupDragStart(event) {
+function handleGroupDragStart(event) {
   event.target.previousSibling.style.display = 'none';
   event.target.nextSibling.style.display = 'none';
   this.list.classList.add('dragging');
@@ -262,15 +230,15 @@ function _handleGroupDragStart(event) {
   event.dataTransfer.dropEffect = 'move';
 }
 
-function _handleGroupDragEnd(event) {
+function handleGroupDragEnd(event) {
   this.list.classList.remove('dragging');
   event.target.classList.remove('dragged');
   event.target.setAttribute('aria-grabbed', false);
 
-  _addOrUpdateDropZoneHandler.call(this);
+  addOrUpdateDropZoneHandler.call(this);
 }
 
-function _addOrUpdateDropZoneHandler() {
+function addOrUpdateDropZoneHandler() {
   this.list.querySelectorAll('.drop-zone').forEach((dropZone) => {
     dropZone.remove();
   });
@@ -287,16 +255,16 @@ function _addOrUpdateDropZoneHandler() {
     listItem.before(newDropZone);
     newDropZone.addEventListener(
       'dragenter',
-      _handleGroupDragEnter.bind(this),
+      handleGroupDragEnter.bind(this),
       false,
     );
     newDropZone.addEventListener(
       'dragleave',
-      _handleGroupDragLeave.bind(this),
+      handleGroupDragLeave.bind(this),
       false,
     );
-    newDropZone.addEventListener('dragover', _handleGroupDragOver, false);
-    newDropZone.addEventListener('drop', _handleGroupDrop.bind(this), false);
+    newDropZone.addEventListener('dragover', handleGroupDragOver, false);
+    newDropZone.addEventListener('drop', handleGroupDrop.bind(this), false);
 
     if (index === this.listItems.length - 1) {
       const newDropZone = dropZone.cloneNode();
@@ -304,34 +272,34 @@ function _addOrUpdateDropZoneHandler() {
       listItem.after(newDropZone);
       newDropZone.addEventListener(
         'dragenter',
-        _handleGroupDragEnter.bind(this),
+        handleGroupDragEnter.bind(this),
         false,
       );
       newDropZone.addEventListener(
         'dragleave',
-        _handleGroupDragLeave.bind(this),
+        handleGroupDragLeave.bind(this),
         false,
       );
-      newDropZone.addEventListener('dragover', _handleGroupDragOver, false);
-      newDropZone.addEventListener('drop', _handleGroupDrop.bind(this), false);
+      newDropZone.addEventListener('dragover', handleGroupDragOver, false);
+      newDropZone.addEventListener('drop', handleGroupDrop.bind(this), false);
     }
   });
 }
 
-function _handleGroupDragEnter(event) {
+function handleGroupDragEnter(event) {
   event.target.classList.add('drop-zone--entered');
 }
 
-function _handleGroupDragLeave(event) {
+function handleGroupDragLeave(event) {
   event.target.classList.remove('drop-zone--entered');
 }
 
-function _handleGroupDragOver(event) {
+function handleGroupDragOver(event) {
   // Necessary to enable drop
   event.preventDefault();
 }
 
-async function _handleGroupDrop(event) {
+async function handleGroupDrop(event) {
   event.preventDefault();
   const groupId = event.dataTransfer.getData('text');
   const droppedGroupNode = document.getElementById(groupId);
@@ -340,7 +308,7 @@ async function _handleGroupDrop(event) {
   droppedGroupNode.Group.moveToIndex(targetIndex);
 }
 
-function _renderFooter() {
+function renderFooter() {
   const addGroupNode = getElementNodeFromString(`
         <button class="button-ghost button-ghost--new">
             ${browser.i18n.getMessage('newGroupButton')}
@@ -356,3 +324,35 @@ function _renderFooter() {
   });
   this.setFooterContent(addGroupNode);
 }
+
+class GroupsFrame extends Frame {
+  constructor(id) {
+    super(id);
+  }
+
+  async render() {
+    this.setContentLoadingStart();
+    const headerRendered = renderHeader.call(this);
+    const groupListRendered = renderGroupList.call(this);
+    renderFooter.call(this);
+    super.render();
+
+    // Setup the focus
+    if (this.lastViewedGroupDetail >= 0) {
+      groupListRendered.then(() => {
+        this.node
+          .querySelector(
+            `#group-${this.lastViewedGroupDetail} .list__link--extend`,
+          )
+          .focus();
+        this.lastViewedGroupDetail = -1;
+      });
+    } else {
+      headerRendered.then(() => {
+        this.node.querySelector('input, button').focus();
+      });
+    }
+  }
+}
+
+export default new GroupsFrame('main-frame');
