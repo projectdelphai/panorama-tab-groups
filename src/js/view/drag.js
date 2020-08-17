@@ -3,7 +3,7 @@ import {
   groupNodes, makeGroupNode, resizeGroups, updateGroupFit, insertTab,
 } from './groupNodes.js';
 import * as groups from './groups.js';
-import { new_element } from '../_share/utils.js';
+import { newElement } from '../_share/utils.js';
 
 let dragTab = null;
 let dragOverTab = null;
@@ -12,7 +12,7 @@ let dragDropBefore;
 let dragIndicator;
 
 export function createDragIndicator() {
-  dragIndicator = new_element('div', { class: 'drag_indicator' });
+  dragIndicator = newElement('div', { class: 'drag_indicator' });
   return dragIndicator;
 }
 

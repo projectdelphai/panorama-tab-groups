@@ -2,7 +2,7 @@ import { forEachTab, forEachTabSync } from './tabs.js';
 import {
   tabDragStart, tabDragEnter, tabDragOver, tabDragLeave, tabDrop, tabDragEnd,
 } from './drag.js';
-import { new_element } from '../_share/utils.js';
+import { newElement } from '../_share/utils.js';
 
 export var tabNodes = {};
 let activeTabId = -1; // tabid of active tab in view
@@ -22,19 +22,19 @@ export async function initTabNodes(tabId) {
 }
 
 export function makeTabNode(tab) {
-  const thumbnail = new_element('div', { class: 'thumbnail' });
-  const favicon = new_element('div', { class: 'favicon' });
-  const close = new_element('div', { class: 'close', title: browser.i18n.getMessage('closeTab') });
-  const name = new_element('div', { class: 'name' });
+  const thumbnail = newElement('div', { class: 'thumbnail' });
+  const favicon = newElement('div', { class: 'favicon' });
+  const close = newElement('div', { class: 'close', title: browser.i18n.getMessage('closeTab') });
+  const name = newElement('div', { class: 'name' });
 
-  const inner = new_element('div', { class: 'inner' }, [
+  const inner = newElement('div', { class: 'inner' }, [
     thumbnail,
     favicon,
     close,
     name,
   ]);
 
-  const node = new_element('div', { class: 'tab', draggable: 'true', tabId: tab.id }, [inner]);
+  const node = newElement('div', { class: 'tab', draggable: 'true', tabId: tab.id }, [inner]);
 
   node.addEventListener('click', async (event) => {
     event.preventDefault();

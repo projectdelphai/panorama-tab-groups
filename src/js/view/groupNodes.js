@@ -1,7 +1,7 @@
 import { getGroupId, forEachTab, forEachTabSync } from './tabs.js';
 import { groupDragOver, groupDrop } from './drag.js';
 import * as groups from './groups.js';
-import { new_element, getPluralForm } from '../_share/utils.js';
+import { newElement, getPluralForm } from '../_share/utils.js';
 import { tabNodes, getTabNode } from './tabNodes.js';
 
 export var groupNodes = {};
@@ -190,39 +190,39 @@ export async function closeGroup(content, group) {
 
 export function makeGroupNode(group) {
   // edges
-  const top = new_element('div', { class: 'top' });
-  const right = new_element('div', { class: 'right' });
-  const bottom = new_element('div', { class: 'bottom' });
-  const left = new_element('div', { class: 'left' });
+  const top = newElement('div', { class: 'top' });
+  const right = newElement('div', { class: 'right' });
+  const bottom = newElement('div', { class: 'bottom' });
+  const left = newElement('div', { class: 'left' });
 
   // corners
-  const top_right = new_element('div', { class: 'top_right' });
-  const bottom_right = new_element('div', { class: 'bottom_right' });
-  const bottom_left = new_element('div', { class: 'bottom_left' });
-  const top_left = new_element('div', { class: 'top_left' });
+  const top_right = newElement('div', { class: 'top_right' });
+  const bottom_right = newElement('div', { class: 'bottom_right' });
+  const bottom_left = newElement('div', { class: 'bottom_left' });
+  const top_left = newElement('div', { class: 'top_left' });
 
   // header
-  const name = new_element('span', { class: 'name', content: group.name });
-  const spacer = new_element('span', { class: 'spacer' });
-  const input = new_element('input', { type: 'text', value: group.name });
+  const name = newElement('span', { class: 'name', content: group.name });
+  const spacer = newElement('span', { class: 'spacer' });
+  const input = newElement('input', { type: 'text', value: group.name });
 
-  const groupId = new_element('spawn', { class: 'group_id', content: group.id });
-  const tabCount = new_element('span', { class: 'tab_count' });
+  const groupId = newElement('spawn', { class: 'group_id', content: group.id });
+  const tabCount = newElement('span', { class: 'tab_count' });
 
-  const close = new_element('div', { class: 'close', title: browser.i18n.getMessage('closeGroup') });
+  const close = newElement('div', { class: 'close', title: browser.i18n.getMessage('closeGroup') });
 
-  const header = new_element('div', { class: 'header', title: browser.i18n.getMessage('dragGroup') }, [name, input, spacer, groupId, tabCount, close]);
+  const header = newElement('div', { class: 'header', title: browser.i18n.getMessage('dragGroup') }, [name, input, spacer, groupId, tabCount, close]);
 
   // newtab
-  const newtab = new_element('div', { class: 'newtab' }, [new_element('div', { class: 'inner' })]);
+  const newtab = newElement('div', { class: 'newtab' }, [newElement('div', { class: 'inner' })]);
 
   // group
-  const content = new_element('div', { class: 'content transition', groupId: group.id }, [newtab]);
+  const content = newElement('div', { class: 'content transition', groupId: group.id }, [newtab]);
   content.addEventListener('dragover', groupDragOver, false);
   content.addEventListener('drop', groupDrop, false);
 
-  const inner = new_element('div', { class: 'inner' }, [top, right, bottom, left, top_right, bottom_right, bottom_left, top_left, header, content]);
-  const node = new_element('div', { class: 'group' }, [inner]);
+  const inner = newElement('div', { class: 'inner' }, [top, right, bottom, left, top_right, bottom_right, bottom_left, top_left, header, content]);
+  const node = newElement('div', { class: 'group' }, [inner]);
 
   close.addEventListener('click', (event) => {
     event.stopPropagation();
