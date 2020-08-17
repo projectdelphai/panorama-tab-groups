@@ -2,7 +2,7 @@ module.exports = {
   env: {
     browser: true,
     es2020: true,
-    webextensions: true
+    webextensions: true,
   },
   extends: [
     'airbnb-base',
@@ -16,5 +16,6 @@ module.exports = {
     sourceType: 'module',
   },
   rules: {
+    'import/extensions': 0,
   },
 };
