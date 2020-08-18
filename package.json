@@ -6,7 +6,7 @@
   "scripts": {
     "test": "npm-run-all test:*",
     "test:lint": "npm run lint",
-    "lint": "npm-run-all linst:*",
+    "lint": "npm-run-all lint:*",
     "lint:eslint": "eslint --ext=.js,.json .",
     "lint:webext": "web-ext -s src lint"
   },
