@@ -1,4 +1,4 @@
-export function addTranslations() {
+export default function addTranslations() {
   document.querySelector(
     '#optionKeyboardShortcuts h2',
   ).innerHTML = browser.i18n.getMessage('optionKeyboardShortcuts');

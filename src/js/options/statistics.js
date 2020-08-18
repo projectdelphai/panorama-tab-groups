@@ -1,12 +1,12 @@
 import { formatByteSize } from '../_share/utils.js';
 
-export async function getStatistics() {
+export default async function getStatistics() {
   const tabs = await browser.tabs.query({});
 
   let totalSize = 0;
   let numActiveTabs = 0;
 
-  for (const tab of tabs) {
+  tabs.forEach(async (tab) => {
     const thumbnail = await browser.sessions.getTabValue(tab.id, 'thumbnail');
 
     if (thumbnail) {
@@ -17,9 +17,10 @@ export async function getStatistics() {
       }
     }
     if (!tab.discarded) {
-      numActiveTabs++;
+      numActiveTabs += 1;
     }
-  }
+  });
+  console.log(numActiveTabs);
 
   document.getElementById('thumbnailCacheSize').innerHTML = '';
   document

@@ -1,5 +1,5 @@
 import { loadOptions } from '../_share/options.js';
-import { addTranslations } from './translations.js';
+import addTranslations from './translations.js';
 import {
   shortcuts,
   updateShortcut,
@@ -9,32 +9,22 @@ import {
   enableShortcut,
 } from './shortcuts.js';
 import { saveOptionView, showViewSpecificOptions } from './view.js';
-import { saveOptionTheme } from './theme.js';
-import { saveOptionToolbarPosition } from './toolbar.js';
+import saveOptionTheme from './theme.js';
+import saveOptionToolbarPosition from './toolbar.js';
 import { loadBackup, saveBackup } from './backup.js';
-import { getStatistics } from './statistics.js';
-import { resetPTG } from './reset.js';
-
-document.addEventListener('DOMContentLoaded', init);
-
-async function init() {
-  const options = await loadOptions();
-  restoreOptions(options, await shortcuts);
-  addTranslations();
-  attachEventHandler(options, await shortcuts);
-  getStatistics();
-}
+import getStatistics from './statistics.js';
+import resetPTG from './reset.js';
 
 function restoreOptions(options, shortcuts) {
   // Shortcuts
-  for (const shortcut of shortcuts) {
-    if (!options.shortcut.hasOwnProperty(shortcut.name)) {
-      continue;
+  shortcuts.forEach((shortcut) => {
+    if (options.shortcut.hasOwnProperty(shortcut.name)) {
+      return;
     }
     if (options.shortcut[shortcut.name].disabled) {
       disableShortcutForm(shortcut.name);
     }
-  }
+  });
 
   // View
   document.querySelector(
@@ -55,11 +45,11 @@ function restoreOptions(options, shortcuts) {
 
 function attachEventHandler(options, shortcuts) {
   // Shortcuts
-  for (const shortcut of shortcuts) {
+  shortcuts.forEach((shortcut) => {
     const shortcutNode = document.querySelector(`#${shortcut.name}`);
 
     if (!shortcutNode) {
-      continue;
+      return;
     }
 
     shortcutNode.querySelector('input').value = shortcut.shortcut;
@@ -78,7 +68,7 @@ function attachEventHandler(options, shortcuts) {
         .querySelector('.disableShortcut')
         .addEventListener('click', disableShortcut.bind(this, options));
     }
-  }
+  });
 
   // View
   document
@@ -104,3 +94,13 @@ function attachEventHandler(options, shortcuts) {
     .addEventListener('click', saveBackup);
   document.getElementById('resetAddon').addEventListener('click', resetPTG);
 }
+
+async function init() {
+  const options = await loadOptions();
+  restoreOptions(options, await shortcuts);
+  addTranslations();
+  attachEventHandler(options, await shortcuts);
+  getStatistics();
+}
+
+document.addEventListener('DOMContentLoaded', init);

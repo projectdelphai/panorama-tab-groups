@@ -18,26 +18,11 @@ export async function resetShortcut(event) {
 
   await browser.commands.reset(shortcut);
   const commands = await browser.commands.getAll();
-  for (const command of commands) {
+  commands.forEach((command) => {
     if (command.name === shortcut) {
       document.querySelector(`#${shortcut} input`).value = command.shortcut;
     }
-  }
-}
-
-export async function disableShortcut(options, event) {
-  event.preventDefault();
-  const button = event.target;
-  const shortcut = button.parentElement.getAttribute('id');
-
-  options.shortcut = Object.assign(options.shortcut, {
-    [shortcut]: {
-      disabled: true,
-    },
   });
-  await browser.storage.sync.set(options);
-
-  disableShortcutForm(shortcut);
 }
 
 export function disableShortcutForm(shortcut) {
@@ -56,19 +41,19 @@ export function disableShortcutForm(shortcut) {
     .removeAttribute('hidden');
 }
 
-export async function enableShortcut(options, event) {
+export async function disableShortcut(options, event) {
   event.preventDefault();
   const button = event.target;
   const shortcut = button.parentElement.getAttribute('id');
 
   options.shortcut = Object.assign(options.shortcut, {
     [shortcut]: {
-      disabled: false,
+      disabled: true,
     },
   });
   await browser.storage.sync.set(options);
 
-  enableShortcutForm(shortcut);
+  disableShortcutForm(shortcut);
 }
 
 export function enableShortcutForm(shortcut) {
@@ -85,4 +70,19 @@ export function enableShortcutForm(shortcut) {
   document
     .querySelector(`#${shortcut} .enableShortcut`)
     .setAttribute('hidden', true);
+}
+
+export async function enableShortcut(options, event) {
+  event.preventDefault();
+  const button = event.target;
+  const shortcut = button.parentElement.getAttribute('id');
+
+  options.shortcut = Object.assign(options.shortcut, {
+    [shortcut]: {
+      disabled: false,
+    },
+  });
+  await browser.storage.sync.set(options);
+
+  enableShortcutForm(shortcut);
 }

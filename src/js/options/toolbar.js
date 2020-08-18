@@ -1,4 +1,4 @@
-export async function saveOptionToolbarPosition() {
+export default async function saveOptionToolbarPosition() {
   await browser.storage.sync.set({
     toolbarPosition: document.querySelector(
       'input[name="toolbarPosition"]:checked',
