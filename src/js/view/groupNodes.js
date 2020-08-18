@@ -252,8 +252,14 @@ async function groupTransform(group, node, top, right, bottom, left, elem) {
   const snapDstx = 5 / groupsRect.width;
   const snapDsty = 5 / groupsRect.height;
 
-  const clamp = function (num, min, max) {
-    return num <= min ? min : num >= max ? max : num;
+  const clamp = function clmp(num, min, max) {
+    if (num <= min) {
+      return min;
+    }
+    if (num >= max) {
+      return max;
+    }
+    return num;
   };
 
   let first = true;
@@ -264,7 +270,6 @@ async function groupTransform(group, node, top, right, bottom, left, elem) {
 
   const onmousemove = function f(event) {
     event.preventDefault();
-    console.log('a');
     x = event.pageX / groupsRect.width;
     y = event.pageY / groupsRect.height;
 
@@ -429,7 +434,7 @@ export function makeGroupNode(group) {
   // renaming groups
   let editing = false;
 
-  header.addEventListener('dblclick', (event) => {
+  header.addEventListener('dblclick', () => {
     if (!editing) {
       editing = true;
 
@@ -447,7 +452,7 @@ export function makeGroupNode(group) {
     }
   }, false);
 
-  input.addEventListener('blur', function f(event) {
+  input.addEventListener('blur', () => {
     header.classList.remove('edit');
     input.setSelectionRange(0, 0);
 
@@ -572,14 +577,14 @@ export async function initGroupNodes(groupsNode) {
 
 // Attempt to insert the tab on a best effort basis,
 // but fall back to fillGroupNodes if something goes wrong
-export async function insertTab(tab) {
+export async function insertTab(oldTab) {
   if (modifyingGroupContent) {
-    setTimeout(() => insertTab(tab), 100);
+    setTimeout(() => insertTab(oldTab), 100);
   }
   try {
     modifyingGroupContent = true;
     // refresh the tab data
-    var tab = await browser.tabs.get(tab.id);
+    const tab = await browser.tabs.get(oldTab.id);
     const groupId = await getGroupId(tab.id);
 
     const tabNode = tabNodes[tab.id];

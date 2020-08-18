@@ -3,10 +3,12 @@ import {
   tabMoved, groupDragOver, outsideDrop, createDragIndicator,
 } from './drag.js';
 import {
-  groupNodes, initGroupNodes, closeGroup, makeGroupNode, fillGroupNodes, insertTab, resizeGroups, raiseGroup, updateGroupFit,
+  groupNodes, initGroupNodes, closeGroup, makeGroupNode,
+  fillGroupNodes, insertTab, resizeGroups, raiseGroup, updateGroupFit,
 } from './groupNodes.js';
 import {
-  initTabNodes, makeTabNode, updateTabNode, setActiveTabNode, setActiveTabNodeById, getActiveTabId, deleteTabNode, updateThumbnail, updateFavicon,
+  initTabNodes, makeTabNode, updateTabNode, setActiveTabNode,
+  setActiveTabNodeById, getActiveTabId, deleteTabNode, updateThumbnail, updateFavicon,
 } from './tabNodes.js';
 import * as groups from './groups.js';
 
@@ -25,60 +27,58 @@ function queueReload() {
   if (document.hidden) {
     pendingReload = true;
   } else {
-    location.reload();
+    window.location.reload();
   }
 }
 
-// Load settings
-browser.storage.sync.get({
-  useDarkTheme: false,
-  theme: 'light',
-  toolbarPosition: 'top',
-}).then((options) => {
-  /*
-     * Migrate legacy theme setting
-     * @deprecate should be removed in v1.0.0
-     */
-  if (options.useDarkTheme) {
-    options.theme = 'dark';
-    browser.storage.sync.set({
-      useDarkTheme: null,
-      theme: 'dark',
-    });
+async function activateTiling() {
+  const windowId = (await browser.windows.getCurrent()).id;
+  await browser.sessions.getWindowValue(windowId, 'layoutMode');
+
+  const numGroups = groups.getLength();
+
+  // get number of groups per row
+  const maxGroups = Math.ceil(Math.sqrt(numGroups));
+  const quotient = Math.floor(numGroups / maxGroups);
+  const remainder = numGroups % maxGroups;
+
+  const gridLayout = Array(quotient).fill(maxGroups);
+  if (remainder !== 0) {
+    gridLayout.push(remainder);
   }
-  setTheme(options.theme);
-  setToolbarPosition(options.toolbarPosition);
 
-  browser.storage.onChanged.addListener((changes, area) => {
-    if (area === 'sync') {
-      if (changes.theme) {
-        setTheme(changes.theme.newValue);
-      }
-      if (changes.toolbarPosition) {
-        setToolbarPosition(changes.toolbarPosition.newValue);
-      }
-    }
-  });
-
-  initView();
-});
-
-function setTheme(theme) {
-  replaceClass('theme', theme);
-}
-
-function setToolbarPosition(position) {
-  replaceClass('toolbar', position);
-}
-
-function replaceClass(prefix, value) {
-  const { classList } = document.getElementsByTagName('body')[0];
-  for (const classObject of classList) {
-    if (classObject.startsWith(`${prefix}-`)) {
-      classList.remove(classObject);
+  const groupIds = groups.getIds();
+  let currentIndex = 0;
+  // gridLayout[i] = number of cells per row
+  for (let i = 0; i < gridLayout.length; i += 1) {
+    // j = specific cell in each row
+    for (let j = 0; j < gridLayout[i]; j += 1) {
+      const rect = {};
+      rect.x = j / gridLayout[i];
+      rect.y = i / gridLayout.length;
+      rect.w = 1.0 / gridLayout[i];
+      rect.h = 1.0 / gridLayout.length;
+      rect.i = rect.x + rect.w;
+      rect.j = rect.y + rect.h;
+      groups.transform(groupIds[currentIndex], rect);
+      resizeGroups(groupIds[currentIndex], rect);
+      currentIndex += 1;
     }
   }
-  classList.add(`${prefix}-${value}`);
+}
+
+// Tiling functionality
+// Toggle tiling on or off
+async function setLayoutMode(mode) {
+  const windowId = (await browser.windows.getCurrent()).id;
+
+  if (mode === 'tiling') {
+    await browser.sessions.setWindowValue(windowId, 'layoutMode', 'tiling');
+    activateTiling();
+  } else {
+    await browser.sessions.setWindowValue(windowId, 'layoutMode', 'freeform');
+    resizeGroups();
+  }
 }
 
 async function captureThumbnail(tab) {
@@ -86,13 +86,15 @@ async function captureThumbnail(tab) {
 
   const cachedThumbnail = await browser.sessions.getTabValue(tabId, 'thumbnail');
 
-  // Only capture a new thumbnail if there's no cached one, the cached one doesn't have a capturedTime,
+  // Only capture a new thumbnail if there's no cached one,
+  // the cached one doesn't have a capturedTime,
   // or the tab was accessed since the cache was made
-  if (!cachedThumbnail || !cachedThumbnail.capturedTime || cachedThumbnail.capturedTime < tab.lastAccessed) {
+  if (!cachedThumbnail || !cachedThumbnail.capturedTime
+    || cachedThumbnail.capturedTime < tab.lastAccessed) {
     const data = await browser.tabs.captureTab(tabId, { format: 'jpeg', quality: 25 });
     const img = new Image();
 
-    img.onload = async function () {
+    img.onload = async function f() {
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d');
 
@@ -117,29 +119,28 @@ async function captureThumbnail(tab) {
 }
 
 async function captureThumbnails() {
-  const tabs = browser.tabs.query({ currentWindow: true, discarded: false });
+  const tabs = await browser.tabs.query({ currentWindow: true, discarded: false });
 
-  for (const tab of await tabs) {
+  tabs.forEach(async (tab) => {
     await captureThumbnail(tab); // await to lessen strain on browser
-  }
+  });
 }
 
-async function doubleClick(e) {
-  if (e.target.className === 'content transition') {
-    const groupID = e.target.getAttribute('groupid');
-    const group = groups.get(groupID);
-    closeGroup(e.target, group);
-  } else if (e.target.id === 'groups') {
-    createGroup(e.clientX, e.clientY);
-  }
-}
+async function createGroup(x = 75, y = 75) {
+  const group = await groups.create();
 
-async function singleClick(e) {
-  if (e.target.className === 'content transition') {
-    const groupID = e.target.getAttribute('groupid');
-    raiseGroup(groupID);
-  }
-  event.stopPropagation();
+  group.rect.x = (x - 75) / window.innerWidth;
+  group.rect.y = (y - 75) / window.innerHeight;
+  group.rect.w = 150 / window.innerWidth;
+  group.rect.h = 150 / window.innerHeight;
+
+  const groupElement = makeGroupNode(group);
+
+  view.groupsNode.appendChild(groupElement);
+
+  resizeGroups();
+
+  groupElement.scrollIntoView({ behavior: 'smooth' });
 }
 
 /*
@@ -160,198 +161,34 @@ async function searchTabs() {
   }
   setActiveTabNodeById(futureActiveTabId);
 }
-/**
- * Initialize the Panorama View tab
- *
- * This displays all the groups and the tabs in them, and sets up listeners
- * to respond to user actions and react to changes
- */
-async function initView() {
-  // set tiling off initially
-  const windowId = (await browser.windows.getCurrent()).id;
-  const tilingStatus = await browser.sessions.setWindowValue(windowId, 'tilingStatus', 'true');
-  setLayoutMode('freeform');
-
-  // set locale specific titles
-  document.getElementById('newGroup').title = browser.i18n.getMessage('newGroupButton');
-  document.getElementById('settings').title = browser.i18n.getMessage('settingsButton');
-  document.getElementById('tiling').title = browser.i18n.getMessage('tilingButton');
-  document.getElementById('freeform').title = browser.i18n.getMessage('freeformButton');
-
-  view.windowId = (await browser.windows.getCurrent()).id;
-  view.tabId = (await browser.tabs.getCurrent()).id;
-  view.groupsNode = document.getElementById('groups');
-
-  view.groupsNode.appendChild(createDragIndicator());
-
-  await groups.init();
-
-  // init Nodes
-  await initTabNodes(view.tabId);
-  await initGroupNodes(view.groupsNode);
-
-  resizeGroups();
-
-  captureThumbnails();
-  // view.intervalId = setInterval(captureThumbnails, 2000);
-
-  // set all listeners
-
-  // Listen for clicks on new group button
-  document.getElementById('newGroup').addEventListener('click', (e) => createGroup(), false);
-
-  // Listen for clicks on settings button
-  document.getElementById('settings').addEventListener('click', () => {
-    browser.runtime.openOptionsPage();
-  }, false);
-
-  document.getElementById('freeform').addEventListener('click', () => {
-    setLayoutMode('freeform');
-  }, false);
-
-  // Listen for tiling toggle
-  document.getElementById('tiling').addEventListener('click', () => {
-    setLayoutMode('tiling');
-  }, false);
-
-  // Listen for search input
-  document.getElementById('tab-search').addEventListener('input', searchTabs);
-
-  // Listen for middle clicks in background to open new group
-  document.getElementById('groups').addEventListener('auxclick', async (event) => {
-    event.preventDefault();
-    event.stopPropagation();
-
-    if (event.target !== document.getElementById('groups')) return; // ignore middle clicks in foreground
-    if (event.button !== 1) return; // middle mouse
-
-    createGroup(e.clientX, e.clientY);
-  }, false);
-
-  document.addEventListener('visibilitychange', () => {
-    if (!document.hidden) {
-      const background = browser.extension.getBackgroundPage();
-
-      if (pendingReload || background.viewRefreshOrdered) {
-        background.viewRefreshOrdered = false;
-        location.reload();
-      }
-
-      setActiveTabNode(view.tabId);
-      captureThumbnails();
-    }
-  }, false);
-
-  window.addEventListener('resize', resizeGroups);
-  document.addEventListener('keydown', keyInput);
-
-  // Listen for tabs being added/removed/switched/etc. and update appropriately
-  browser.tabs.onCreated.addListener(tabCreated);
-  browser.tabs.onRemoved.addListener(tabRemoved);
-  browser.tabs.onUpdated.addListener(tabUpdated, {
-    // This page doesn't care about tabs in other windows
-    windowId: view.windowId,
-    // We don't want to listen for every property because that includes
-    // the hidden state changing which generates a ton of events
-    // every time the active group changes
-    properties: [
-      'discarded',
-      'favIconUrl',
-      'pinned',
-      'title',
-      'status',
-    ],
-  });
-  browser.tabs.onMoved.addListener(tabMoved);
-  browser.tabs.onAttached.addListener(tabAttached);
-  browser.tabs.onDetached.addListener(tabDetached);
-
-  view.groupsNode.addEventListener('dragover', groupDragOver, false);
-  view.groupsNode.addEventListener('drop', outsideDrop, false);
-  view.groupsNode.addEventListener('dblclick', doubleClick, false);
-  view.groupsNode.addEventListener('click', singleClick, false);
-}
-
-// Tiling functionality
-// Toggle tiling on or off
-async function setLayoutMode(mode) {
-  const windowId = (await browser.windows.getCurrent()).id;
-
-  if (mode === 'tiling') {
-    await browser.sessions.setWindowValue(windowId, 'layoutMode', 'tiling');
-    activateTiling();
-  } else {
-    await browser.sessions.setWindowValue(windowId, 'layoutMode', 'freeform');
-    resizeGroups();
-  }
-}
-
-async function activateTiling() {
-  const windowId = (await browser.windows.getCurrent()).id;
-  await browser.sessions.getWindowValue(windowId, 'layoutMode');
-
-  const numGroups = groups.getLength();
-
-  // get number of groups per row
-  const maxGroups = Math.ceil(Math.sqrt(numGroups));
-  const quotient = Math.floor(numGroups / maxGroups);
-  const remainder = numGroups % maxGroups;
-
-  const gridLayout = Array(quotient).fill(maxGroups);
-  if (remainder !== 0) {
-    gridLayout.push(remainder);
-  }
-
-  const groupIds = groups.getIds();
-  let currentIndex = 0;
-  console.log(gridLayout);
-  // gridLayout[i] = number of cells per row
-  for (const i in gridLayout) {
-    // j = specific cell in each row
-    for (let j = 0; j < gridLayout[i]; j++) {
-      console.log(`i: ${i}, j: ${j}`);
-      const rect = {};
-      rect.x = j / gridLayout[i];
-      rect.y = i / gridLayout.length;
-      rect.w = 1.0 / gridLayout[i];
-      rect.h = 1.0 / gridLayout.length;
-      rect.i = rect.x + rect.w;
-      rect.j = rect.y + rect.h;
-      console.log(groupIds[currentIndex]);
-      console.log(rect);
-      groups.transform(groupIds[currentIndex], rect);
-      resizeGroups(groupIds[currentIndex], rect);
-      currentIndex++;
-    }
-  }
-}
 
 async function keyInput(e) {
   if (e.key === 'ArrowRight') {
-    var activeTabId = getActiveTabId();
-    var groupId = await getGroupId(activeTabId);
-    var { childNodes } = groupNodes[groupId].content;
+    const activeTabId = getActiveTabId();
+    let groupId = await getGroupId(activeTabId);
+    let { childNodes } = groupNodes[groupId].content;
 
-    for (var i = 0; i < childNodes.length; i++) {
-      var tabId = Number(childNodes[i].getAttribute('tabId'));
+    let i;
+    let tabId;
+    for (i = 0; i < childNodes.length; i += 1) {
+      tabId = Number(childNodes[i].getAttribute('tabId'));
       if (tabId === activeTabId) {
         break;
       }
     }
 
-    var newTabId = -1;
-    var max = childNodes.length - 2;
+    let newTabId = -1;
+    const max = childNodes.length - 2;
     // check if at end or if tab not found
     if (i === max || i === childNodes.length) {
-      var newGroupId = -1;
-      var groupsLength = Object.keys(groupNodes).length;
+      const groupsLength = Object.keys(groupNodes).length;
 
       const last = Object.keys(groupNodes)[groupsLength - 2];
       if (groupId === last) {
-        var first = Object.keys(groupNodes)[0];
+        const first = Object.keys(groupNodes)[0];
         groupId = first;
       } else {
-        var index = Object.keys(groupNodes).indexOf(groupId.toString());
+        const index = Object.keys(groupNodes).indexOf(groupId.toString());
         groupId = Object.keys(groupNodes)[index + 1];
       }
       childNodes = groupNodes[groupId].content.childNodes;
@@ -362,30 +199,29 @@ async function keyInput(e) {
 
     setActiveTabNodeById(newTabId);
   } else if (e.key === 'ArrowLeft') {
-    var activeTabId = getActiveTabId();
-    var groupId = await getGroupId(activeTabId);
-    var { childNodes } = groupNodes[groupId].content;
+    const activeTabId = getActiveTabId();
+    let groupId = await getGroupId(activeTabId);
+    let { childNodes } = groupNodes[groupId].content;
 
-    for (var i = 0; i < childNodes.length; i++) {
-      var tabId = Number(childNodes[i].getAttribute('tabId'));
+    let i;
+    for (i = 0; i < childNodes.length; i += 1) {
+      const tabId = Number(childNodes[i].getAttribute('tabId'));
       if (tabId === activeTabId) {
         break;
       }
     }
 
-    var newTabId = -1;
-    var max = childNodes.length - 2;
+    let newTabId = -1;
     // check if at end or if tab not found
     if (i === 0 || i === childNodes.length) {
-      var newGroupId = -1;
-      var groupsLength = Object.keys(groupNodes).length;
+      const groupsLength = Object.keys(groupNodes).length;
 
       // check if at last tab in group and switch to next group
-      var first = Object.keys(groupNodes)[0];
+      const first = Object.keys(groupNodes)[0];
       if (groupId === first) {
         groupId = Object.keys(groupNodes)[groupsLength - 2];
       } else {
-        var index = Object.keys(groupNodes).indexOf(groupId.toString());
+        const index = Object.keys(groupNodes).indexOf(groupId.toString());
         groupId = Object.keys(groupNodes)[index - 1];
       }
       childNodes = groupNodes[groupId].content.childNodes;
@@ -401,23 +237,6 @@ async function keyInput(e) {
   }
 }
 
-async function createGroup(x = 75, y = 75) {
-  const group = await groups.create();
-
-  group.rect.x = (x - 75) / window.innerWidth;
-  group.rect.y = (y - 75) / window.innerHeight;
-  group.rect.w = 150 / window.innerWidth;
-  group.rect.h = 150 / window.innerHeight;
-
-  const groupElement = makeGroupNode(group);
-
-  view.groupsNode.appendChild(groupElement);
-
-  resizeGroups();
-
-  groupElement.scrollIntoView({ behavior: 'smooth' });
-}
-
 async function tabCreated(tab) {
   if (view.windowId === tab.windowId) {
     makeTabNode(tab);
@@ -425,10 +244,7 @@ async function tabCreated(tab) {
     updateFavicon(tab);
 
     // Wait for background script to assign this tab to a group
-    let groupId;
-    while (groupId === undefined) {
-      groupId = await getGroupId(tab.id);
-    }
+    const groupId = await getGroupId(tab.id);
 
     const group = groups.get(groupId);
     await insertTab(tab);
@@ -475,3 +291,185 @@ function tabDetached(tabId, detachInfo) {
     });
   }
 }
+
+async function doubleClick(e) {
+  if (e.target.className === 'content transition') {
+    const groupID = e.target.getAttribute('groupid');
+    const group = groups.get(groupID);
+    closeGroup(e.target, group);
+  } else if (e.target.id === 'groups') {
+    createGroup(e.clientX, e.clientY);
+  }
+}
+
+async function singleClick(e) {
+  if (e.target.className === 'content transition') {
+    const groupID = e.target.getAttribute('groupid');
+    raiseGroup(groupID);
+  }
+  e.stopPropagation();
+}
+
+/**
+ * Initialize the Panorama View tab
+ *
+ * This displays all the groups and the tabs in them, and sets up listeners
+ * to respond to user actions and react to changes
+ */
+async function initView() {
+  // set tiling off initially
+  // const windowId = (await browser.windows.getCurrent()).id;
+  // const tilingStatus = await browser.sessions.setWindowValue(windowId, 'tilingStatus', 'true');
+  setLayoutMode('freeform');
+
+  // set locale specific titles
+  document.getElementById('newGroup').title = browser.i18n.getMessage('newGroupButton');
+  document.getElementById('settings').title = browser.i18n.getMessage('settingsButton');
+  document.getElementById('tiling').title = browser.i18n.getMessage('tilingButton');
+  document.getElementById('freeform').title = browser.i18n.getMessage('freeformButton');
+
+  view.windowId = (await browser.windows.getCurrent()).id;
+  view.tabId = (await browser.tabs.getCurrent()).id;
+  view.groupsNode = document.getElementById('groups');
+
+  view.groupsNode.appendChild(createDragIndicator());
+
+  await groups.init();
+
+  // init Nodes
+  await initTabNodes(view.tabId);
+  await initGroupNodes(view.groupsNode);
+
+  resizeGroups();
+
+  captureThumbnails();
+  // view.intervalId = setInterval(captureThumbnails, 2000);
+
+  // set all listeners
+
+  // Listen for clicks on new group button
+  document.getElementById('newGroup').addEventListener('click', () => createGroup(), false);
+
+  // Listen for clicks on settings button
+  document.getElementById('settings').addEventListener('click', () => {
+    browser.runtime.openOptionsPage();
+  }, false);
+
+  document.getElementById('freeform').addEventListener('click', () => {
+    setLayoutMode('freeform');
+  }, false);
+
+  // Listen for tiling toggle
+  document.getElementById('tiling').addEventListener('click', () => {
+    setLayoutMode('tiling');
+  }, false);
+
+  // Listen for search input
+  document.getElementById('tab-search').addEventListener('input', searchTabs);
+
+  // Listen for middle clicks in background to open new group
+  document.getElementById('groups').addEventListener('auxclick', async (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    if (event.target !== document.getElementById('groups')) return; // ignore middle clicks in foreground
+    if (event.button !== 1) return; // middle mouse
+
+    createGroup(event.clientX, event.clientY);
+  }, false);
+
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) {
+      const background = browser.extension.getBackgroundPage();
+
+      if (pendingReload || background.viewRefreshOrdered) {
+        background.viewRefreshOrdered = false;
+        window.location.reload();
+      }
+
+      setActiveTabNode(view.tabId);
+      captureThumbnails();
+    }
+  }, false);
+
+  window.addEventListener('resize', resizeGroups);
+  document.addEventListener('keydown', keyInput);
+
+  // Listen for tabs being added/removed/switched/etc. and update appropriately
+  browser.tabs.onCreated.addListener(tabCreated);
+  browser.tabs.onRemoved.addListener(tabRemoved);
+  browser.tabs.onUpdated.addListener(tabUpdated, {
+    // This page doesn't care about tabs in other windows
+    windowId: view.windowId,
+    // We don't want to listen for every property because that includes
+    // the hidden state changing which generates a ton of events
+    // every time the active group changes
+    properties: [
+      'discarded',
+      'favIconUrl',
+      'pinned',
+      'title',
+      'status',
+    ],
+  });
+  browser.tabs.onMoved.addListener(tabMoved);
+  browser.tabs.onAttached.addListener(tabAttached);
+  browser.tabs.onDetached.addListener(tabDetached);
+
+  view.groupsNode.addEventListener('dragover', groupDragOver, false);
+  view.groupsNode.addEventListener('drop', outsideDrop, false);
+  view.groupsNode.addEventListener('dblclick', doubleClick, false);
+  view.groupsNode.addEventListener('click', singleClick, false);
+}
+
+function replaceClass(prefix, value) {
+  const { classList } = document.getElementsByTagName('body')[0];
+  classList.forEach((classObject) => {
+    if (classObject.startsWith(`${prefix}-`)) {
+      classList.remove(classObject);
+    }
+  });
+  classList.add(`${prefix}-${value}`);
+}
+
+function setTheme(theme) {
+  replaceClass('theme', theme);
+}
+
+function setToolbarPosition(position) {
+  replaceClass('toolbar', position);
+}
+
+// Load settings
+browser.storage.sync.get({
+  useDarkTheme: false,
+  theme: 'light',
+  toolbarPosition: 'top',
+}).then((options) => {
+  /*
+     * Migrate legacy theme setting
+     * @deprecate should be removed in v1.0.0
+     */
+  if (options.useDarkTheme) {
+    options.theme = 'dark';
+    browser.storage.sync.set({
+      useDarkTheme: null,
+      theme: 'dark',
+    });
+  }
+  setTheme(options.theme);
+  setToolbarPosition(options.toolbarPosition);
+
+  browser.storage.onChanged.addListener((changes, area) => {
+    if (area === 'sync') {
+      if (changes.theme) {
+        setTheme(changes.theme.newValue);
+      }
+      if (changes.toolbarPosition) {
+        setToolbarPosition(changes.toolbarPosition.newValue);
+      }
+    }
+  });
+
+  initView();
+});

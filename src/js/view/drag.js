@@ -194,7 +194,7 @@ export async function groupDrop(e) {
   return false;
 }
 
-export function tabDragEnd(e) {
+export function tabDragEnd() {
   dragCount = 0;
   this.classList.remove('drag');
   dragIndicator.classList.remove('show');

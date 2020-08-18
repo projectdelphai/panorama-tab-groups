@@ -11,16 +11,6 @@ export function getTabNode(tabId) {
   return tabNodes[tabId].tab;
 }
 
-export async function initTabNodes(tabId) {
-  await forEachTab(async (tab) => {
-    makeTabNode(tab);
-    updateTabNode(tab);
-    await updateFavicon(tab);
-    await updateThumbnail(tab.id);
-  });
-  setActiveTabNode(tabId);
-}
-
 export function makeTabNode(tab) {
   const thumbnail = newElement('div', { class: 'thumbnail' });
   const favicon = newElement('div', { class: 'favicon' });
@@ -120,7 +110,7 @@ export async function setActiveTabNode(tabId) {
       tabNodes[tab.id].tab.classList.remove('selected');
     }
 
-    if (tab.lastAccessed > lastAccessed && tab.id != tabId) {
+    if (tab.lastAccessed > lastAccessed && tab.id !== tabId) {
       lastAccessed = tab.lastAccessed;
       lastActive = tab.id;
     }
@@ -132,9 +122,9 @@ export async function setActiveTabNode(tabId) {
 
 // Remove selected from all other thumbnails, add to tab with id given
 export function setActiveTabNodeById(tabId) {
-  for (const nodeId in tabNodes) {
-    tabNodes[nodeId].tab.classList.remove('selected');
-  }
+  tabNodes.forEach((node) => {
+    node.tab.classList.remove('selected');
+  });
   tabNodes[tabId].tab.classList.add('selected');
   activeTabId = tabId;
 }
@@ -182,7 +172,7 @@ async function testImage(url) {
       reject('error');
     };
 
-    img.onload = function () {
+    img.onload = function f() {
       resolve('success');
     };
 
@@ -195,8 +185,8 @@ export async function updateFavicon(tab) {
 
   if (node) {
     if (tab.favIconUrl
-			&& tab.favIconUrl.substr(0, 22) != 'chrome://mozapps/skin/'
-			&& tab.favIconUrl != tab.url) {
+      && tab.favIconUrl.substr(0, 22) !== 'chrome://mozapps/skin/'
+      && tab.favIconUrl !== tab.url) {
       try {
         await testImage(tab.favIconUrl);
         node.favicon.style.backgroundImage = `url(${tab.favIconUrl})`;
@@ -209,4 +199,14 @@ export async function updateFavicon(tab) {
       node.favicon.classList.remove('visible');
     }
   }
+}
+
+export async function initTabNodes(tabId) {
+  await forEachTab(async (tab) => {
+    makeTabNode(tab);
+    updateTabNode(tab);
+    await updateFavicon(tab);
+    await updateThumbnail(tab.id);
+  });
+  setActiveTabNode(tabId);
 }

@@ -9,18 +9,22 @@ function convertBackup(tgData) {
     windows: [],
   };
 
-  for (const wi in tgData.windows) {
-    const tabviewGroup = JSON.parse(tgData.windows[wi].extData['tabview-group']);
-    const tabviewGroups = JSON.parse(tgData.windows[wi].extData['tabview-groups']);
+  tgData.windows.forEach((wi, index) => {
+    const tabviewGroup = JSON.parse(wi.extData['tabview-group']);
+    const tabviewGroups = JSON.parse(wi.extData['tabview-groups']);
 
-    data.windows[wi] = {
-      groups: [], tabs: [], activeGroup: tabviewGroups.activeGroupId, groupIndex: tabviewGroups.nextID, position: {},
+    data.windows[index] = {
+      groups: [],
+      tabs: [],
+      activeGroup: tabviewGroups.activeGroupId,
+      groupIndex: tabviewGroups.nextID,
+      position: {},
     };
     data.windows[wi].position = {
-      left: tgData.windows[wi].screenX,
-      top: tgData.windows[wi].screenY,
-      height: tgData.windows[wi].height,
-      width: tgData.windows[wi].width,
+      left: wi.screenX,
+      top: wi.screenY,
+      height: wi.height,
+      width: wi.width,
     };
 
     const nGroups = Object.keys(tabviewGroup).length;
@@ -29,48 +33,48 @@ function convertBackup(tgData) {
     const deltaX = 1 / (nGroups < 4 ? 4 : nGroups + 1);
     let curY = 0.0;
     const deltaY = 1 / 32;
-    for (const gkey in tabviewGroup) {
-      data.windows[wi].groups.push({
-        id: tabviewGroup[gkey].id,
-        name: tabviewGroup[gkey].title,
+    tabviewGroup.forEach((gkey) => {
+      data.windows[index].groups.push({
+        id: gkey.id,
+        name: gkey.title,
         rect: {
           x: curX, y: curY, w: gwidth, h: 0.5,
         },
       });
       curX += deltaX;
       curY += deltaY;
-    }
+    });
 
-    for (const ti in tgData.windows[wi].tabs) {
-      const tab = tgData.windows[wi].tabs[ti];
-      if (tab.pinned == true) {
-        var groupId = 0;
+    wi.tabs.forEach((tab, tIndex) => {
+      let groupId;
+      if (tab.pinned === true) {
+        groupId = 0;
       } else if (tab.extData) {
-        var groupId = JSON.parse(tab.extData['tabview-tab']).groupID;
+        groupId = JSON.parse(tab.extData['tabview-tab']).groupID;
       } else {
         // No associated groupId, where should it go???
         console.log(`Skipping tab with missing groupId: ${tab.entries[0].url}`);
-        continue;
+        return;
       }
-      data.windows[wi].tabs.push({
+      data.windows[index].tabs.push({
         url: tab.entries[0].url,
         title: tab.entries[0].title,
         groupId,
-        index: Number(ti),
+        index: Number(tIndex),
         lastAccessed: tab.lastAccessed,
         pinned: tab.pinned,
       });
-    }
-  }
+    });
+  });
 
   return data;
 }
 
 function getGroupIdsFromTabs(window) {
   const allGroupIds = [];
-  for (const ti in window.tabs) {
-    allGroupIds.push(window.tabs[ti].groupId);
-  }
+  window.tabs.forEach((tab) => {
+    allGroupIds.push(tab.groupId);
+  });
 
   const uniqueGroupIds = [...new Set(allGroupIds)];
   return uniqueGroupIds;
@@ -81,21 +85,21 @@ async function openBackup(data) {
 
   background.backgroundState.openingBackup = true;
 
-  for (const wi in data.windows) {
+  data.windows.forEach(async (wi) => {
     const groups = [];
 
-    if (data.windows[wi].groups.length === 0) {
+    if (wi.groups.length === 0) {
       console.log('no groups in backup, trying to retrieve them from tabs');
-      const newGroupIds = getGroupIdsFromTabs(data.windows[wi]);
+      const newGroupIds = getGroupIdsFromTabs(wi);
 
       // TODO: eval rect by minimum size and fit it optimally on screen
 
       let curX = 0.0;
       const delta = 1 / newGroupIds.length;
 
-      for (let i = 0; i < newGroupIds.length; i++) {
+      for (let i = 0; i < newGroupIds.length; i += 1) {
         const gId = newGroupIds[i];
-        data.windows[wi].groups.push({
+        wi.groups.push({
           id: gId,
           name: `Group ${gId}`,
           rect: {
@@ -109,48 +113,49 @@ async function openBackup(data) {
       }
     }
 
-    for (const gi in data.windows[wi].groups) {
+    wi.groups.forEach((gi) => {
       groups.push({
-        id: data.windows[wi].groups[gi].id,
-        name: data.windows[wi].groups[gi].name,
+        id: gi.id,
+        name: gi.name,
         containerId: 'firefox-default',
-        rect: data.windows[wi].groups[gi].rect,
+        rect: gi.rect,
         tabCount: 0,
       });
-    }
+    });
 
     let windata = {};
-    if (data.windows[wi].position) {
-      windata = data.windows[wi].position;
+    if (wi.position) {
+      windata = wi.position;
     }
     const window = await browser.windows.create({});
     await browser.windows.update(window.id, windata);
 
     await browser.sessions.setWindowValue(window.id, 'groups', groups);
-    await browser.sessions.setWindowValue(window.id, 'activeGroup', data.windows[wi].activeGroup);
-    await browser.sessions.setWindowValue(window.id, 'groupIndex', data.windows[wi].groupIndex);
+    await browser.sessions.setWindowValue(window.id, 'activeGroup', wi.activeGroup);
+    await browser.sessions.setWindowValue(window.id, 'groupIndex', wi.groupIndex);
 
-    for (const ti in data.windows[wi].tabs) {
+    wi.tabs.forEach(async (ti) => {
       // pinned tabs are not allowed to be discarded
-      if (data.windows[wi].tabs[ti].pinned == true) {
-        var bdiscarded = false;
+      let bdiscarded;
+      if (ti.pinned === true) {
+        bdiscarded = false;
       } else {
-        var bdiscarded = true;
+        bdiscarded = true;
       }
 
       const tab = await browser.tabs.create({
-        url: data.windows[wi].tabs[ti].url,
+        url: ti.url,
         active: false,
         discarded: bdiscarded,
         windowId: window.id,
-        pinned: data.windows[wi].tabs[ti].pinned,
+        pinned: ti.pinned,
       }).catch((err) => { console.log(err); });
 
       if (tab) {
-        await browser.sessions.setTabValue(tab.id, 'groupId', parseInt(data.windows[wi].tabs[ti].groupId));
+        await browser.sessions.setTabValue(tab.id, 'groupId', parseInt(ti.groupId, 10));
         // await browser.tabs.discard(tab.id);
       }
-    }
+    });
 
     if ((await currentOptions).view === 'freeform') {
       // Show freeform view
@@ -162,34 +167,34 @@ async function openBackup(data) {
       await browser.sessions.setTabValue(freeformViewTab.id, 'groupId', -1);
     } else {
       // Remove the "New tab"-tab
-  			const activeNewTabs = await browser.tabs.query({
+      const activeNewTabs = await browser.tabs.query({
         windowId: window.id,
         active: true,
       });
       if (activeNewTabs.length === 1) {
         await browser.tabs.remove(activeNewTabs[0].id);
-      		}
+      }
     }
-  }
+  });
   background.backgroundState.openingBackup = false;
 }
 
 export function loadBackup(input) {
   const file = input.target.files[0];
 
-  if (file.type == 'application/json') {
+  if (file.type === 'application/json') {
     const reader = new FileReader();
 
-    reader.onload = function (json) {
+    reader.onload = function parseJSON(json) {
       let data = JSON.parse(json.target.result);
 
       // panorama view backup
-      if (data.file && data.file.type == 'panoramaView' && data.file.version == 1) {
+      if (data.file && data.file.type === 'panoramaView' && data.file.version === 1) {
 
         // nothing to do..
 
         // if it's a tab groups backup
-      } else if ((data.version && data.version[0] == 'tabGroups' || data.version && data.version[0] == 'sessionrestore') && data.version[1] == 1) {
+      } else if (((data.version && data.version[0] === 'tabGroups') || (data.version && data.version[0] === 'sessionrestore')) && data.version[1] === 1) {
         data = convertBackup(data);
       } else {
         alert('Invalid file');
@@ -207,7 +212,7 @@ export function loadBackup(input) {
 }
 
 function makeDateString() {
-  const pad = function (num) {
+  const pad = function padNum(num) {
     const s = `00${num}`;
     return s.substr(-2);
   };
@@ -237,29 +242,29 @@ export async function saveBackup() {
 
   const windows = await browser.windows.getAll({});
 
-  for (const wi in windows) {
-    const groups = await browser.sessions.getWindowValue(windows[wi].id, 'groups');
-    const groupIndex = await browser.sessions.getWindowValue(windows[wi].id, 'groupIndex');
-    const activeGroup = await browser.sessions.getWindowValue(windows[wi].id, 'activeGroup');
+  windows.forEach(async (wi, index) => {
+    const groups = await browser.sessions.getWindowValue(wi.id, 'groups');
+    const groupIndex = await browser.sessions.getWindowValue(wi.id, 'groupIndex');
+    const activeGroup = await browser.sessions.getWindowValue(wi.id, 'activeGroup');
 
-    data.windows[wi] = {
+    data.windows[index] = {
       groups: [], tabs: [], activeGroup, groupIndex,
     };
 
-    for (const gi in groups) {
-      data.windows[wi].groups.push({
-        id: groups[gi].id,
-        name: groups[gi].name,
-        rect: groups[gi].rect,
+    groups.forEach((gi) => {
+      data.windows[index].groups.push({
+        id: gi.id,
+        name: gi.name,
+        rect: gi.rect,
       });
-    }
+    });
 
-    const tabs = browser.tabs.query({ windowId: windows[wi].id });
-    for (const tab of await tabs) {
+    const tabs = await browser.tabs.query({ windowId: wi.id });
+    tabs.forEach(async (tab) => {
       const groupId = await browser.sessions.getTabValue(tab.id, 'groupId');
 
-      if (groupId != -1) {
-        data.windows[wi].tabs.push({
+      if (groupId !== -1) {
+        data.windows[index].tabs.push({
           url: tab.url,
           title: tab.title,
           groupId,
@@ -268,8 +273,8 @@ export async function saveBackup() {
           pinned: tab.pinned,
         });
       }
-    }
-  }
+    });
+  });
 
   const blob = new Blob([JSON.stringify(data, null, '\t')], { type: 'application/json' });
   const dataUrl = window.URL.createObjectURL(blob);

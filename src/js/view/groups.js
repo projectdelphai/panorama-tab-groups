@@ -17,38 +17,38 @@ async function newUid() {
 }
 
 function getIndex(id) {
-  for (const i in groups) {
-    if (groups[i].id === id) {
-      return i;
+  let letVal = -1;
+  groups.forEach((group, index) => {
+    if (group.id === id) {
+      letVal = index;
     }
-  }
-  return -1;
+  });
+  return letVal;
 }
 
 export function getLength() {
   let length = 0;
-  for (const i in groups) {
-    length++;
-  }
+  groups.forEach(() => { length += 1; });
   return length;
 }
 
 export function getName(id) {
-  for (const i in groups) {
-    if (groups[i].id === id) {
-      return groups[i].name;
+  let retVal;
+  groups.forEach((group) => {
+    if (group.id === id) {
+      retVal = group.name;
     }
-  }
-  return null;
+  });
+  return retVal;
 }
 
 export async function init() {
   windowId = (await browser.windows.getCurrent()).id;
   groups = (await browser.sessions.getWindowValue(windowId, 'groups')) || [];
 
-  for (const i in groups) {
-    groups[i].tabCount = 0;
-  }
+  groups.forEach((group) => {
+    group.tabCount = 0;
+  });
 }
 
 export async function create() {
@@ -107,7 +107,7 @@ export async function transform(id, rect) {
 }
 
 export async function getActive() {
-  return await browser.sessions.getWindowValue(windowId, 'activeGroup');
+  return browser.sessions.getWindowValue(windowId, 'activeGroup');
 }
 
 export async function setActive(id) {
@@ -124,12 +124,13 @@ export function get(id) {
 
 export function getIds() {
   const arr = [];
-  for (const i in groups) {
-    arr.push(groups[i].id);
-  }
+  groups.forEach((group) => {
+    arr.push(group.id);
+  });
   return arr;
 }
 
+// confused why this is necessary tbh
 export function forEach(callback) {
   for (const i in groups) {
     callback(groups[i]);

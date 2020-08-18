@@ -6,7 +6,7 @@
  * @copyright 2015 asvd <heliosframework@gmail.com>
  */
 
-(function (root, factory) {
+(function f(root, factory) {
   if (typeof define === 'function' && define.amd) {
     define(['exports'], factory);
   } else if (typeof exports !== 'undefined') {
@@ -15,8 +15,8 @@
     factory((root.dragscroll = {}));
   }
 }(this, (exports) => {
-  const _window = window;
-  const _document = document;
+  const tWindow = window;
+  const tDocument = document;
   const mousemove = 'mousemove';
   const mouseup = 'mouseup';
   const mousedown = 'mousedown';
@@ -27,26 +27,26 @@
     newScrollY;
 
   let dragged = [];
-  const reset = function (i, el) {
+  const reset = function f(i, el) {
     for (i = 0; i < dragged.length;) {
       el = dragged[i++];
       el = el.container || el;
       el[removeEventListener](mousedown, el.md, 0);
-      _window[removeEventListener](mouseup, el.mu, 0);
-      _window[removeEventListener](mousemove, el.mm, 0);
+      tWindow[removeEventListener](mouseup, el.mu, 0);
+      tWindow[removeEventListener](mousemove, el.mm, 0);
     }
 
     // cloning into array since HTMLCollection is updated dynamically
-    dragged = [].slice.call(_document.getElementsByClassName('dragscroll'));
+    dragged = [].slice.call(tDocument.getElementsByClassName('dragscroll'));
     for (i = 0; i < dragged.length;) {
-      (function (el, lastClientX, lastClientY, pushed, scroller, cont) {
+      (function f(el, lastClientX, lastClientY, pushed, scroller, cont) {
         (cont = el.container || el)[addEventListener](
           mousedown,
-          cont.md = function (e) {
+          cont.md = function f(e) {
             if (!el.hasAttribute('nochilddrag')
-                            || _document.elementFromPoint(
+                            || tDocument.elementFromPoint(
                               e.pageX, e.pageY,
-                            ) == cont
+                            ) === cont
             ) {
               pushed = 1;
               lastClientX = e.clientX;
@@ -57,20 +57,20 @@
           }, 0,
         );
 
-        _window[addEventListener](
-          mouseup, cont.mu = function () { pushed = 0; }, 0,
+        tWindow[addEventListener](
+          mouseup, cont.mu = function f() { pushed = 0; }, 0,
         );
 
-        _window[addEventListener](
+        tWindow[addEventListener](
           mousemove,
-          cont.mm = function (e) {
+          cont.mm = function f(e) {
             if (pushed) {
               (scroller = el.scroller || el).scrollLeft
                                 -= newScrollX = (-lastClientX + (lastClientX = e.clientX));
               scroller.scrollTop
                                 -= newScrollY = (-lastClientY + (lastClientY = e.clientY));
-              if (el == _document.body) {
-                (scroller = _document.documentElement).scrollLeft -= newScrollX;
+              if (el === tDocument.body) {
+                (scroller = tDocument.documentElement).scrollLeft -= newScrollX;
                 scroller.scrollTop -= newScrollY;
               }
             }
@@ -80,10 +80,10 @@
     }
   };
 
-  if (_document.readyState == 'complete') {
+  if (tDocument.readyState === 'complete') {
     reset();
   } else {
-    _window[addEventListener]('load', reset, 0);
+    tWindow[addEventListener]('load', reset, 0);
   }
 
   exports.reset = reset;
