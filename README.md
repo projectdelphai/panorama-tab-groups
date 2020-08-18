@@ -1,5 +1,7 @@
 # Panorama Tab Groups
 
+Effective Immediately: Feature Code Freeze while CI pipeline implemented to add linting and tests to clean code. Breaking changes potentially incoming
+
 ## Description
 
 Panorama Tab Groups is an easy way to organize a lot of tabs. You can visually group related tabs and switch between groups.
