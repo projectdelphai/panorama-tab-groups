@@ -50,7 +50,7 @@ browser.storage.sync.get({
   setToolbarPosition(options.toolbarPosition);
 
   browser.storage.onChanged.addListener((changes, area) => {
-    if (area == 'sync') {
+    if (area === 'sync') {
       if (changes.theme) {
         setTheme(changes.theme.newValue);
       }
@@ -222,8 +222,8 @@ async function initView() {
     event.preventDefault();
     event.stopPropagation();
 
-    if (event.target != document.getElementById('groups')) return; // ignore middle clicks in foreground
-    if (event.button != 1) return; // middle mouse
+    if (event.target !== document.getElementById('groups')) return; // ignore middle clicks in foreground
+    if (event.button !== 1) return; // middle mouse
 
     createGroup(e.clientX, e.clientY);
   }, false);
@@ -277,7 +277,7 @@ async function initView() {
 async function setLayoutMode(mode) {
   const windowId = (await browser.windows.getCurrent()).id;
 
-  if (mode == 'tiling') {
+  if (mode === 'tiling') {
     await browser.sessions.setWindowValue(windowId, 'layoutMode', 'tiling');
     activateTiling();
   } else {
@@ -298,7 +298,7 @@ async function activateTiling() {
   const remainder = numGroups % maxGroups;
 
   const gridLayout = Array(quotient).fill(maxGroups);
-  if (remainder != 0) {
+  if (remainder !== 0) {
     gridLayout.push(remainder);
   }
 
@@ -334,7 +334,7 @@ async function keyInput(e) {
 
     for (var i = 0; i < childNodes.length; i++) {
       var tabId = Number(childNodes[i].getAttribute('tabId'));
-      if (tabId == activeTabId) {
+      if (tabId === activeTabId) {
         break;
       }
     }
@@ -342,12 +342,12 @@ async function keyInput(e) {
     var newTabId = -1;
     var max = childNodes.length - 2;
     // check if at end or if tab not found
-    if (i == max || i == childNodes.length) {
+    if (i === max || i === childNodes.length) {
       var newGroupId = -1;
       var groupsLength = Object.keys(groupNodes).length;
 
       const last = Object.keys(groupNodes)[groupsLength - 2];
-      if (groupId == last) {
+      if (groupId === last) {
         var first = Object.keys(groupNodes)[0];
         groupId = first;
       } else {
@@ -368,7 +368,7 @@ async function keyInput(e) {
 
     for (var i = 0; i < childNodes.length; i++) {
       var tabId = Number(childNodes[i].getAttribute('tabId'));
-      if (tabId == activeTabId) {
+      if (tabId === activeTabId) {
         break;
       }
     }
@@ -376,13 +376,13 @@ async function keyInput(e) {
     var newTabId = -1;
     var max = childNodes.length - 2;
     // check if at end or if tab not found
-    if (i == 0 || i == childNodes.length) {
+    if (i === 0 || i === childNodes.length) {
       var newGroupId = -1;
       var groupsLength = Object.keys(groupNodes).length;
 
       // check if at last tab in group and switch to next group
       var first = Object.keys(groupNodes)[0];
-      if (groupId == first) {
+      if (groupId === first) {
         groupId = Object.keys(groupNodes)[groupsLength - 2];
       } else {
         var index = Object.keys(groupNodes).indexOf(groupId.toString());
@@ -419,7 +419,7 @@ async function createGroup(x = 75, y = 75) {
 }
 
 async function tabCreated(tab) {
-  if (view.windowId == tab.windowId) {
+  if (view.windowId === tab.windowId) {
     makeTabNode(tab);
     updateTabNode(tab);
     updateFavicon(tab);
@@ -437,7 +437,7 @@ async function tabCreated(tab) {
 }
 
 function tabRemoved(tabId, removeInfo) {
-  if (view.windowId == removeInfo.windowId && view.tabId != tabId) {
+  if (view.windowId === removeInfo.windowId && view.tabId !== tabId) {
     deleteTabNode(tabId);
     groups.forEach((group) => {
       updateGroupFit(group);
@@ -460,14 +460,14 @@ async function tabUpdated(tabId, changeInfo, tab) {
 }
 
 async function tabAttached(tabId, attachInfo) {
-  if (view.windowId == attachInfo.newWindowId) {
+  if (view.windowId === attachInfo.newWindowId) {
     const tab = await browser.tabs.get(tabId);
     tabCreated(tab);
   }
 }
 
 function tabDetached(tabId, detachInfo) {
-  if (view.windowId == detachInfo.oldWindowId) {
+  if (view.windowId === detachInfo.oldWindowId) {
     console.log('delete node', tabId);
     deleteTabNode(tabId); // something really weird is happening here...
     groups.forEach((group) => {

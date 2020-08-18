@@ -162,7 +162,7 @@
 	cursor: ew-resize;
 }
 
-.group .top_right {
+.group .topRight {
 	width: 22px;
 	height: 22px;
 
@@ -173,7 +173,7 @@
 	cursor: nesw-resize;
 }
 
-.group .bottom_right {
+.group .bottomRight {
 	width: 22px;
 	height: 22px;
 
@@ -184,7 +184,7 @@
 	cursor: nwse-resize;
 }
 
-.group .bottom_left {
+.group .bottomLeft {
 	width: 22px;
 	height: 22px;
 
@@ -195,7 +195,7 @@
 	cursor: nesw-resize;
 }
 
-.group .top_left {
+.group .topLeft {
 	width: 22px;
 	height: 22px;
 

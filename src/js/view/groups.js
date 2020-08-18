@@ -18,7 +18,7 @@ async function newUid() {
 
 function getIndex(id) {
   for (const i in groups) {
-    if (groups[i].id == id) {
+    if (groups[i].id === id) {
       return i;
     }
   }
@@ -35,7 +35,7 @@ export function getLength() {
 
 export function getName(id) {
   for (const i in groups) {
-    if (groups[i].id == id) {
+    if (groups[i].id === id) {
       return groups[i].name;
     }
   }
@@ -74,7 +74,7 @@ export async function create() {
 
 export async function remove(id) {
   const index = getIndex(id);
-  if (index == -1) {
+  if (index === -1) {
     return;
   }
   groups.splice(index, 1);
@@ -85,7 +85,7 @@ export async function remove(id) {
 
 export async function rename(id, newName) {
   const index = getIndex(id);
-  if (index == -1) {
+  if (index === -1) {
     return;
   }
   groups[index].name = newName;
@@ -96,7 +96,7 @@ export async function rename(id, newName) {
 
 export async function transform(id, rect) {
   const index = getIndex(id);
-  if (index == -1) {
+  if (index === -1) {
     return;
   }
 
@@ -116,7 +116,7 @@ export async function setActive(id) {
 
 export function get(id) {
   const index = getIndex(id);
-  if (index == -1) {
+  if (index === -1) {
     return;
   }
   return groups[index];

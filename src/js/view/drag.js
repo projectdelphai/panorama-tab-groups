@@ -18,7 +18,7 @@ export function createDragIndicator() {
 
 export async function tabMoved(tabId, moveInfo) {
   const windowId = (await browser.windows.getCurrent()).id;
-  if (windowId == moveInfo.windowId) {
+  if (windowId === moveInfo.windowId) {
     browser.tabs.get(tabId).then(async (tab) => {
       await insertTab(tab);
       groups.forEach(async (group) => {
@@ -49,22 +49,22 @@ export function tabDragStart(e) {
 export function tabDragEnter(e) {
   e.preventDefault();
 
-  if (dragOverTab && this != dragOverTab) {
+  if (dragOverTab && this !== dragOverTab) {
     dragIndicator.classList.remove('show');
     dragOverTab = this;
   }
 
-  if (dragCount == 0) {
+  if (dragCount === 0) {
     dragOverTab = this;
   }
-  dragCount++;
+  dragCount += 1;
 }
 
 export function tabDragLeave(e) {
   e.preventDefault();
 
-  dragCount--;
-  if (dragCount == 0) {
+  dragCount -= 1;
+  if (dragCount === 0) {
     dragIndicator.classList.remove('show');
     dragOverTab = null;
   }
@@ -75,7 +75,7 @@ export function tabDragOver(e) {
 
   e.dataTransfer.dropEffect = 'move'; // See the section on the DataTransfer object.
 
-  if (dragOverTab && dragTab != dragOverTab) {
+  if (dragOverTab && dragTab !== dragOverTab) {
     const rect = dragOverTab.getBoundingClientRect();
 
     dragIndicator.classList.add('show');
@@ -121,10 +121,10 @@ export async function tabDrop(e) {
 
     if (tab.index < toTab.index) {
       if (dragDropBefore) {
-        toIndex--;
+        toIndex -= 1;
       }
     } else if (!dragDropBefore) {
-      toIndex++;
+      toIndex -= 1;
     }
 
     browser.tabs.onMoved.removeListener(tabMoved);
