@@ -151,14 +151,13 @@ async function searchTabs() {
   const searchInput = document.getElementById('tab-search').value;
   // get old active tab in case search doesn't find any valid tabs
   let futureActiveTabId = getActiveTabId();
-  for (const tabIndex in tabs) {
+  tabs.forEach((tab, tabIndex) => {
     const { title } = tabs[tabIndex];
     // lowercase both inputs and compare to see if match
     if (title.toLowerCase().includes(searchInput.toLowerCase())) {
       futureActiveTabId = tabs[tabIndex].id;
-      break;
     }
-  }
+  });
   setActiveTabNodeById(futureActiveTabId);
 }
 

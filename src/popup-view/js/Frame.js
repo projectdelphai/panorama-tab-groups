@@ -16,14 +16,6 @@ function updateContent(contentNode, content) {
   }
 }
 
-function disableSibling() {
-  const siblings = getSiblings.call(this);
-
-  siblings.forEach((sibling) => {
-    sibling.classList.remove('frame--active');
-  });
-}
-
 /**
  * Basic functionality forked from jQuery
  */
@@ -40,10 +32,28 @@ function getSiblings() {
   return siblings;
 }
 
+function disableSibling() {
+  const siblings = getSiblings.call(this);
+
+  siblings.forEach((sibling) => {
+    sibling.classList.remove('frame--active');
+  });
+}
+
+function getCurrentIndex(element, siblings) {
+  const currentIndex = Array.from(siblings).findIndex((sibling) => sibling === element);
+
+  if (currentIndex === -1) {
+    throw new Error(`Can't find current index for element ${element}`);
+  }
+
+  return currentIndex;
+}
+
 function navigateVerticalByKeyboard(event) {
   const rows = this.node.querySelectorAll('[data-nav-row');
   const currentRow = event.target.closest('[data-nav-row');
-  const currentIndex = _getCurrentIndex(currentRow, rows);
+  const currentIndex = getCurrentIndex(currentRow, rows);
   let targetIndex = 0;
 
   if (event.key === 'ArrowUp') {
@@ -72,14 +82,14 @@ function navigateVerticalByKeyboard(event) {
       horizontalTarget.focus();
       targetFound = true;
     }
-    horizontalTargetIndex--;
+    horizontalTargetIndex -= 1;
   }
 }
 
-function _navigateHorizontalByKeyboard(event) {
+function navigateHorizontalByKeyboard(event) {
   const currentRow = event.target.closest('[data-nav-row');
   const cols = currentRow.querySelectorAll('button,input');
-  const currentIndex = _getCurrentIndex(event.target, cols);
+  const currentIndex = getCurrentIndex(event.target, cols);
   let targetIndex = 0;
 
   if (event.key === 'ArrowLeft') {
@@ -100,17 +110,7 @@ function _navigateHorizontalByKeyboard(event) {
   cols[targetIndex].focus();
 }
 
-function _getCurrentIndex(element, siblings) {
-  const currentIndex = Array.from(siblings).findIndex((sibling) => sibling === element);
-
-  if (currentIndex === -1) {
-    throw new Error(`Can't find current index for element ${element}`);
-  }
-
-  return currentIndex;
-}
-
-export class Frame {
+export default class Frame {
   constructor(id) {
     this.node = document.getElementById(id);
     this.shell = this.node.parentNode;
@@ -142,11 +142,11 @@ export class Frame {
       navigateVerticalByKeyboard.call(this, event);
     }
     if (['ArrowLeft', 'ArrowRight'].indexOf(event.key) >= 0) {
-      _navigateHorizontalByKeyboard.call(this, event);
+      navigateHorizontalByKeyboard.call(this, event);
     }
   }
 
-  setContentLoadingStart() {
+  static setContentLoadingStart() {
     document.body.classList.add('content-loading');
   }
 
@@ -179,7 +179,7 @@ export class Frame {
     updateContent(this.footer, content);
   }
 
-  getRenderedTabList(Tabs, options) {
+  static getRenderedTabList(Tabs, options) {
     options = { hideCloseButton: false, ...options };
 
     const tabNodes = Tabs.map((Tab) => {

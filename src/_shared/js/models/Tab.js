@@ -1,4 +1,8 @@
-export class Tab {
+async function getGroupId(Tab) {
+  return browser.sessions.getTabValue(Tab.id, 'groupId');
+}
+
+export default class Tab {
   constructor(tab) {
     return (async () => {
       Object.assign(this, tab);
@@ -15,8 +19,4 @@ export class Tab {
   async remove() {
     await browser.tabs.remove(this.id);
   }
-}
-
-async function getGroupId(Tab) {
-  return await browser.sessions.getTabValue(Tab.id, 'groupId');
 }

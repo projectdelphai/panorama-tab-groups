@@ -1,4 +1,4 @@
-import { Frame } from './Frame.js';
+import Frame from './Frame.js';
 import GroupDetailFrame from './GroupDetailFrame.js';
 import { getElementNodeFromString } from '../../_shared/js/utilities/node.js';
 import { getPluralForm } from '../../js/_share/utils.js';
@@ -46,7 +46,7 @@ function addOrUpdateDropZoneHandler() {
     `);
 
   this.listItems.forEach((listItem, index) => {
-    const newDropZone = dropZone.cloneNode();
+    let newDropZone = dropZone.cloneNode();
     newDropZone.setAttribute('data-index', index);
 
     listItem.before(newDropZone);
@@ -64,7 +64,7 @@ function addOrUpdateDropZoneHandler() {
     newDropZone.addEventListener('drop', handleGroupDrop.bind(this), false);
 
     if (index === this.listItems.length - 1) {
-      const newDropZone = dropZone.cloneNode();
+      newDropZone = dropZone.cloneNode();
       newDropZone.setAttribute('data-index', index + 1);
       listItem.after(newDropZone);
       newDropZone.addEventListener(
@@ -108,111 +108,21 @@ function renderFooter() {
   this.setFooterContent(addGroupNode);
 }
 
-async function renderHeader() {
-  const searchNode = getElementNodeFromString(`
-        <div class="form-field form-field--search">
-            <input class="form-field__input" type="search" name="query" 
-                   placeholder="${browser.i18n.getMessage(
-    'searchForTab.placeholder',
-  )}" />
-        </div>
-    `);
-  const searchInput = searchNode.querySelector('[type="search"]');
-  const groups = await window.PopupView.getGroups();
-  await groups.forEach(async (group) => {
-    await group.loadTabs();
-  });
-  const noResultNode = getElementNodeFromString(`
-      <h2 class="list-title">${browser.i18n.getMessage(
-    'searchForTab.noResults',
-  )}</h2>
-  `);
-  let lastSearchInput = '';
+function enableGroupDragAndDrop() {
+  this.list = this.content.querySelector('.list');
+  this.listItems = this.list.querySelectorAll('.list__item');
 
-  searchInput.addEventListener(
-    'keyup',
-    (event) => {
-      const searchQuery = searchInput.value;
-
-      if (searchQuery.length >= 2) {
-        const groupsToSearch = groups.map((group) => ({ ...group }));
-        const resultGroups = groupsToSearch.filter((group) => {
-          group.tabs = group.tabs.filter((tab) => (
-            new RegExp(searchQuery, 'gi').test(tab.title)
-              || new RegExp(searchQuery, 'gi').test(tab.url)
-          ));
-
-          return group.tabs.length > 0;
-        });
-        lastSearchInput = searchQuery;
-
-        if (resultGroups.length) {
-          const resultsNode = getElementNodeFromString('<div></div>');
-          resultGroups.map((group) => {
-            const groupNode = getElementNodeFromString(`
-                <h2 class="list-title">${group.name}</h2>
-            `);
-            resultsNode.append(groupNode);
-            const tabNodes = this.getRenderedTabList(group.tabs, {
-              hideCloseButton: true,
-            });
-            resultsNode.append(tabNodes);
-          });
-
-          // Show that the first search result is selected when hitting enter
-          const firstTabItem = resultsNode.querySelector('.list__item--tab');
-          firstTabItem.classList.add('list__item--selected');
-          firstTabItem
-            .querySelector('.list__link')
-            .addEventListener('blur', () => {
-              firstTabItem.classList.remove('list__item--selected');
-            });
-
-          this.setContent(resultsNode);
-        } else {
-          this.setContent(noResultNode);
-        }
-      } else if (
-        searchQuery.length === 0
-        && lastSearchInput.length > 0
-        && ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].indexOf(
-          event.key,
-        ) === -1
-      ) {
-        lastSearchInput = '';
-        renderGroupList.call(this);
-      }
-    },
-    false,
-  );
-
-  // Open first tab from result
-  searchInput.addEventListener('keypress', (event) => {
-    if (event.key !== 'Enter') {
-      return;
-    }
-
-    const firstTabNode = this.node.querySelector('.list__item--tab');
-    if (firstTabNode) {
-      firstTabNode.Tab.open();
-      window.PopupView.close();
-    }
+  this.listItems.forEach((listItem) => {
+    listItem.setAttribute('draggable', 'true');
+    listItem.addEventListener(
+      'dragstart',
+      handleGroupDragStart.bind(this),
+      false,
+    );
+    listItem.addEventListener('dragend', handleGroupDragEnd.bind(this), false);
   });
 
-  const settingsNode = getElementNodeFromString(`
-        <button class="button-ghost button-ghost--settings" 
-                title="${browser.i18n.getMessage('settingsButton')}"></button>
-    `);
-  settingsNode.addEventListener(
-    'click',
-    () => {
-      browser.runtime.openOptionsPage();
-      window.PopupView.close();
-    },
-    false,
-  );
-
-  this.setHeaderContent([searchNode, settingsNode]);
+  addOrUpdateDropZoneHandler.call(this);
 }
 
 async function renderGroupListItem(Group) {
@@ -296,23 +206,6 @@ async function renderGroupListItem(Group) {
   return node;
 }
 
-function enableGroupDragAndDrop() {
-  this.list = this.content.querySelector('.list');
-  this.listItems = this.list.querySelectorAll('.list__item');
-
-  this.listItems.forEach((listItem) => {
-    listItem.setAttribute('draggable', 'true');
-    listItem.addEventListener(
-      'dragstart',
-      handleGroupDragStart.bind(this),
-      false,
-    );
-    listItem.addEventListener('dragend', handleGroupDragEnd.bind(this), false);
-  });
-
-  addOrUpdateDropZoneHandler.call(this);
-}
-
 async function renderGroupList() {
   const groups = await window.PopupView.getGroups();
   const groupNodes = await Promise.all(
@@ -325,11 +218,114 @@ async function renderGroupList() {
   enableGroupDragAndDrop.call(this);
 }
 
-class GroupsFrame extends Frame {
-  constructor(id) {
-    super(id);
-  }
+async function renderHeader() {
+  const searchNode = getElementNodeFromString(`
+        <div class="form-field form-field--search">
+            <input class="form-field__input" type="search" name="query" 
+                   placeholder="${browser.i18n.getMessage(
+    'searchForTab.placeholder',
+  )}" />
+        </div>
+    `);
+  const searchInput = searchNode.querySelector('[type="search"]');
+  const groups = await window.PopupView.getGroups();
+  await groups.forEach(async (group) => {
+    await group.loadTabs();
+  });
+  const noResultNode = getElementNodeFromString(`
+      <h2 class="list-title">${browser.i18n.getMessage(
+    'searchForTab.noResults',
+  )}</h2>
+  `);
+  let lastSearchInput = '';
 
+  searchInput.addEventListener(
+    'keyup',
+    (event) => {
+      const searchQuery = searchInput.value;
+
+      if (searchQuery.length >= 2) {
+        const groupsToSearch = groups.map((group) => ({ ...group }));
+        const resultGroups = groupsToSearch.filter((group) => {
+          group.tabs = group.tabs.filter((tab) => (
+            new RegExp(searchQuery, 'gi').test(tab.title)
+              || new RegExp(searchQuery, 'gi').test(tab.url)
+          ));
+
+          return group.tabs.length > 0;
+        });
+        lastSearchInput = searchQuery;
+
+        if (resultGroups.length) {
+          const resultsNode = getElementNodeFromString('<div></div>');
+          resultGroups.forEach((group) => {
+            const groupNode = getElementNodeFromString(`
+                <h2 class="list-title">${group.name}</h2>
+            `);
+            resultsNode.append(groupNode);
+            const tabNodes = this.getRenderedTabList(group.tabs, {
+              hideCloseButton: true,
+            });
+            resultsNode.append(tabNodes);
+          });
+
+          // Show that the first search result is selected when hitting enter
+          const firstTabItem = resultsNode.querySelector('.list__item--tab');
+          firstTabItem.classList.add('list__item--selected');
+          firstTabItem
+            .querySelector('.list__link')
+            .addEventListener('blur', () => {
+              firstTabItem.classList.remove('list__item--selected');
+            });
+
+          this.setContent(resultsNode);
+        } else {
+          this.setContent(noResultNode);
+        }
+      } else if (
+        searchQuery.length === 0
+        && lastSearchInput.length > 0
+        && ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].indexOf(
+          event.key,
+        ) === -1
+      ) {
+        lastSearchInput = '';
+        renderGroupList.call(this);
+      }
+    },
+    false,
+  );
+
+  // Open first tab from result
+  searchInput.addEventListener('keypress', (event) => {
+    if (event.key !== 'Enter') {
+      return;
+    }
+
+    const firstTabNode = this.node.querySelector('.list__item--tab');
+    if (firstTabNode) {
+      firstTabNode.Tab.open();
+      window.PopupView.close();
+    }
+  });
+
+  const settingsNode = getElementNodeFromString(`
+        <button class="button-ghost button-ghost--settings" 
+                title="${browser.i18n.getMessage('settingsButton')}"></button>
+    `);
+  settingsNode.addEventListener(
+    'click',
+    () => {
+      browser.runtime.openOptionsPage();
+      window.PopupView.close();
+    },
+    false,
+  );
+
+  this.setHeaderContent([searchNode, settingsNode]);
+}
+
+class GroupsFrame extends Frame {
   async render() {
     this.setContentLoadingStart();
     const headerRendered = renderHeader.call(this);

@@ -4,7 +4,7 @@ import {
 } from './drag.js';
 import { newElement } from '../_share/utils.js';
 
-export var tabNodes = {};
+export const tabNodes = {};
 let activeTabId = -1; // tabid of active tab in view
 
 export function getTabNode(tabId) {
@@ -37,7 +37,7 @@ export function makeTabNode(tab) {
     event.preventDefault();
     event.stopPropagation();
 
-    if (event.button == 1) { // middle mouse
+    if (event.button === 1) { // middle mouse
       browser.tabs.remove(tab.id);
     }
   }, false);
@@ -122,8 +122,9 @@ export async function setActiveTabNode(tabId) {
 
 // Remove selected from all other thumbnails, add to tab with id given
 export function setActiveTabNodeById(tabId) {
-  tabNodes.forEach((node) => {
-    node.tab.classList.remove('selected');
+  // for (const id in tabNodes) {
+  Object.keys(tabNodes).forEach((tabNodeId) => {
+    tabNodes[tabNodeId].tab.classList.remove('selected');
   });
   tabNodes[tabId].tab.classList.add('selected');
   activeTabId = tabId;
@@ -168,8 +169,11 @@ async function testImage(url) {
   return new Promise((resolve, reject) => {
     const img = new Image();
 
-    img.onerror = img.onabort = function () {
-      reject('error');
+    img.onerror = function rej() {
+      reject(new Error('error: img.onerror from testImage()'));
+    };
+    img.onabort = function rej() {
+      reject(new Error('error: img.onabort from testImage()'));
     };
 
     img.onload = function f() {

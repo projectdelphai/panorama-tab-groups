@@ -1,4 +1,4 @@
-import { Frame } from './Frame.js';
+import Frame from './Frame.js';
 import GroupsFrame from './GroupsFrame.js';
 import { getElementNodeFromString } from '../../_shared/js/utilities/node.js';
 
@@ -19,7 +19,7 @@ function activateGroupNameEdit(groupNameNode) {
   const inputNode = node.querySelector('input');
 
   // Save edited group name when leaving input
-  inputNode.addEventListener('blur', async (event) => {
+  inputNode.addEventListener('blur', async () => {
     saveGroupName.call(this, node, inputNode);
   });
 

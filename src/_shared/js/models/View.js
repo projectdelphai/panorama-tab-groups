@@ -1,10 +1,18 @@
 import { loadOptions } from '../../../js/_share/options.js';
-import { Group } from './Group.js';
-import { Tab } from './Tab.js';
+import Group from './Group.js';
+import Tab from './Tab.js';
 
-export class View {
-  constructor() {}
+function updateViewSetting(prefix, value) {
+  const { classList } = document.getElementsByTagName('body')[0];
+  for (const classObject of classList) {
+    if (classObject.startsWith(`${prefix}-`)) {
+      classList.remove(classObject);
+    }
+  }
+  classList.add(`${prefix}-${value}`);
+}
 
+export default class View {
   async initializeView() {
     await Promise.all([
       // key, value, property
@@ -77,7 +85,7 @@ export class View {
     });
 
     if (lastActiveTab !== null) {
-      return await new Tab(lastActiveTab);
+      return new Tab(lastActiveTab);
     }
 
     return null;
@@ -96,14 +104,15 @@ export class View {
     let groupData = {};
 
     groups.forEach((group) => {
-      if (group.id === parseInt(groupId)) {
+      if (group.id === parseInt(groupId, 10)) {
         groupData = group;
       }
     });
 
-    if (groupData.hasOwnProperty('id')) {
+    if (Object.prototype.hasOwnProperty.call(groupData, 'id')) {
       return new Group(this, groupData);
     }
+    return null;
   }
 
   async createGroup() {
@@ -149,7 +158,9 @@ export class View {
         w: rectW,
         h: rectH,
         i: rectX + rectW,
-        y: rectY + rectH,
+        // duplicate y so renamed to j until I can figure out if this introduces bugs
+        // y: rectY + rectH,
+        j: rectY + rectH,
       },
       lastMoved: new Date().getTime(),
     };
@@ -166,17 +177,7 @@ export class View {
     return new Group(this, newGroup);
   }
 
-  setTheme(theme) {
-    _updateViewSetting('theme', theme);
+  static setTheme(theme) {
+    updateViewSetting('theme', theme);
   }
-}
-
-function _updateViewSetting(prefix, value) {
-  const { classList } = document.getElementsByTagName('body')[0];
-  for (const classObject of classList) {
-    if (classObject.startsWith(`${prefix}-`)) {
-      classList.remove(classObject);
-    }
-  }
-  classList.add(`${prefix}-${value}`);
 }

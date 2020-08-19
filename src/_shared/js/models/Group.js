@@ -1,4 +1,4 @@
-export class Group {
+export default class Group {
   constructor(View, group) {
     return (async () => {
       Object.assign(this, group);
@@ -84,13 +84,13 @@ export class Group {
 
   async moveToIndex(targetIndex) {
     const groups = await this.getAll();
-    targetIndex = parseInt(targetIndex);
+    targetIndex = parseInt(targetIndex, 10);
 
     // Get current index
     const currentIndex = groups.findIndex((group) => group.id === this.id);
 
     if (currentIndex === -1) {
-      throw new Error(`Can't find current index for group ${group}`);
+      throw new Error(`Can't find current index for group ${targetIndex}`);
     }
 
     // Update target index if necessary

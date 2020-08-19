@@ -117,7 +117,8 @@ export async function setActive(id) {
 export function get(id) {
   const index = getIndex(id);
   if (index === -1) {
-    return;
+    // should properly throw error here.
+    return null;
   }
   return groups[index];
 }
@@ -132,7 +133,8 @@ export function getIds() {
 
 // confused why this is necessary tbh
 export function forEach(callback) {
-  for (const i in groups) {
+  // for (const i in groups) {
+  groups.forEach((group, i) => {
     callback(groups[i]);
-  }
+  });
 }
