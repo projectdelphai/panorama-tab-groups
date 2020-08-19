@@ -304,7 +304,7 @@ async function doubleClick(e) {
 
 async function singleClick(e) {
   if (e.target.className === 'content transition') {
-    const groupID = e.target.getAttribute('groupid');
+    const groupID = parseInt(e.target.getAttribute('groupid'), 10);
     raiseGroup(groupID);
   }
   e.stopPropagation();
