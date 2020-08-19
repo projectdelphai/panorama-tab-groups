@@ -2,3 +2,6 @@
 build
 dist
 node_modules
+src/js/depends/dragscroll.js
+src/popup-view/*
+src/_shared/js/models/View.js
