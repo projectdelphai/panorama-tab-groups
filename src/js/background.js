@@ -434,7 +434,7 @@ async function init() {
 
 init();
 
-window.refreshView = async function () {
+window.refreshView = async function refreshView() {
   const options = await loadOptions();
 
   console.log('Refresh Panorama Tab View');

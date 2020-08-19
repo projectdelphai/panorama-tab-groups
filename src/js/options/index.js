@@ -15,10 +15,10 @@ import { loadBackup, saveBackup } from './backup.js';
 import getStatistics from './statistics.js';
 import resetPTG from './reset.js';
 
-function restoreOptions(options, shortcuts) {
+function restoreOptions(options, loadedShortcuts) {
   // Shortcuts
-  shortcuts.forEach((shortcut) => {
-    if (options.shortcut.hasOwnProperty(shortcut.name)) {
+  loadedShortcuts.forEach((shortcut) => {
+    if (Object.prototype.hasOwnProperty.call(shortcut, 'name')) {
       return;
     }
     if (options.shortcut[shortcut.name].disabled) {
@@ -43,9 +43,9 @@ function restoreOptions(options, shortcuts) {
   ).checked = true;
 }
 
-function attachEventHandler(options, shortcuts) {
+function attachEventHandler(options, loadedShortcuts) {
   // Shortcuts
-  shortcuts.forEach((shortcut) => {
+  loadedShortcuts.forEach((shortcut) => {
     const shortcutNode = document.querySelector(`#${shortcut.name}`);
 
     if (!shortcutNode) {
@@ -63,7 +63,7 @@ function attachEventHandler(options, shortcuts) {
       .querySelector('.enableShortcut')
       .addEventListener('click', enableShortcut.bind(this, options));
 
-    if (options.shortcut.hasOwnProperty(shortcut.name)) {
+    if (Object.prototype.hasOwnProperty.call(shortcut, 'name')) {
       shortcutNode
         .querySelector('.disableShortcut')
         .addEventListener('click', disableShortcut.bind(this, options));
