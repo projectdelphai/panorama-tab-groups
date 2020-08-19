@@ -1,21 +1,21 @@
 export default function addTranslations() {
   document.querySelector(
     '#optionKeyboardShortcuts h2',
-  ).innerHTML = browser.i18n.getMessage('optionKeyboardShortcuts');
+  ).textContent = browser.i18n.getMessage('optionKeyboardShortcuts');
   const optionKeyboardShortcutsLink = document.querySelector(
     '#optionKeyboardShortcuts a',
   );
   optionKeyboardShortcutsLink.href = browser.i18n.getMessage(
     'optionKeyboardShortcutsHelpLink',
   );
-  optionKeyboardShortcutsLink.innerHTML = browser.i18n.getMessage(
+  optionKeyboardShortcutsLink.textContent = browser.i18n.getMessage(
     'optionKeyboardShortcutsHelpLinkText',
   );
   const optionKeyboardShortcutsButtonsUpdate = document.querySelectorAll(
     '#optionKeyboardShortcuts .updateShortcut',
   );
   optionKeyboardShortcutsButtonsUpdate.forEach((button) => {
-    button.innerHTML = browser.i18n.getMessage(
+    button.textContent = browser.i18n.getMessage(
       'optionKeyboardShortcutsButtonsUpdate',
     );
   });
@@ -23,12 +23,12 @@ export default function addTranslations() {
     '#optionKeyboardShortcuts .resetShortcut',
   );
   optionKeyboardShortcutsButtonsReset.forEach((button) => {
-    button.innerHTML = browser.i18n.getMessage(
+    button.textContent = browser.i18n.getMessage(
       'optionKeyboardShortcutsButtonsReset',
     );
   });
   optionKeyboardShortcutsButtonsUpdate.forEach((button) => {
-    button.innerHTML = browser.i18n.getMessage(
+    button.textContent = browser.i18n.getMessage(
       'optionKeyboardShortcutsButtonsUpdate',
     );
   });
@@ -36,7 +36,7 @@ export default function addTranslations() {
     '#optionKeyboardShortcuts .disableShortcut',
   );
   optionKeyboardShortcutsButtonsDisable.forEach((button) => {
-    button.innerHTML = browser.i18n.getMessage(
+    button.textContent = browser.i18n.getMessage(
       'optionKeyboardShortcutsButtonsDisable',
     );
   });
@@ -44,80 +44,80 @@ export default function addTranslations() {
     '#optionKeyboardShortcuts .enableShortcut',
   );
   optionKeyboardShortcutsButtonsEnable.forEach((button) => {
-    button.innerHTML = browser.i18n.getMessage(
+    button.textContent = browser.i18n.getMessage(
       'optionKeyboardShortcutsButtonsEnable',
     );
   });
   document.querySelector(
     'label[for="_execute_browser_action"]',
-  ).innerHTML = browser.i18n.getMessage('optionKeyboardShortcutsToggle');
+  ).textContent = browser.i18n.getMessage('optionKeyboardShortcutsToggle');
   document.querySelector(
     'label[for="activate-next-group"]',
-  ).innerHTML = browser.i18n.getMessage('optionKeyboardShortcutsNextGroup');
+  ).textContent = browser.i18n.getMessage('optionKeyboardShortcutsNextGroup');
   document.querySelector(
     'label[for="activate-previous-group"]',
-  ).innerHTML = browser.i18n.getMessage('optionKeyboardShortcutsPreviousGroup');
+  ).textContent = browser.i18n.getMessage('optionKeyboardShortcutsPreviousGroup');
   document.querySelector(
     '#optionsView h2',
-  ).innerHTML = browser.i18n.getMessage('optionsView');
+  ).textContent = browser.i18n.getMessage('optionsView');
   document.querySelector(
     'label[for="viewFreeform"] span',
-  ).innerHTML = browser.i18n.getMessage('optionsViewFreeform');
+  ).textContent = browser.i18n.getMessage('optionsViewFreeform');
   document.querySelector(
     'label[for="viewPopup"] span',
-  ).innerHTML = browser.i18n.getMessage('optionsViewPopup');
+  ).textContent = browser.i18n.getMessage('optionsViewPopup');
   document.querySelector(
     '#optionsTheme h2',
-  ).innerHTML = browser.i18n.getMessage('optionsTheme');
+  ).textContent = browser.i18n.getMessage('optionsTheme');
   document.querySelector(
     'label[for="themeLight"] span',
-  ).innerHTML = browser.i18n.getMessage('optionsThemeLight');
+  ).textContent = browser.i18n.getMessage('optionsThemeLight');
   document.querySelector(
     'label[for="themeDark"] span',
-  ).innerHTML = browser.i18n.getMessage('optionsThemeDark');
+  ).textContent = browser.i18n.getMessage('optionsThemeDark');
   document.querySelector(
     '#optionsToolbar h3',
-  ).innerHTML = browser.i18n.getMessage('optionsToolbar');
+  ).textContent = browser.i18n.getMessage('optionsToolbar');
   document.querySelector(
     '#optionsToolbar h4',
-  ).innerHTML = browser.i18n.getMessage('optionsToolbarPosition');
+  ).textContent = browser.i18n.getMessage('optionsToolbarPosition');
   document.querySelector(
     'label[for="toolbarPositionTop"] span',
-  ).innerHTML = browser.i18n.getMessage('optionsToolbarPositionTop');
+  ).textContent = browser.i18n.getMessage('optionsToolbarPositionTop');
   document.querySelector(
     'label[for="toolbarPositionRight"] span',
-  ).innerHTML = browser.i18n.getMessage('optionsToolbarPositionRight');
+  ).textContent = browser.i18n.getMessage('optionsToolbarPositionRight');
   document.querySelector(
     'label[for="toolbarPositionBottom"] span',
-  ).innerHTML = browser.i18n.getMessage('optionsToolbarPositionBottom');
+  ).textContent = browser.i18n.getMessage('optionsToolbarPositionBottom');
   document.querySelector(
     'label[for="toolbarPositionLeft"] span',
-  ).innerHTML = browser.i18n.getMessage('optionsToolbarPositionLeft');
+  ).textContent = browser.i18n.getMessage('optionsToolbarPositionLeft');
   document.querySelector(
     '#optionsBackup h2',
-  ).innerHTML = browser.i18n.getMessage('optionsBackup');
+  ).textContent = browser.i18n.getMessage('optionsBackup');
   document.querySelector(
     '#optionsBackup h3:nth-of-type(1)',
-  ).innerHTML = browser.i18n.getMessage('optionsBackupImport');
+  ).textContent = browser.i18n.getMessage('optionsBackupImport');
   document.querySelector(
     '#optionsBackup p:nth-of-type(1)',
-  ).innerHTML = browser.i18n.getMessage('optionsBackupImportText');
+  ).textContent = browser.i18n.getMessage('optionsBackupImportText');
   document.querySelector(
     '#optionsBackup h3:nth-of-type(2)',
-  ).innerHTML = browser.i18n.getMessage('optionsBackupExport');
+  ).textContent = browser.i18n.getMessage('optionsBackupExport');
   document.querySelector(
     '#optionsBackup p:nth-of-type(2)',
-  ).innerHTML = browser.i18n.getMessage('optionsBackupExportText');
+  ).textContent = browser.i18n.getMessage('optionsBackupExportText');
   document.querySelector(
     '#optionsStatistics h2',
-  ).innerHTML = browser.i18n.getMessage('optionsStatistics');
+  ).textContent = browser.i18n.getMessage('optionsStatistics');
   document.querySelector(
     'label[for="numberOfTabs"]',
-  ).innerHTML = browser.i18n.getMessage('optionsStatisticsNumberOfTabs');
+  ).textContent = browser.i18n.getMessage('optionsStatisticsNumberOfTabs');
   document.querySelector(
     'label[for="thumbnailCacheSize"]',
-  ).innerHTML = browser.i18n.getMessage('optionsStatisticsThumbnailCacheSize');
+  ).textContent = browser.i18n.getMessage('optionsStatisticsThumbnailCacheSize');
   document.querySelector(
     '#saveBackupButton',
-  ).innerHTML = browser.i18n.getMessage('optionsBackupExportButton');
+  ).textContent = browser.i18n.getMessage('optionsBackupExportButton');
 }

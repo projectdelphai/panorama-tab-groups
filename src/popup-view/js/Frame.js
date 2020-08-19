@@ -6,7 +6,7 @@ function updateContent(contentNode, content) {
 
   // Set
   if (typeof content === 'string') {
-    contentNode.innerHTML = content;
+    contentNode.textContent = content;
   } else if (Array.isArray(content)) {
     content.forEach((item) => {
       contentNode.append(item);
