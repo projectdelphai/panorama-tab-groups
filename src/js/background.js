@@ -217,20 +217,6 @@ async function changeActiveGroupBy(offset) {
   await toggleVisibleTabs(activeGroup, true);
 }
 
-async function triggerCommand(command) {
-  const options = await loadOptions();
-
-  if (options.shortcut[command].disabled) {
-    // Doesn't execute disabled command
-    return;
-  }
-  if (command === 'activate-next-group') {
-    await changeActiveGroupBy(1);
-  } else if (command === 'activate-previous-group') {
-    await changeActiveGroupBy(-1);
-  }
-}
-
 /** Open the Panorama View tab, or return to the last open tab if Panorama View is currently open */
 async function toggleView() {
   const extTabs = await browser.tabs.query({ url: browser.extension.getURL('view.html'), currentWindow: true });
@@ -253,6 +239,22 @@ async function toggleView() {
   } else { // if there is no Panorama View tab, make one
     window.backgroundState.openingView = true;
     await browser.tabs.create({ url: '/view.html', active: true });
+  }
+}
+
+async function triggerCommand(command) {
+  const options = await loadOptions();
+
+  if (options.shortcut[command].disabled) {
+    // Doesn't execute disabled command
+    return;
+  }
+  if (command === 'activate-next-group') {
+    await changeActiveGroupBy(1);
+  } else if (command === 'activate-previous-group') {
+    await changeActiveGroupBy(-1);
+  } else if (command === 'toggle-panorama-view') {
+    await toggleView();
   }
 }
 
