@@ -2,6 +2,7 @@ import { getGroupId } from './tabs.js';
 import { tabMoved, groupDragOver, outsideDrop, createDragIndicator } from './drag.js';
 import { groupNodes, initGroupNodes, closeGroup, makeGroupNode, fillGroupNodes, insertTab, resizeGroups, raiseGroup, updateGroupFit } from './groupNodes.js';
 import { initTabNodes, makeTabNode, updateTabNode, setActiveTabNode, setActiveTabNodeById, getActiveTabId, deleteTabNode, updateThumbnail, updateFavicon } from './tabNodes.js';
+import { toggleVisibleTabs } from '../background.js';
 import * as groups from './groups.js';
 
 var view = {
@@ -11,6 +12,7 @@ var view = {
     dragIndicator: null,
     //intervalId: null,
     tabs: {},
+    loggedNumericKeys: ''
 };
 
 var pendingReload = false;
@@ -328,6 +330,8 @@ async function activateTiling() {
 }
 
 async function keyInput(e) {
+  var charList = '0123456789'; // we use a charlist as e.key is string not number
+
     if (e.key === "ArrowRight") {
         var activeTabId = getActiveTabId();
         var groupId = await getGroupId(activeTabId);
@@ -339,7 +343,6 @@ async function keyInput(e) {
                 break;
             }
         }
-
 
         var newTabId = -1;
         var max = childNodes.length - 2;
@@ -375,7 +378,6 @@ async function keyInput(e) {
             }
         }
 
-
         var newTabId = -1;
         var max = childNodes.length - 2;
         // check if at end or if tab not found
@@ -399,8 +401,25 @@ async function keyInput(e) {
         }
 
         setActiveTabNodeById(newTabId);
+    } else if (charList.indexOf(e.key) > -1) {
+        // log numeric inputs
+        view.loggedNumericKeys += e.key;
+        console.log(view.loggedNumericKeys + '.');
+        e.stopPropagation();
     } else if (e.key === "Enter") {
-        browser.tabs.update(getActiveTabId(), {active: true});
+        // if we have a keylogged groupID then raiseGroup
+        console.log('Enter ' + view.loggedNumericKeys);
+        if (view.loggedNumericKeys != '') {
+            await toggleVisibleTabs(view.loggedNumericKeys, true);
+        } else {
+            console.log('activate ' + view.loggedNumericKeys);
+            // activate selected tab
+            browser.tabs.update(getActiveTabId(), {active: true});
+        }
+        view.loggedNumericKeys='';
+    } else {
+      console.log('reset num key');
+      view.loggedNumericKeys = '';
     }
 }
 
