@@ -2,7 +2,7 @@ import { getGroupId } from './tabs.js';
 import { tabMoved, groupDragOver, outsideDrop, createDragIndicator } from './drag.js';
 import { groupNodes, initGroupNodes, closeGroup, makeGroupNode, fillGroupNodes, insertTab, resizeGroups, raiseGroup, updateGroupFit } from './groupNodes.js';
 import { initTabNodes, makeTabNode, updateTabNode, setActiveTabNode, setActiveTabNodeById, getActiveTabId, deleteTabNode, updateThumbnail, updateFavicon } from './tabNodes.js';
-import { toggleVisibleTabs } from '../background.js';
+import { switchToGroup } from '../background.js';
 import * as groups from './groups.js';
 
 var view = {
@@ -410,7 +410,7 @@ async function keyInput(e) {
         // if we have a keylogged groupID then raiseGroup
         console.log('Enter ' + view.loggedNumericKeys);
         if (view.loggedNumericKeys != '') {
-            await toggleVisibleTabs(view.loggedNumericKeys, true);
+            await switchToGroup(view.loggedNumericKeys, true);
         } else {
             console.log('activate ' + view.loggedNumericKeys);
             // activate selected tab

@@ -545,4 +545,6 @@ function onRuntimeInstallNotification(details) {
 
 browser.runtime.onInstalled.addListener(onRuntimeInstallNotification);
 
-
+export async function switchToGroup(groupId, noTabSelected) {
+    await toggleVisibleTabs(groupId, noTabSelected);
+}
