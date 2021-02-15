@@ -404,21 +404,18 @@ async function keyInput(e) {
     } else if (charList.indexOf(e.key) > -1) {
         // log numeric inputs
         view.loggedNumericKeys += e.key;
-        console.log(view.loggedNumericKeys + '.');
         e.stopPropagation();
     } else if (e.key === "Enter") {
         // if we have a keylogged groupID then raiseGroup
-        console.log('Enter ' + view.loggedNumericKeys);
         if (view.loggedNumericKeys != '') {
             await switchToGroup(view.loggedNumericKeys, true);
         } else {
-            console.log('activate ' + view.loggedNumericKeys);
             // activate selected tab
             browser.tabs.update(getActiveTabId(), {active: true});
         }
         view.loggedNumericKeys='';
     } else {
-      console.log('reset num key');
+      // reset numkey logging
       view.loggedNumericKeys = '';
     }
 }
