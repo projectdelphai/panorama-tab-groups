@@ -82,6 +82,8 @@ async function setLayoutMode(mode) {
 }
 
 async function captureThumbnail(tab) {
+  if(tab.url.startsWith(browser.extension.getURL('view.html'))) return; // No selfies
+
   const tabId = tab.id;
 
   const cachedThumbnail = await browser.sessions.getTabValue(tabId, 'thumbnail');
